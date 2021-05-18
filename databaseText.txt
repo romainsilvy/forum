@@ -1,0 +1,80 @@
+PRAGMA foreign_keys = ON;
+CREATE TABLE User(
+    id_user INT NOT NULL,
+    user_name TEXT NOT NULL,
+    password TEXT NOT NULL,
+    email TEXT NOT NULL,
+
+    PRIMARY KEY (id_user)
+);
+
+
+CREATE TABLE Thread(
+    id_th INT NOT NULL,
+    id_user INT NOT NULL,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    notif BOOL NOT NULL DEFAULT 0,
+    like_count INT NOT NULL,
+    dislike_count INT NOT NULL,
+    comment_count INT NOT NULL,
+
+    PRIMARY KEY (id_th),
+ 	FOREIGN KEY(id_user) REFERENCES User(id_user)
+);
+
+
+CREATE TABLE ThreadMessage(
+    id_th_msg INT NOT NULL,
+    id_th INT NOT NULL,
+    id_user INT NOT NULL,
+    created_at TEXT NOT NULL,
+    msg_content TEXT NOT NULL,
+
+    PRIMARY KEY (id_th_msg),
+    FOREIGN KEY(id_user) REFERENCES User(id_user),
+    FOREIGN KEY(id_th) REFERENCES Thread(id_th)
+);
+
+
+CREATE TABLE Like(
+    id_like INT NOT NULL,
+    id_user INT NOT NULL,
+    like BOOL NOT NULL DEFAULT 0,
+    dislike BOOL NOT NULL DEFAULT 0,
+    id_th INT NOT NULL,
+
+    PRIMARY KEY (id_like),
+    FOREIGN KEY(id_user) REFERENCES User(id_user),
+    FOREIGN KEY(id_th) REFERENCES Thread(id_th)
+);
+
+CREATE TABLE Following(
+    id_following INT NOT NULL,
+    id_user INT NOT NULL,
+    id_th INT NOT NULL,
+
+    PRIMARY KEY (id_following),
+    FOREIGN KEY(id_user) REFERENCES User(id_user),
+    FOREIGN KEY(id_th) REFERENCES Thread(id_th)
+);
+
+
+CREATE TABLE ThreadCategory(
+    id_th_cat INT NOT NULL,
+    id_cat INT NOT NULL,
+    id_th INT NOT NULL,
+
+    PRIMARY KEY (id_th_cat),
+    FOREIGN KEY(id_cat) REFERENCES Category(id_cat),
+    FOREIGN KEY(id_th) REFERENCES Thread(id_th)
+);
+
+
+CREATE TABLE Category(
+    id_cat INT NOT NULL,
+    cat_name TEXT NOT NULL,
+
+    PRIMARY KEY (id_cat)
+);
