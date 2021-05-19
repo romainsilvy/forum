@@ -38,6 +38,7 @@ func runServer() {
 	}
 }
 
+// get Data from the sqlite database and print them int the html page
 func getUsers() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		variable, _ := template.ParseFiles("index.html")

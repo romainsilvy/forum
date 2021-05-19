@@ -16,7 +16,9 @@
 
     <div id="global">
         <div class="global-item" id="global-left">
-            <p>left</p>
+            {{range .}}
+            <p>{{.Id_user}}</p>
+            {{end}}
         </div>
         <div class="global-item" id="global-center">
             <div class="inside-center" id="add-thread">
