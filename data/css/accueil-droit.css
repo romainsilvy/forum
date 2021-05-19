@@ -32,6 +32,23 @@ header #profile-picture {
     grid-column: 10;
 }
 
+div #profile-picture {
+    margin-top: 50px;
+    height: 100px;
+    grid-row: 1;
+    grid-column: 10;
+    align-items: center;
+}
+
+div #Participant{
+    margin-top: 75px;
+}
+div #tableau{
+    text-align: start;
+    margin-left: 50px;
+    margin-top: 50px;
+}
+
 #global{
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
@@ -53,6 +70,7 @@ header #profile-picture {
 }
 
 #global #global-right {
+    text-align: center;
     grid-column: 3;
     grid-row: 1;
 }
