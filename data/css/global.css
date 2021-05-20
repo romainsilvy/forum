@@ -49,6 +49,8 @@ header #profile-picture {
 #global #global-center {
     grid-column: 2;
     grid-row: 1;
+    border-left: solid 1px grey;
+    border-right: solid 1px grey;
 }
 
 #global #global-right {
