@@ -1,5 +1,5 @@
 .inside-center {
-    width: 80%;
+    width: auto;
     background-color: white;
     border-radius: 20px;
     box-shadow: 0px 8px 24px #7090B0B3;
@@ -12,7 +12,6 @@
     border-width: 0 0 2px;
     background: white;
     width: 50%;
-    font-size: 3em;
 }
 
 #add-thread #input-add-thread:focus {
@@ -24,7 +23,6 @@
     background: #593C8F;
     color: white;
     font-size: 1.5em;
-    width: 1em;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -32,5 +30,12 @@
     /* text-align: right; */
     float: right;
     margin-top: 0px;
-    height: 100%;
+    height: auto;
 }
+
+/* #global #global-center {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+} */
