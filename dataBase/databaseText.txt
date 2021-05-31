@@ -4,6 +4,8 @@ CREATE TABLE User(
     user_name TEXT NOT NULL,
     password TEXT NOT NULL,
     email TEXT NOT NULL,
+    id_image INT NOT NULL,
+    image TEXT NOT NULL,
 
     PRIMARY KEY (id_user)
 );
@@ -19,9 +21,12 @@ CREATE TABLE Thread(
     like_count INT NOT NULL,
     dislike_count INT NOT NULL,
     comment_count INT NOT NULL,
+    id_image INT NOT NULL,
+    image TEXT NOT NULL,
 
     PRIMARY KEY (id_th),
- 	FOREIGN KEY(id_user) REFERENCES User(id_user)
+ 	FOREIGN KEY(id_user) REFERENCES User(id_user),
+    FOREIGN KEY(id_image) REFERENCES User(id_image)
 );
 
 
@@ -31,10 +36,13 @@ CREATE TABLE ThreadMessage(
     id_user INT NOT NULL,
     created_at TEXT NOT NULL,
     msg_content TEXT NOT NULL,
+    id_image INT NOT NULL,
+    image TEXT NOT NULL,
 
     PRIMARY KEY (id_th_msg),
     FOREIGN KEY(id_user) REFERENCES User(id_user),
-    FOREIGN KEY(id_th) REFERENCES Thread(id_th)
+    FOREIGN KEY(id_th) REFERENCES Thread(id_th),
+    FOREIGN KEY(id_image) REFERENCES User(id_image)
 );
 
 
