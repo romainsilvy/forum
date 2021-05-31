@@ -45,9 +45,15 @@ header #profile-picture {
     grid-template-rows: 1fr;
     height: calc(100vh - 125px);
     width: 100%;
+<<<<<<< HEAD
     /* background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%); */
 }
 
+=======
+    background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
+    ;
+}
+>>>>>>> accueil-gauche
 #global #global-left {
     grid-column: 1;
     grid-row: 1;

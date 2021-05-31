@@ -23,12 +23,16 @@ func cssFile() {
 	http.Handle("/global.css", cssServer)
 	http.Handle("/accueil.css", cssServer)
 	http.Handle("/accueil-droit.css", cssServer)
+	http.Handle("/accueil-gauche.css", cssServer)
 }
 
 func pictureFile() {
 	pictureServer := http.FileServer(http.Dir("./data/images"))
 	http.Handle("/logo.png", pictureServer)
 	http.Handle("/profile-picture.png", pictureServer)
+	http.Handle("/follow.png", pictureServer)
+	http.Handle("/home.png", pictureServer)
+	http.Handle("/thread.png", pictureServer)
 }
 
 //runServer sets the listenandserve port to 8080
