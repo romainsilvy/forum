@@ -2,7 +2,9 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -13,6 +15,27 @@ type User struct {
 	User_name string
 	Password  string
 	Email     string
+}
+
+// serveFile makes files available for the website
+func cssFile() {
+	cssServer := http.FileServer(http.Dir("./data/css"))
+	http.Handle("/global.css", cssServer)
+	http.Handle("/accueil.css", cssServer)
+}
+
+func pictureFile() {
+	pictureServer := http.FileServer(http.Dir("./data/images"))
+	http.Handle("/logo.png", pictureServer)
+	http.Handle("/profile-picture.png", pictureServer)
+}
+
+//runServer sets the listenandserve port to 8080
+func runServer() {
+	fmt.Println("server is runing")
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		log.Fatal(err)
+	}
 }
 
 // get Data from the sqlite database and print them int the html page
@@ -36,4 +59,7 @@ func getUsers() {
 
 func main() {
 	getUsers()
+	cssFile()
+	pictureFile()
+	runServer()
 }
