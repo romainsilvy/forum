@@ -22,6 +22,7 @@ func cssFile() {
 	cssServer := http.FileServer(http.Dir("./data/css"))
 	http.Handle("/global.css", cssServer)
 	http.Handle("/accueil.css", cssServer)
+	http.Handle("/accueil-droit.css", cssServer)
 }
 
 func pictureFile() {
