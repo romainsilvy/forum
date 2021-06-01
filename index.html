@@ -18,15 +18,11 @@
 
     <div id="global">
         <div class="global-item" id="global-left">
-            {{range .}}
-                {{.Id_user}}
-            {{end}}
         </div>
         <div class="global-item" id="global-center">
             <div class="inside-center" id="add-thread">
                 <button id="button-input-add-thread" type="button">+</button>
                 <input id="input-add-thread" type="text" placeholder="Ajoutez le nom d'un thread....">
-                
             </div>
             <div class="inside-center a-thread">
                 <p>un thread</p>
@@ -85,10 +81,9 @@
                 </div>
                 <h2 id="Participant"> Participant</h2>
                 <ul id="tableau">
-                    <li> Louis</li>
-                    <li> Romain</li>
-                    <li> Mattéo</li>
-                    <li> Isma</li>
+                    {{range .}}
+                    <li>{{.User_name}}</li>
+                    {{end}}
                 </ul>
             </div>
         </div>

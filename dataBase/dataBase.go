@@ -9,56 +9,56 @@ import (
 )
 
 type User struct {
-	id_user   int
-	user_name string
-	password  string
-	email     string
-	image     string
+	Id_user   int
+	User_name string
+	Password  string
+	Email     string
+	Image     string
 }
 
 type Thread struct {
-	id_th         int
-	id_user       int
-	title         string
-	content       string
-	created_at    string
-	notif         bool
-	like_count    int
-	dislike_count int
-	comment_count int
+	Id_th         int
+	Id_user       int
+	Title         string
+	Content       string
+	Created_at    string
+	Notif         bool
+	Like_count    int
+	Dislike_count int
+	Comment_count int
 }
 
 type ThreadMessage struct {
-	id_th_msg   int
-	id_th       int
-	id_user     int
-	created_at  string
-	msg_content string
+	Id_th_msg   int
+	Id_th       int
+	Id_user     int
+	Created_at  string
+	Msg_content string
 }
 
 type Like struct {
-	id_like int
-	id_user int
-	like    bool
-	dislike bool
-	id_th   int
+	Id_like int
+	Id_user int
+	Like    bool
+	Dislike bool
+	Id_th   int
 }
 
 type Following struct {
-	id_following int
-	id_user      int
-	id_th        int
+	Id_following int
+	Id_user      int
+	Id_th        int
 }
 
 type ThreadCategory struct {
-	id_th_cat int
-	id_cat    int
-	id_th     int
+	Id_th_cat int
+	Id_cat    int
+	Id_th     int
 }
 
 type Category struct {
-	id_cat   int
-	cat_name string
+	Id_cat   int
+	Cat_name string
 }
 
 func initDatabase(database string) *sql.DB {
@@ -78,20 +78,20 @@ func initDatabase(database string) *sql.DB {
 	return db
 }
 
-func insertIntoUsers(db *sql.DB, user_name string, email string, password string, image string) {
-	_, err := db.Exec(`INSERT INTO User (user_name, email, password, image) VALUES (?, ?, ?, ?)`, user_name, email, password, image)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
+// func insertIntoUsers(db *sql.DB, user_name string, email string, password string, image string) {
+// 	_, err := db.Exec(`INSERT INTO User (user_name, email, password, image) VALUES (?, ?, ?, ?)`, user_name, email, password, image)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// }
 
-func main() {
-	db := initDatabase("test.db")
-	insertIntoUsers(db, "Louis", "mail", "mdp", "image")
-	// ReadItem(db)
-	defer db.Close()
+// func main() {
+// 	db := initDatabase("test.db")
+// 	insertIntoUsers(db, "Louis", "mail", "mdp", "image")
+// 	// ReadItem(db)
+// 	defer db.Close()
 
-}
+// }
 
 // func ReadItem(db *sql.DB) {
 // 	sql_readall := `

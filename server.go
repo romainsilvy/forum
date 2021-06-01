@@ -6,9 +6,9 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	database "test/dataBase"
 
-	
-	"forum/dataBase/database"
+	// "forum/dataBase/database"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -42,15 +42,15 @@ func runServer() {
 }
 
 // get Data from the sqlite database and print them int the html page
-func getUsers() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request, database.User) {
+func getUsers(oneUser database.User, tabUser []database.User) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		variable, _ := template.ParseFiles("index.html")
-		database, _ := sql.Open("sqlite3", "./forum.db")
+		database, _ := sql.Open("sqlite3", "dataBase/test.db")
 		rows, _ := database.Query("select * from User")
-		var result []database.User
+		result := tabUser
 		for rows.Next() {
-			item := User{}
-			err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email)
+			item := oneUser
+			err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email, &item.Image)
 			if err2 != nil {
 				panic(err2)
 			}
@@ -61,7 +61,7 @@ func getUsers() {
 }
 
 func main() {
-	getUsers()
+	getUsers(database.User{}, []database.User{})
 	cssFile()
 	pictureFile()
 	runServer()
