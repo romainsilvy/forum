@@ -1,4 +1,4 @@
-package main
+package database
 
 import (
 	"database/sql"
@@ -78,17 +78,16 @@ func initDatabase(database string) *sql.DB {
 	return db
 }
 
-func insertIntoUsers(db *sql.DB, id_user int, user_name string, email string, password string, image string) (int64, error) {
-	result, err := db.Exec(`INSERT INTO User (id_user, user_name, email, password, image) VALUES (?, ?, ?, ?, ?)`, id_user, user_name, email, password, image)
+func insertIntoUsers(db *sql.DB, user_name string, email string, password string, image string) {
+	_, err := db.Exec(`INSERT INTO User (user_name, email, password, image) VALUES (?, ?, ?, ?)`, user_name, email, password, image)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return result.LastInsertId()
 }
 
 func main() {
 	db := initDatabase("test.db")
-	insertIntoUsers(db, 1, "Louis", "mail", "mdp", "image")
+	insertIntoUsers(db, "Louis", "mail", "mdp", "image")
 	// ReadItem(db)
 	defer db.Close()
 
