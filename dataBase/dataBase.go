@@ -78,16 +78,18 @@ func initDatabase(database string) *sql.DB {
 	return db
 }
 
-// func insertIntoUsers(db *sql.DB, user_name string, email string, password string, image string) {
-// 	_, err := db.Exec(`INSERT INTO User (user_name, email, password, image) VALUES (?, ?, ?, ?)`, user_name, email, password, image)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// }
+func InsertIntoUsers(user_name string, email string, password string, image string) {
+	db := initDatabase("test.db")
+	_, err := db.Exec(`INSERT INTO User (user_name, email, password, image) VALUES (?, ?, ?, ?)`, user_name, email, password, image)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+}
 
 // func main() {
 // 	db := initDatabase("test.db")
-// 	insertIntoUsers(db, "Louis", "mail", "mdp", "image")
+// 	InsertIntoUsers(db, "Louis", "mail", "mdp", "image")
 // 	// ReadItem(db)
 // 	defer db.Close()
 
