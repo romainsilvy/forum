@@ -1,17 +1,17 @@
 PRAGMA foreign_keys = ON;
-CREATE TABLE User(
+
+CREATE TABLE IF NOT EXISTS User(
     id_user INT NOT NULL,
     user_name TEXT NOT NULL,
     password TEXT NOT NULL,
     email TEXT NOT NULL,
-    id_image INT NOT NULL,
     image TEXT NOT NULL,
 
     PRIMARY KEY (id_user)
 );
 
 
-CREATE TABLE Thread(
+CREATE TABLE IF NOT EXISTS Thread(
     id_th INT NOT NULL,
     id_user INT NOT NULL,
     title TEXT NOT NULL,
@@ -21,32 +21,28 @@ CREATE TABLE Thread(
     like_count INT NOT NULL,
     dislike_count INT NOT NULL,
     comment_count INT NOT NULL,
-    id_image INT NOT NULL,
     image TEXT NOT NULL,
 
     PRIMARY KEY (id_th),
- 	FOREIGN KEY(id_user) REFERENCES User(id_user),
-    FOREIGN KEY(id_image) REFERENCES User(id_image)
+ 	FOREIGN KEY(id_user) REFERENCES User(id_user)
 );
 
 
-CREATE TABLE ThreadMessage(
+CREATE TABLE IF NOT EXISTS ThreadMessage(
     id_th_msg INT NOT NULL,
     id_th INT NOT NULL,
     id_user INT NOT NULL,
     created_at TEXT NOT NULL,
     msg_content TEXT NOT NULL,
-    id_image INT NOT NULL,
     image TEXT NOT NULL,
 
     PRIMARY KEY (id_th_msg),
     FOREIGN KEY(id_user) REFERENCES User(id_user),
-    FOREIGN KEY(id_th) REFERENCES Thread(id_th),
-    FOREIGN KEY(id_image) REFERENCES User(id_image)
+    FOREIGN KEY(id_th) REFERENCES Thread(id_th)
 );
 
 
-CREATE TABLE Like(
+CREATE TABLE IF NOT EXISTS Like(
     id_like INT NOT NULL,
     id_user INT NOT NULL,
     like BOOL NOT NULL DEFAULT 0,
@@ -58,7 +54,7 @@ CREATE TABLE Like(
     FOREIGN KEY(id_th) REFERENCES Thread(id_th)
 );
 
-CREATE TABLE Following(
+CREATE TABLE IF NOT EXISTS Following(
     id_following INT NOT NULL,
     id_user INT NOT NULL,
     id_th INT NOT NULL,
@@ -69,7 +65,7 @@ CREATE TABLE Following(
 );
 
 
-CREATE TABLE ThreadCategory(
+CREATE TABLE IF NOT EXISTS ThreadCategory(
     id_th_cat INT NOT NULL,
     id_cat INT NOT NULL,
     id_th INT NOT NULL,
@@ -80,7 +76,7 @@ CREATE TABLE ThreadCategory(
 );
 
 
-CREATE TABLE Category(
+CREATE TABLE IF NOT EXISTS Category(
     id_cat INT NOT NULL,
     cat_name TEXT NOT NULL,
 

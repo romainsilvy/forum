@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"io/ioutil"
 	"log"
 
@@ -70,7 +69,7 @@ func initDatabase(database string) *sql.DB {
 
 	createDb, _ := ioutil.ReadFile("databaseText.txt")
 	str := string(createDb)
-	fmt.Println(str)
+	// fmt.Println(str)
 	_, err = db.Exec(str)
 	if err != nil {
 		log.Fatal(err)
@@ -79,14 +78,42 @@ func initDatabase(database string) *sql.DB {
 	return db
 }
 
-func insertIntoUsers(db *sql.DB, user_name string, email string, password string) (int64, error) {
-	result, _ := db.Exec(`INSERT INTO User (user_name, email, password) VALUES (?, ?, ?)`, user_name, email, password)
+func insertIntoUsers(db *sql.DB, id_user int, user_name string, email string, password string, image string) (int64, error) {
+	result, err := db.Exec(`INSERT INTO User (id_user, user_name, email, password, image) VALUES (?, ?, ?, ?, ?)`, id_user, user_name, email, password, image)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return result.LastInsertId()
 }
 
 func main() {
 	db := initDatabase("test.db")
+	insertIntoUsers(db, 1, "Louis", "mail", "mdp", "image")
+	// ReadItem(db)
 	defer db.Close()
 
-	insertIntoUsers(db, "Louis", "mail", "mdp")
 }
+
+// func ReadItem(db *sql.DB) {
+// 	sql_readall := `
+// 	SELECT Id_user, User_name, Password, Email FROM items
+// 	ORDER BY datetime(InsertedDatetime) DESC
+// 	`
+
+// 	rows, err := db.Query(sql_readall)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	defer rows.Close()
+
+// 	var result []User
+// 	for rows.Next() {
+// 		item := User{}
+// 		err2 := rows.Scan(&item.id_user, &item.user_name, &item.password, &item.email, &item.image)
+// 		if err2 != nil {
+// 			panic(err2)
+// 		}
+// 		result = append(result, item)
+// 	}
+// 	fmt.Println(result)
+// }
