@@ -46,6 +46,28 @@ div #mdp{
 
 }
 
+.box input[type = "text"],.box input[type = "password"] {
+    border:0;
+    background: none;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #f8d5ee;
+    padding: 14px 10px;
+    width: 200px;
+    outline: none;
+    color: rgb(5, 5, 5);
+    border-radius: 24px;
+    transition: 0.25s;
+}
+
+.box {
+    background-image: linear-gradient( #fde8f7 0%, #d5e3fb 100%);
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 0px 8px 24px #7090B0B3;
+}
+
 div #button{
     background-color: white;
     border-radius: 20px;
@@ -78,6 +100,7 @@ div #story2{
     resize: none;
     border-radius: 20px;
     box-shadow: 0px 8px 24px #7090B0B3;
+    background-image: linear-gradient( #fde8f7 0%, #d5e3fb 100%);
 }
 
 div #profile-picture {

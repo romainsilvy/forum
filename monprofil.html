@@ -22,46 +22,26 @@
             <p>left</p>
         </div>
         <div class="global-item" id="global-center">
-            <div id="mdp">
+            <div id="mdp" class="box">
                 <h2>Mot de passe</h2> 
-                <div>
-                    <label for="name">Ancien mot de passe :</label>
-
-                    <input type="text" id="confirmermdp" name="name2" required
-                    minlength="4" maxlength="10" size="10">
-                </div>
-                <div>
-                    <label for="name">Nouveau mot de passe :</label>
-
-                    <input type="text" id="nouveaumdp" name="name" required
-                    minlength="4" maxlength="10" size="10">
-                </div>
-                <div>
-                    <label for="name">Confirmer le mot de passe :</label>
-
-                    <input type="text" id="confirmermdp" name="name2" required
-                    minlength="4" maxlength="10" size="10">
-                </div>
+                <input type="text" placeholder="Ancien mot de passe :" name="" required
+                minlength="4" maxlength="10" size="10">
+                <input type="text" placeholder="Nouveau mot de passe :" name="name" required
+                minlength="4" maxlength="10" size="10">
+                <input type="text" placeholder="Confirmer le mot de passe :" name="name2" required
+                minlength="4" maxlength="10" size="10">
                 <div>
                     <button id="button" name="button2">Valider</button>
                 </div>
             </div>
 
-            <div id="mail">
+            <div id="mail" class="box">
                 <h2>Adresse mail</h2>
                 <div>
                     Mon adresse : exemple@gmail.com
                 </div>
-                <div>
-                    <label for="name">Nouvelle adresse :</label>
-
-                    <input type="text" class="nouveaumail" name="name">
-                </div>
-                <div>
-                    <label for="name">Confirmer l'adresse :</label>
-
-                    <input type="text" class="confirmermail" name="name2">
-                </div>
+                    <input type="text" placeholder="Nouvelle adresse :" name="name">
+                    <input type="text" placeholder="Confirmer l'adresse :" name="name2">
                 <div>
                     <button id="button" name="button2">Valider</button>
                 </div>
