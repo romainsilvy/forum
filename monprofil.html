@@ -25,7 +25,7 @@
             <div id="mdp">
                 <h2>Mot de passe</h2> 
                 <div>
-                    <label for="name">Mot de passe actuel :</label>
+                    <label for="name">Ancien mot de passe :</label>
 
                     <input type="text" id="confirmermdp" name="name2" required
                     minlength="4" maxlength="10" size="10">
@@ -37,7 +37,7 @@
                     minlength="4" maxlength="10" size="10">
                 </div>
                 <div>
-                    <label for="name">Confirmer le mdp :</label>
+                    <label for="name">Confirmer le mot de passe :</label>
 
                     <input type="text" id="confirmermdp" name="name2" required
                     minlength="4" maxlength="10" size="10">
@@ -48,25 +48,27 @@
             </div>
 
             <div id="mail">
-                <h2>Adress mail</h2>
+                <h2>Adresse mail</h2>
                 <div>
-                    <label for="name">Nouveau mail :</label>
-
-                    <input type="text" class="nouveaumail" name="name" required
-                    minlength="4" maxlength="10" size="10">
+                    Mon adresse : exemple@gmail.com
                 </div>
                 <div>
-                    <label for="name">Confirmer le mail :</label>
+                    <label for="name">Nouvelle adresse :</label>
 
-                    <input type="text" class="confirmermail" name="name2" required
-                    minlength="4" maxlength="10" size="10">
+                    <input type="text" class="nouveaumail" name="name">
+                </div>
+                <div>
+                    <label for="name">Confirmer l'adresse :</label>
+
+                    <input type="text" class="confirmermail" name="name2">
                 </div>
                 <div>
                     <button id="buttonvalidermail" name="button2">Valider</button>
                 </div>
             </div>
             <div id = "stats">
-                <h2>Stats</h2>
+                <h2>Description</h2>
+                <textarea id="story2" name ="story"></textarea>
             </div>
         </div>
         <div class="global-item" id="global-right">
