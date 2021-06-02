@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="monprofil.css">
+    <title>Cham Nation</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="global.css">
+    <link rel="stylesheet" type="text/css" href="accueil.css">
+</head>
+
+<body>
+    <header>
+        
+        <img id="logo" src="logo.png">
+        <input type="search">
+        <img id="profile-picture" src="profile-picture.png">
+    </header>
+
+    <div id="global">
+        <div class="global-item" id="global-left">
+            <p>left</p>
+        </div>
+        <div class="global-item" id="global-center">
+            <div id="mdp">
+                <h2>Mot de passe</h2> 
+                <div>
+                    <label for="name">Mot de passe actuel :</label>
+
+                    <input type="text" id="confirmermdp" name="name2" required
+                    minlength="4" maxlength="10" size="10">
+                </div>
+                <div>
+                    <label for="name">Nouveau mot de passe :</label>
+
+                    <input type="text" id="nouveaumdp" name="name" required
+                    minlength="4" maxlength="10" size="10">
+                </div>
+                <div>
+                    <label for="name">Confirmer le mdp :</label>
+
+                    <input type="text" id="confirmermdp" name="name2" required
+                    minlength="4" maxlength="10" size="10">
+                </div>
+                <div>
+                    <button id="buttonvalidermdp" name="button2">Valider</button>
+                </div>
+            </div>
+
+            <div id="mail">
+                <h2>Adress mail</h2>
+                <div>
+                    <label for="name">Nouveau mail :</label>
+
+                    <input type="text" class="nouveaumail" name="name" required
+                    minlength="4" maxlength="10" size="10">
+                </div>
+                <div>
+                    <label for="name">Confirmer le mail :</label>
+
+                    <input type="text" class="confirmermail" name="name2" required
+                    minlength="4" maxlength="10" size="10">
+                </div>
+                <div>
+                    <button id="buttonvalidermail" name="button2">Valider</button>
+                </div>
+            </div>
+            <div id = "stats">
+                <h2>Stats</h2>
+            </div>
+        </div>
+        <div class="global-item" id="global-right">
+            <button id="parametre" type="button">+</button>
+            <img id="profile-picture" src="profile-picture.png">
+            <div class="txt">
+                <h2>Amaury</h2>
+                <div  class="bannerSubtitle">
+                </div>
+                <textarea id="story" name ="story" rows="15" cols="33">
+                </textarea>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
