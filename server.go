@@ -24,6 +24,7 @@ func cssFile() {
 	http.Handle("/accueil.css", cssServer)
 	http.Handle("/accueil-droit.css", cssServer)
 	http.Handle("/accueil-gauche.css", cssServer)
+	http.Handle("/connexion-inscription.css", cssServer)
 }
 
 func pictureFile() {
