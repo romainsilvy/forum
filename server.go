@@ -45,7 +45,7 @@ func runServer() {
 func getUsers(oneUser database.User, tabUser []database.User) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		variable, _ := template.ParseFiles("index.html")
-		database, _ := sql.Open("sqlite3", "test.db")
+		database, _ := sql.Open("sqlite3", "dataBase/test.db")
 		rows, _ := database.Query("select * from User")
 		result := tabUser
 		for rows.Next() {
@@ -61,12 +61,9 @@ func getUsers(oneUser database.User, tabUser []database.User) {
 }
 
 func main() {
-	database.InsertIntoUsers("ROMA", "qssdwd", "mqsfdqsw<sdqddp", "tdqif")
+	database.InsertIntoUsers("Louis", "mail", "mdp", "image")
 	getUsers(database.User{}, []database.User{})
 	cssFile()
 	pictureFile()
 	runServer()
 }
-
-// faire en sorte que qq on crée la database le fichier soit dans le dossier dataBase
-// et pas dans le dossier forum général

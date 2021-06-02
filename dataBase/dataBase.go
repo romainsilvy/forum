@@ -67,9 +67,11 @@ func initDatabase(database string) *sql.DB {
 		log.Fatal(err)
 	}
 
-	createDb, _ := ioutil.ReadFile("databaseText.txt")
+	createDb, err := ioutil.ReadFile("dataBase/databaseText.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
 	str := string(createDb)
-	// fmt.Println(str)
 	_, err = db.Exec(str)
 	if err != nil {
 		log.Fatal(err)
@@ -79,7 +81,7 @@ func initDatabase(database string) *sql.DB {
 }
 
 func InsertIntoUsers(user_name string, email string, password string, image string) {
-	db := initDatabase("test.db")
+	db := initDatabase("dataBase/test.db")
 	_, err := db.Exec(`INSERT INTO User (user_name, email, password, image) VALUES (?, ?, ?, ?)`, user_name, email, password, image)
 	if err != nil {
 		log.Fatal(err)
