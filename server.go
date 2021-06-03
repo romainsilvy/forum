@@ -68,23 +68,6 @@ func getUsers(oneUser database.User, tabUser []database.User) {
 	})
 }
 
-func monProfil(oneUser database.User, tabUser []database.User) {
-	http.HandleFunc("/monprofil", func(w http.ResponseWriter, r *http.Request) {
-		variable, _ := template.ParseFiles("monprofil.html")
-		database, _ := sql.Open("sqlite3", "./forum.db")
-		rows, _ := database.Query("select * from User")
-		result := tabUser
-		for rows.Next() {
-			item := oneUser
-			err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email)
-			if err2 != nil {
-				panic(err2)
-			}
-			result = append(result, item)
-		}
-		variable.Execute(w, result)
-	})
-}
 func handleConnexion() {
 	http.HandleFunc("/connexion", func(w http.ResponseWriter, r *http.Request) {
 
@@ -97,18 +80,26 @@ func handleConnexion() {
 func handleInscription() {
 	http.HandleFunc("/inscription", func(w http.ResponseWriter, r *http.Request) {
 
-		variable, _ := template.ParseFiles("inscription.html")
-		result := 4
+		variable, _ := template.ParseFiles("connexion.html")
+		result := 3
 		variable.Execute(w, result)
 	})
 }
 
+func handleProfil() {
+	http.HandleFunc("/profil/", func(w http.ResponseWriter, r *http.Request) {
+		pseudoPath := r.URL.Path[7:]
+		variable, _ := template.ParseFiles("profil.html")
+		variable.Execute(w, pseudoPath)
+	})
+}
+
 func main() {
-	database.InsertIntoUsers("Amaury", "mail", "mdp", "image")
+	// database.InsertIntoUsers("Amaury", "mail", "mdp", "image")
 	getUsers(database.User{}, []database.User{})
-	monProfil(database.User{}, []database.User{})
 	handleInscription()
 	handleConnexion()
+	handleProfil()
 	cssFile()
 	pictureFile()
 	runServer()
