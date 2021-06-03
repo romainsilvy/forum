@@ -65,7 +65,7 @@ func getUsers(oneUser database.User, tabUser []database.User) {
 }
 
 func main() {
-	database.InsertIntoUsers("Louis", "mail", "mdp", "image")
+	database.InsertIntoUsers("Amaury", "mail", "mdp", "image")
 	getUsers(database.User{}, []database.User{})
 	cssFile()
 	pictureFile()
