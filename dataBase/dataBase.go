@@ -79,7 +79,7 @@ func initDatabase(database string) *sql.DB {
 }
 
 func InsertIntoUsers(user_name string, email string, password string, image string) {
-	db := initDatabase("test.db")
+	db := initDatabase("forum.db")
 	_, err := db.Exec(`INSERT INTO User (user_name, email, password, image) VALUES (?, ?, ?, ?)`, user_name, email, password, image)
 	if err != nil {
 		log.Fatal(err)
