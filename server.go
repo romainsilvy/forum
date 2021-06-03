@@ -25,6 +25,10 @@ func cssFile() {
 	http.Handle("/global.css", cssServer)
 	http.Handle("/accueil.css", cssServer)
 	http.Handle("/accueil-droit.css", cssServer)
+<<<<<<< HEAD
+=======
+	http.Handle("/monprofil.css", cssServer)
+>>>>>>> monprofil
 	http.Handle("/accueil-gauche.css", cssServer)
 }
 
@@ -35,6 +39,7 @@ func pictureFile() {
 	http.Handle("/follow.png", pictureServer)
 	http.Handle("/home.png", pictureServer)
 	http.Handle("/thread.png", pictureServer)
+	http.Handle("/like.png", pictureServer)
 }
 
 //runServer sets the listenandserve port to 8080
@@ -64,9 +69,29 @@ func getUsers(oneUser database.User, tabUser []database.User) {
 	})
 }
 
+func monProfil() {
+	http.HandleFunc("/monprofil", func(w http.ResponseWriter, r *http.Request) {
+		variable, _ := template.ParseFiles("monprofil.html")
+		database, _ := sql.Open("sqlite3", "./forum.db")
+		rows, _ := database.Query("select * from User")
+		var result []User
+		for rows.Next() {
+			item := User{}
+			err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email)
+			if err2 != nil {
+				panic(err2)
+			}
+			result = append(result, item)
+		}
+		variable.Execute(w, result)
+	})
+}
+
 func main() {
 	database.InsertIntoUsers("Amaury", "mail", "mdp", "image")
 	getUsers(database.User{}, []database.User{})
+	monProfil()
+	getUsers()
 	cssFile()
 	pictureFile()
 	runServer()
