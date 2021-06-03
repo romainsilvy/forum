@@ -86,6 +86,7 @@ div #mdp{
     color: rgb(5, 5, 5);
     border-radius: 24px;
     transition: 0.25s;
+
 }
 
 .box {
@@ -93,12 +94,16 @@ div #mdp{
     text-align: center;
     border-radius: 20px;
     box-shadow: 0px 8px 24px #7090B0B3;
+    height: 105%;
 }
 
 div #button{
-    background-color: white;
+    background: none;
+    background-color: (#fde8f7 0%, #d5e3fb 100%) ;
     border-radius: 20px;
-    box-shadow: 0px 8px 24px #7090B0B3;
+    border: 3px solid #f8d5ee;
+    display: flex;
+    justify-content: center;
 }
 
 
@@ -137,6 +142,12 @@ div #profile-picture {
     grid-column: 10;
     align-items: center;
     margin-left: 50px;
+}
+
+div #like-picture{
+    height: 50px;
+    align-items: left;
+    display: flex;
 }
 
 #parametre {
@@ -194,7 +205,7 @@ textarea {
     
 }
 
-#global #global-right {
+#global #global-right{
     text-align: center;
     grid-column: 3;
     grid-row: 1;

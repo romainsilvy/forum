@@ -34,6 +34,7 @@ func pictureFile() {
 	http.Handle("/follow.png", pictureServer)
 	http.Handle("/home.png", pictureServer)
 	http.Handle("/thread.png", pictureServer)
+	http.Handle("/like.png", pictureServer)
 }
 
 //runServer sets the listenandserve port to 8080
