@@ -64,8 +64,35 @@ func getUsers(oneUser database.User, tabUser []database.User) {
 	})
 }
 
+func handleConnexion() {
+    http.HandleFunc("/connexion", func(w http.ResponseWriter, r *http.Request) {
+
+        variable, _ := template.ParseFiles("connexion.html")
+        result := 3
+        variable.Execute(w, result)
+    })
+}
+
+func handleInscription() {
+    http.HandleFunc("/inscription", func(w http.ResponseWriter, r *http.Request) {
+
+        variable, _ := template.ParseFiles("connexion.html")
+        result := 3
+        variable.Execute(w, result)
+    })
+}
+
+func handleProfil() {
+	pseudo := "/profil/"
+    http.HandleFunc("/profil/", func(w http.ResponseWriter, r *http.Request) {
+		pseudoPath := r.URL.Path[7:]
+        variable, _ := template.ParseFiles("profil.html")
+        variable.Execute(w, pseudoPath)
+    })
+}
+
 func main() {
-	database.InsertIntoUsers("Amaury", "mail", "mdp", "image")
+	// database.InsertIntoUsers("Amaury", "mail", "mdp", "image")
 	getUsers(database.User{}, []database.User{})
 	cssFile()
 	pictureFile()
