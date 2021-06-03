@@ -33,10 +33,12 @@ header input {
     grid-column: 5;
 }
 
-header #profile-picture {
-    height: 120px;
+header a {
     grid-row: 1;
     grid-column: 10;
+}
+header #profile-picture {
+    height: 100px;
 }
 
 #global{

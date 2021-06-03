@@ -24,7 +24,8 @@ func cssFile() {
 	http.Handle("/accueil.css", cssServer)
 	http.Handle("/accueil-droit.css", cssServer)
 	http.Handle("/accueil-gauche.css", cssServer)
-	http.Handle("/connexion-inscription.css", cssServer)
+	http.Handle("/connexion.css", cssServer)
+	http.Handle("/inscription.css", cssServer)
 }
 
 func pictureFile() {
@@ -46,7 +47,7 @@ func runServer() {
 
 // get Data from the sqlite database and print them int the html page
 func getUsers() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/forum", func(w http.ResponseWriter, r *http.Request) {
 		variable, _ := template.ParseFiles("index.html")
 		database, _ := sql.Open("sqlite3", "./forum.db")
 		rows, _ := database.Query("select * from User")
@@ -62,9 +63,28 @@ func getUsers() {
 		variable.Execute(w, result)
 	})
 }
+func handleConnexion() {
+	http.HandleFunc("/connexion", func(w http.ResponseWriter, r *http.Request) {
+
+		variable, _ := template.ParseFiles("connexion.html")
+		result := 3
+		variable.Execute(w, result)
+	})
+} 
+
+func handleInscription() {
+	http.HandleFunc("/inscription", func(w http.ResponseWriter, r *http.Request) {
+
+		variable, _ := template.ParseFiles("inscription.html")
+		result := 4
+		variable.Execute(w, result)
+	})
+}
 
 func main() {
 	getUsers()
+	handleInscription()
+	handleConnexion()
 	cssFile()
 	pictureFile()
 	runServer()
