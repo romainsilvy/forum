@@ -11,6 +11,11 @@
     overflow-y: scroll;
 }
   
+.visible-flex  {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
 #add-thread #input-add-thread {
     border-width: 0 0 2px;
     background: white;
@@ -31,9 +36,12 @@
     align-items: center;
     border-radius: 10px;
     /* text-align: right; */
-    float: right;
-    margin-top: 0px;
-    height: auto;
+    /* float: right; */
+    padding: 5px;
+}
+
+.hidden {
+    display: none;
 }
 
 /* #global #global-center {
