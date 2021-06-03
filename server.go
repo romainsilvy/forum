@@ -25,11 +25,10 @@ func cssFile() {
 	http.Handle("/global.css", cssServer)
 	http.Handle("/accueil.css", cssServer)
 	http.Handle("/accueil-droit.css", cssServer)
-<<<<<<< HEAD
-=======
 	http.Handle("/monprofil.css", cssServer)
->>>>>>> monprofil
 	http.Handle("/accueil-gauche.css", cssServer)
+	http.Handle("/connexion.css", cssServer)
+	http.Handle("/inscription.css", cssServer)
 }
 
 func pictureFile() {
@@ -69,14 +68,14 @@ func getUsers(oneUser database.User, tabUser []database.User) {
 	})
 }
 
-func monProfil() {
+func monProfil(oneUser database.User, tabUser []database.User) {
 	http.HandleFunc("/monprofil", func(w http.ResponseWriter, r *http.Request) {
 		variable, _ := template.ParseFiles("monprofil.html")
 		database, _ := sql.Open("sqlite3", "./forum.db")
 		rows, _ := database.Query("select * from User")
-		var result []User
+		result := tabUser
 		for rows.Next() {
-			item := User{}
+			item := oneUser
 			err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email)
 			if err2 != nil {
 				panic(err2)
@@ -86,12 +85,30 @@ func monProfil() {
 		variable.Execute(w, result)
 	})
 }
+func handleConnexion() {
+	http.HandleFunc("/connexion", func(w http.ResponseWriter, r *http.Request) {
+
+		variable, _ := template.ParseFiles("connexion.html")
+		result := 3
+		variable.Execute(w, result)
+	})
+}
+
+func handleInscription() {
+	http.HandleFunc("/inscription", func(w http.ResponseWriter, r *http.Request) {
+
+		variable, _ := template.ParseFiles("inscription.html")
+		result := 4
+		variable.Execute(w, result)
+	})
+}
 
 func main() {
 	database.InsertIntoUsers("Amaury", "mail", "mdp", "image")
 	getUsers(database.User{}, []database.User{})
-	monProfil()
-	getUsers()
+	monProfil(database.User{}, []database.User{})
+	handleInscription()
+	handleConnexion()
 	cssFile()
 	pictureFile()
 	runServer()

@@ -33,10 +33,12 @@ header input {
     grid-column: 5;
 }
 
-header #profile-picture {
-    height: 120px;
+header a {
     grid-row: 1;
     grid-column: 10;
+}
+header #profile-picture {
+    height: 100px;
 }
 
 #global{
@@ -45,15 +47,9 @@ header #profile-picture {
     grid-template-rows: 1fr;
     height: calc(100vh - 125px);
     width: 100%;
-<<<<<<< HEAD
     /* background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%); */
 }
 
-=======
-    background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
-    ;
-}
->>>>>>> accueil-gauche
 #global #global-left {
     grid-column: 1;
     grid-row: 1;
