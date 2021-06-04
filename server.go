@@ -19,28 +19,6 @@ import (
 // 	Email     string
 // }
 
-// serveFile makes files available for the website
-func cssFile() {
-	cssServer := http.FileServer(http.Dir("./data/css"))
-	http.Handle("/global.css", cssServer)
-	http.Handle("/accueil.css", cssServer)
-	http.Handle("/accueil-droit.css", cssServer)
-	http.Handle("/monprofil.css", cssServer)
-	http.Handle("/accueil-gauche.css", cssServer)
-	http.Handle("/connexion.css", cssServer)
-	http.Handle("/inscription.css", cssServer)
-}
-
-func pictureFile() {
-	pictureServer := http.FileServer(http.Dir("./data/images"))
-	http.Handle("/logo.png", pictureServer)
-	http.Handle("/profile-picture.png", pictureServer)
-	http.Handle("/follow.png", pictureServer)
-	http.Handle("/home.png", pictureServer)
-	http.Handle("/thread.png", pictureServer)
-	http.Handle("/like.png", pictureServer)
-}
-
 //runServer sets the listenandserve port to 8080
 func runServer() {
 	fmt.Println("server is runing")
@@ -80,27 +58,39 @@ func handleConnexion() {
 func handleInscription() {
 	http.HandleFunc("/inscription", func(w http.ResponseWriter, r *http.Request) {
 
-		variable, _ := template.ParseFiles("connexion.html")
+		variable, _ := template.ParseFiles("inscription.html")
 		result := 3
 		variable.Execute(w, result)
 	})
 }
 
-func handleProfil() {
+func handleProfil(oneUser database.User, tabUser []database.User) {
 	http.HandleFunc("/profil/", func(w http.ResponseWriter, r *http.Request) {
-		pseudoPath := r.URL.Path[7:]
 		variable, _ := template.ParseFiles("profil.html")
-		variable.Execute(w, pseudoPath)
+		database, _ := sql.Open("sqlite3", "dataBase/forum.db")
+		rows, _ := database.Query("select * from User")
+		result := tabUser
+		for rows.Next() {
+			item := oneUser
+			err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email, &item.Image)
+			if err2 != nil {
+				panic(err2)
+			}
+			result = append(result, item)
+		}
+		variable.Execute(w, result)
 	})
 }
 
 func main() {
+	fileServer := http.FileServer(http.Dir("./data"))
+	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
 	// database.InsertIntoUsers("Amaury", "mail", "mdp", "image")
 	getUsers(database.User{}, []database.User{})
 	handleInscription()
 	handleConnexion()
-	handleProfil()
-	cssFile()
-	pictureFile()
+	handleProfil(database.User{}, []database.User{})
+	// cssFile()
+	// pictureFile()
 	runServer()
 }
