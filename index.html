@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/static/css/accueil-droit.css">
     <link rel="stylesheet" type="text/css" href="/static/css/accueil-gauche.css">
-    <!-- <link rel="stylesheet" type="text/css" href="connexion.css"> -->
+    <link rel="stylesheet" type="text/css" href="/static/css/connexion.css">
     <title>Cham Nation</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/static/css/global.css">
@@ -13,23 +13,23 @@
 
 <body>
     <header>
-        <img id="logo" src="/static/images/logo.png">
+        <img id="logo" src="logo.png">
         <input type="search">
-        <a href="forum/inscription.html"><img id="profile-picture" src="/static/images/profile-picture.png"></a> 
+        <img id="profile-picture" src="profile-picture.png"> 
     </header>
 
     <div id="global">
         <div class="global-item" id="global-left">
             <div class="item-left item">
-                <img id="home" src="/static/images/home.png">
+                <img id="home" src="home.png">
                 <p>Accueil</p>
             </div>
             <div class="item-left" id="item">
-                <img id="home" src="/static/images/thread.png">
+                <img id="home" src="thread.png">
                 <p>Mes threads</p>
             </div>
             <div class="item-left" id="item">
-                <img id="home" src="/static/images/follow.png">
+                <img id="home" src="follow.png">
                 <p>Suivis</p>
             </div>
             <div id="cat">
@@ -91,7 +91,7 @@
             </div>
         </div>
         <div class="global-item" id="global-right">
-            <img id="profile-picture" src="/static/images/profile-picture.png">
+            <img id="profile-picture" src="profile-picture.png">
             <div class="txt">
                 <h2>Amaury</h2>
                 <div  class="bannerSubtitle">
@@ -105,6 +105,65 @@
             </div>
         </div>
     </div>
+
+    <div id="pop-up"></div>
+    <form id="connexion" class="box" action="" methode="post">
+        <h1>Se connecter</h1>
+        <input type="text" name="" placeholder="Nom d'utilisateur" required="required"/>
+        <input type="password" name="" placeholder="Mot de passe" required="required"/>
+        <div class="option_div">
+            <div class="check_box">
+                <input type="checkbox">
+                <span>Se rappeler de moi</span>
+            </div>
+            <div class="forget">
+                <a href="">Mot de passe oublié?</a>
+            </div>
+        </div>
+        <div class="input_box button">
+            <input type="submit" value="Connexion">
+        </div>
+        <div class="sign_up">
+            Pas de compte ? <span id="sInscrire">S'inscrire</span>
+        </div>
+    </form>
+
+    <form id="inscription" class="box" action="" methode="post">
+        <h1>Inscription</h1>
+        <input type="text" name="" placeholder="Pseudo" required="required"/>
+        <input type="email" id="email" name="" placeholder="Email" required="required"/>
+        <input type="email" id="email" name="" placeholder="Confirmer l'email" required="required"/>
+        <input type="password" name="" placeholder="Mot de passe" required="required"/>
+        <input type="password" name="" placeholder="Confirmer Mot de passe" required="required"/>
+        <div class="option_div">
+            <div class="check_box">
+                <input type="checkbox">
+                <span>Se rappeler de moi</span>
+            </div>
+        </div>
+            <div class="input_box button">
+                <input type="submit" value="Créer un compte">
+            </div>
+    </form>
     
+    <script>
+        document.querySelector('#profile-picture').addEventListener('click', ()=>{
+            document.querySelector('#pop-up').classList.add("connexion-background")
+            document.querySelector('#connexion').classList.add("popUp")
+
+        })
+        document.querySelector('#sInscrire').addEventListener('click', ()=>{
+            // document.querySelector('#pop-up').classList.("connexion-background")
+            document.querySelector('#connexion').classList.remove("popUp")
+            document.querySelector('#inscription').classList.add("popUp")
+        })
+
+        document.querySelector('#pop-up').addEventListener('click', ()=>{
+            document.querySelector('#pop-up').classList.remove("connexion-background")
+            document.querySelector('#connexion').classList.remove("popUp")
+            document.querySelector('#inscription').classList.remove("popUp")
+
+        })
+    </script>
 </body>
 </html>
