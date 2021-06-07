@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/static/css/global.css">
     <link rel="stylesheet" type="text/css" href="/static/css/accueil.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -74,7 +75,11 @@
                 </div>
             </div>
             <div>
-                <img id="like-picture" src="/static/images/like.png">
+                10000 <i id="like" class="glyphicon glyphicon-thumbs-up"></i>
+                {{range .}}
+                <li>{{.User_name}}</li>
+                {{end}} 
+                <i id="like" class="glyphicon glyphicon-thumbs-down"></i>
             </div>
         </div>
     </div>
