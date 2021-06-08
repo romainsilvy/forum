@@ -62,7 +62,11 @@ func hanldeAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 			}
 			if seConnecter != "" {
 				if connexionUser == item.User_name && connexionPassword == item.Password {
-					fmt.Println("ez")
+					sql_readall := `
+					"SELECT id FROM User WHERE user_name = Louis
+						`
+					database.Query(sql_readall)
+					fmt.Println(database.Query(sql_readall))
 				} else {
 					fmt.Println("L")
 				}
