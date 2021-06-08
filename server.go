@@ -28,8 +28,7 @@ func runServer() {
 	}
 }
 
-// get Data from the sqlite database and print them int the html page
-func getIncrisption(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
+func hanldeAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		variable, _ := template.ParseFiles("index.html")
 		http.SetCookie(w, &http.Cookie{
@@ -37,7 +36,6 @@ func getIncrisption(oneUser databaseTools.User, tabUser []databaseTools.User, da
 			Value: "some value",
 			Path:  "/",
 		})
-		fmt.Println("COOKIE CREATED")
 
 		if r.FormValue("inscriptionPseudo") != "" {
 			inscriptionPseudo := r.FormValue("inscriptionPseudo")
@@ -50,6 +48,10 @@ func getIncrisption(oneUser databaseTools.User, tabUser []databaseTools.User, da
 				databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, inscriptionPassword, "test")
 			}
 		}
+
+		connexionUser := r.FormValue("connexionUser")
+		connexionPassword := r.FormValue("connexionPassword")
+		seConnecter := r.FormValue("connexionUser")
 		rows, _ := database.Query("select * from User")
 		result := tabUser
 		for rows.Next() {
@@ -58,11 +60,80 @@ func getIncrisption(oneUser databaseTools.User, tabUser []databaseTools.User, da
 			if err2 != nil {
 				panic(err2)
 			}
+			if seConnecter != "" {
+				if connexionUser == item.User_name && connexionPassword == item.Password {
+					fmt.Println("ez")
+				} else {
+					fmt.Println("L")
+				}
+			}
 			result = append(result, item)
 		}
 		variable.Execute(w, result)
 	})
 }
+
+// get Data from the sqlite database and print them int the html page
+// func getIncrisption(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
+// 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+// 		variable, _ := template.ParseFiles("index.html")
+// 		http.SetCookie(w, &http.Cookie{
+// 			Name:  "my-cookie",
+// 			Value: "some value",
+// 			Path:  "/",
+// 		})
+// 		fmt.Println("COOKIE CREATED")
+
+// 		if r.FormValue("inscriptionPseudo") != "" {
+// 			inscriptionPseudo := r.FormValue("inscriptionPseudo")
+// 			inscriptionEmail := r.FormValue("inscriptionEmail")
+// 			inscriptionEmailConfirm := r.FormValue("inscriptionEmailConfirm")
+// 			inscriptionPassword := r.FormValue("inscriptionPassword")
+// 			inscriptionPasswordConfirm := r.FormValue("inscriptionPasswordConfirm")
+
+// 			if inscriptionEmail == inscriptionEmailConfirm && inscriptionPassword == inscriptionPasswordConfirm {
+// 				databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, inscriptionPassword, "test")
+// 			}
+// 		}
+// 		rows, _ := database.Query("select * from User")
+// 		result := tabUser
+// 		for rows.Next() {
+// 			item := oneUser
+// 			err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email, &item.Image)
+// 			if err2 != nil {
+// 				panic(err2)
+// 			}
+// 			result = append(result, item)
+// 		}
+// 		variable.Execute(w, result)
+// 	})
+// }
+
+// func getConnexion(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
+// 	http.HandleFunc("/connexion", func(w http.ResponseWriter, r *http.Request) {
+// 		variable, _ := template.ParseFiles("index.html")
+
+// 		connexionUser := r.FormValue("connexionUser")
+// 		// connexionPassword := r.FormValue("connexionPassword")
+
+// 		rows, _ := database.Query("select * from User")
+// 		result := tabUser
+// 		for rows.Next() {
+// 			item := oneUser
+// 			err2 := rows.Scan(&item.User_name)
+// 			if err2 != nil {
+// 				panic(err2)
+// 			}
+// 			if connexionUser == item.User_name {
+// 				fmt.Println("c est good")
+// 			} else {
+// 				fmt.Println("marche pas")
+// 			}
+// 			result = append(result, item)
+// 		}
+// 		variable.Execute(w, result)
+// 	})
+// }
 
 func handleProfil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
 	http.HandleFunc("/profil/", func(w http.ResponseWriter, r *http.Request) {
@@ -91,32 +162,14 @@ func set(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintln(w, "in chrome go to: dev tools / application / cookies")
 }
 
-func handleConnexion() {
-	http.HandleFunc("/connexion", func(w http.ResponseWriter, r *http.Request) {
-
-		variable, _ := template.ParseFiles("connexion.html")
-		result := 3
-		variable.Execute(w, result)
-	})
-}
-
-func handleInscription() {
-	http.HandleFunc("/inscription", func(w http.ResponseWriter, r *http.Request) {
-
-		variable, _ := template.ParseFiles("inscription.html")
-		result := 3
-		variable.Execute(w, result)
-	})
-}
-
 func main() {
 	databaseOpened, _ := sql.Open("sqlite3", "dataBase/forum.db")
 	fileServer := http.FileServer(http.Dir("./data"))
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
-	handleConnexion()
-	handleInscription()
-	getIncrisption(databaseTools.User{}, []databaseTools.User{}, databaseOpened)
+	hanldeAccueil(databaseTools.User{}, []databaseTools.User{}, databaseOpened)
+	// getIncrisption(databaseTools.User{}, []databaseTools.User{}, databaseOpened)
 	handleProfil(databaseTools.User{}, []databaseTools.User{}, databaseOpened)
+	// getConnexion(databaseTools.User{}, []databaseTools.User{}, databaseOpened)
 	// mux.HandleFunc("/createcookie", CreateCookie)
 	// http.ListenAndServe(":8080", mux)
 	// getUsers(databaseTools.User{}, []databaseTools.User{})
