@@ -21,18 +21,6 @@ import (
 // 	Email     string
 // }
 
-
-
-func InsertIntoDb(user_name string, password string) {
-	db := database.InitDatabase("dataBase/forum.db")
-	_, err := db.Exec(`INSERT INTO User (user_name, password) VALUES (?, ?)`, user_name, password)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-}
-
-
 //runServer sets the listenandserve port to 8080
 func runServer() {
 	fmt.Println("server is runing")
@@ -42,7 +30,7 @@ func runServer() {
 }
 
 // get Data from the sqlite database and print them int the html page
-func getUsers(oneUser database.User, tabUser []database.User) {
+func getUsers(oneUser database.User, tabUser []database.User, databaseOpened) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
 
@@ -54,15 +42,18 @@ func getUsers(oneUser database.User, tabUser []database.User) {
    		fmt.Println("COOKIE CREATED")
 
 		variable, _ := template.ParseFiles("index.html")
-		database, _ := sql.Open("sqlite3", "dataBase/forum.db")
-		rows, _ := database.Query("select * from User")
+		rows, _ := databaseOpened.Query("select * from User")
 		result := tabUser
 
-		nameUser := r.FormValue("inputNameUser")
-		passwordUser := r.FormValue("inputPasswordUser")
-		InsertIntoDb(nameUser, passwordUser)
-		fmt.Println(nameUser)
-		fmt.Println(passwordUser)
+		fmt.Println(r.FormValue("inscriptionPseudo"))
+		fmt.Println(r.FormValue("inscriptionEmail"))
+		fmt.Println(r.FormValue("inscriptionEmailConfirm"))
+		fmt.Println(r.FormValue("inscriptionPassword"))
+		fmt.Println(r.FormValue("inscriptionPasswordConfirm"))
+
+		database.InsertIntoUsers("Amaury", "mail", "mdp", "image")
+
+
 
 
 		for rows.Next() {
@@ -99,7 +90,6 @@ func handleInscription() {
 func handleProfil(oneUser database.User, tabUser []database.User) {
 	http.HandleFunc("/profil/", func(w http.ResponseWriter, r *http.Request) {
 		variable, _ := template.ParseFiles("profil.html")
-		database, _ := sql.Open("sqlite3", "dataBase/forum.db")
 		rows, _ := database.Query("select * from User")
 		result := tabUser
 		for rows.Next() {
@@ -176,11 +166,11 @@ func set(w http.ResponseWriter, req *http.Request) {
 
 
 func main() {
-	// mux := http.NewServeMux()
+	databaseOpened, _ := sql.Open("sqlite3", "dataBase/forum.db")
 	fileServer := http.FileServer(http.Dir("./data"))
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
-	// database.InsertIntoUsers("Amaury", "mail", "mdp", "image")
-	getUsers(database.User{}, []database.User{})
+	database.InsertIntoUsers("Amaury", "mail", "mdp", "image")
+	getUsers(database.User{}, []database.User{}, databaseOpened)
 	handleInscription()
 	handleConnexion()
 	handleProfil(database.User{}, []database.User{})

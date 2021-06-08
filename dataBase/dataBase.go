@@ -61,7 +61,7 @@ type Category struct {
 	Cat_name string
 }
 
-func InitDatabase(database string) *sql.DB {
+func initDatabase(database string) *sql.DB {
 	db, err := sql.Open("sqlite3", database)
 	if err != nil {
 		log.Fatal(err)
@@ -80,23 +80,14 @@ func InitDatabase(database string) *sql.DB {
 	return db
 }
 
-// func InsertIntoUsers(user_name string, email string, password string, image string) {
-// 	db := initDatabase("dataBase/forum.db")
-// 	_, err := db.Exec(`INSERT INTO User (user_name, email, password, image) VALUES (?, ?, ?, ?)`, user_name, email, password, image)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	defer db.Close()
-// }
-
-// func InsertIntoDb(user_name string, password string) {
-// 	db := initDatabase("dataBase/forum.db")
-// 	_, err := db.Exec(`INSERT INTO User (user_name, password) VALUES (?, ?)`, user_name, password)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	defer db.Close()
-// }
+func InsertIntoUsers(user_name string, email string, password string, image string) {
+	db := initDatabase("dataBase/forum.db")
+	_, err := db.Exec(`INSERT INTO User (user_name, email, password, image) VALUES (?, ?, ?, ?)`, user_name, email, password, image)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+}
 
 // func main() {
 // 	db := initDatabase("test.db")
