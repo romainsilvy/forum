@@ -64,8 +64,17 @@ func handleInscription() {
 	})
 }
 
+func handleVoirprofil() {
+	http.HandleFunc("/voirprofil", func(w http.ResponseWriter, r *http.Request) {
+
+		variable, _ := template.ParseFiles("voir-profil.html")
+		result := 3
+		variable.Execute(w, result)
+	})
+}
+
 func handleProfil(oneUser database.User, tabUser []database.User) {
-	http.HandleFunc("/profil/", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/profil", func(w http.ResponseWriter, r *http.Request) {
 		variable, _ := template.ParseFiles("profil.html")
 		database, _ := sql.Open("sqlite3", "dataBase/forum.db")
 		rows, _ := database.Query("select * from User")
@@ -89,6 +98,7 @@ func main() {
 	getUsers(database.User{}, []database.User{})
 	handleInscription()
 	handleConnexion()
+	handleVoirprofil()
 	handleProfil(database.User{}, []database.User{})
 	// cssFile()
 	// pictureFile()
