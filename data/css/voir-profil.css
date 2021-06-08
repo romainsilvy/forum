@@ -29,6 +29,13 @@
     grid-column: 1;
     text-align: center;
     border-right-style: solid;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: red;
+    top: 0px;
+    /* vertical-align: center; */
 }
 
 .voirprofil .statthread {
@@ -37,4 +44,9 @@
     justify-self: center;
     align-content: center;
     line-height: 30px;
+}
+
+.voirprofil #profile-picture {
+    width: 100%;
+    height: 100%;
 }
