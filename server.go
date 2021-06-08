@@ -61,32 +61,8 @@ func getIncrisption(oneUser databaseTools.User, tabUser []databaseTools.User, da
 			result = append(result, item)
 		}
 		variable.Execute(w, result)
-
-		// fmt.Println(r.FormValue("inscriptionPseudo"))
-		// fmt.Println(r.FormValue("inscriptionEmail"))
-		// fmt.Println(r.FormValue("inscriptionEmailConfirm"))
-		// fmt.Println(r.FormValue("inscriptionPassword"))
-		// fmt.Println(r.FormValue("inscriptionPasswordConfirm"))
 	})
 }
-
-// func getUsers(oneUser databaseTools.User, tabUser []databaseTools.User) {
-// 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-// 		variable, _ := template.ParseFiles("index.html")
-// 		database, _ := sql.Open("sqlite3", "dataBase/forum.db")
-// 		rows, _ := database.Query("select * from User")
-// 		result := tabUser
-// 		for rows.Next() {
-// 			item := oneUser
-// 			err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email, &item.Image)
-// 			if err2 != nil {
-// 				panic(err2)
-// 			}
-// 			result = append(result, item)
-// 		}
-// 		variable.Execute(w, result)
-// 	})
-// }
 
 func handleProfil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
 	http.HandleFunc("/profil/", func(w http.ResponseWriter, r *http.Request) {
