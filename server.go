@@ -6,12 +6,11 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	database "test/dataBase"
+	databaseTools "test/dataBase"
 
 	// "forum/dataBase/database"
 	_ "github.com/mattn/go-sqlite3"
-
-    // "github.com/gorilla/sessions"
+	// "github.com/gorilla/sessions"
 )
 
 // type User struct {
@@ -30,64 +29,37 @@ func runServer() {
 }
 
 // get Data from the sqlite database and print them int the html page
-func getUsers(oneUser database.User, tabUser []database.User, databaseOpened) {
+func getIncrisption(database *sql.DB) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-
-
-		http.SetCookie(w, &http.Cookie{
-			Name:  "my-cookie", 
-			Value: "some value",  
-			Path: "/",
-   		})
-   		fmt.Println("COOKIE CREATED")
-
 		variable, _ := template.ParseFiles("index.html")
-		rows, _ := databaseOpened.Query("select * from User")
-		result := tabUser
+		http.SetCookie(w, &http.Cookie{
+			Name:  "my-cookie",
+			Value: "some value",
+			Path:  "/",
+		})
+		fmt.Println("COOKIE CREATED")
 
-		fmt.Println(r.FormValue("inscriptionPseudo"))
-		fmt.Println(r.FormValue("inscriptionEmail"))
-		fmt.Println(r.FormValue("inscriptionEmailConfirm"))
-		fmt.Println(r.FormValue("inscriptionPassword"))
-		fmt.Println(r.FormValue("inscriptionPasswordConfirm"))
+		inscriptionPseudo := r.FormValue("inscriptionPseudo")
+		inscriptionEmail := r.FormValue("inscriptionEmail")
+		inscriptionEmailConfirm := r.FormValue("inscriptionEmailConfirm")
+		inscriptionPassword := r.FormValue("inscriptionPassword")
+		inscriptionPasswordConfirm := r.FormValue("inscriptionPasswordConfirm")
 
-		database.InsertIntoUsers("Amaury", "mail", "mdp", "image")
-
-
-
-
-		for rows.Next() {
-			item := oneUser
-			err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email, &item.Image)
-			if err2 != nil {
-				panic(err2)
-			}
-			result = append(result, item)
+		if inscriptionEmail == inscriptionEmailConfirm && inscriptionPassword == inscriptionPasswordConfirm {
+			databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, inscriptionPassword, "test")
 		}
-		variable.Execute(w, result)
+
+		// fmt.Println(r.FormValue("inscriptionPseudo"))
+		// fmt.Println(r.FormValue("inscriptionEmail"))
+		// fmt.Println(r.FormValue("inscriptionEmailConfirm"))
+		// fmt.Println(r.FormValue("inscriptionPassword"))
+		// fmt.Println(r.FormValue("inscriptionPasswordConfirm"))
+
+		variable.Execute(w, database)
 	})
 }
 
-
-func handleConnexion() {
-	http.HandleFunc("/connexion", func(w http.ResponseWriter, r *http.Request) {
-
-		variable, _ := template.ParseFiles("connexion.html")
-		result := 3
-		variable.Execute(w, result)
-	})
-}
-
-func handleInscription() {
-	http.HandleFunc("/inscription", func(w http.ResponseWriter, r *http.Request) {
-
-		variable, _ := template.ParseFiles("inscription.html")
-		result := 3
-		variable.Execute(w, result)
-	})
-}
-
-func handleProfil(oneUser database.User, tabUser []database.User) {
+func handleProfil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
 	http.HandleFunc("/profil/", func(w http.ResponseWriter, r *http.Request) {
 		variable, _ := template.ParseFiles("profil.html")
 		rows, _ := database.Query("select * from User")
@@ -104,21 +76,26 @@ func handleProfil(oneUser database.User, tabUser []database.User) {
 	})
 }
 
-
-
-
-
-
-
-
 func set(w http.ResponseWriter, req *http.Request) {
 	http.SetCookie(w, &http.Cookie{
-			 Name:  "my-cookie", 
-			 Value: "some value",  
-			 Path: "/",
+		Name:  "my-cookie",
+		Value: "some value",
+		Path:  "/",
 	})
 	fmt.Fprintln(w, "COOKIE WRITTEN - CHECK YOUR BROWSER")
 	fmt.Fprintln(w, "in chrome go to: dev tools / application / cookies")
+}
+
+func main() {
+	databaseOpened, _ := sql.Open("sqlite3", "dataBase/forum.db")
+	fileServer := http.FileServer(http.Dir("./data"))
+	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
+
+	getIncrisption(databaseOpened)
+	handleProfil(databaseTools.User{}, []databaseTools.User{}, databaseOpened)
+	// mux.HandleFunc("/createcookie", CreateCookie)
+	// http.ListenAndServe(":8080", mux)
+	runServer()
 }
 
 // func secret(w http.ResponseWriter, r *http.Request) {
@@ -158,23 +135,14 @@ func set(w http.ResponseWriter, req *http.Request) {
 //     http.ListenAndServe(":8080", nil)
 // }
 
+//LIRE BDD ET ENVOYER
 
-
-
-
-
-
-
-func main() {
-	databaseOpened, _ := sql.Open("sqlite3", "dataBase/forum.db")
-	fileServer := http.FileServer(http.Dir("./data"))
-	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
-	database.InsertIntoUsers("Amaury", "mail", "mdp", "image")
-	getUsers(database.User{}, []database.User{}, databaseOpened)
-	handleInscription()
-	handleConnexion()
-	handleProfil(database.User{}, []database.User{})
-	// mux.HandleFunc("/createcookie", CreateCookie)
-	// http.ListenAndServe(":8080", mux)
-	runServer()
-}
+// for rows.Next() {
+// 	item := oneUser
+// 	err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email, &item.Image)
+// 	if err2 != nil {
+// 		panic(err2)
+// 	}
+// 	result = append(result, item)
+// }
+// variable.Execute(w, result)
