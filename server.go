@@ -39,14 +39,16 @@ func getIncrisption(database *sql.DB) {
 		})
 		fmt.Println("COOKIE CREATED")
 
-		inscriptionPseudo := r.FormValue("inscriptionPseudo")
-		inscriptionEmail := r.FormValue("inscriptionEmail")
-		inscriptionEmailConfirm := r.FormValue("inscriptionEmailConfirm")
-		inscriptionPassword := r.FormValue("inscriptionPassword")
-		inscriptionPasswordConfirm := r.FormValue("inscriptionPasswordConfirm")
+		if r.FormValue("createAccount") == "envoyer" {
+			inscriptionPseudo := r.FormValue("inscriptionPseudo")
+			inscriptionEmail := r.FormValue("inscriptionEmail")
+			inscriptionEmailConfirm := r.FormValue("inscriptionEmailConfirm")
+			inscriptionPassword := r.FormValue("inscriptionPassword")
+			inscriptionPasswordConfirm := r.FormValue("inscriptionPasswordConfirm")
 
-		if inscriptionEmail == inscriptionEmailConfirm && inscriptionPassword == inscriptionPasswordConfirm {
-			databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, inscriptionPassword, "test")
+			if inscriptionEmail == inscriptionEmailConfirm && inscriptionPassword == inscriptionPasswordConfirm {
+				databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, inscriptionPassword, "test")
+			}
 		}
 
 		// fmt.Println(r.FormValue("inscriptionPseudo"))
@@ -92,7 +94,7 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
 
 	getIncrisption(databaseOpened)
-	handleProfil(databaseTools.User{}, []databaseTools.User{}, databaseOpened)
+	// handleProfil(databaseTools.User{}, []databaseTools.User{}, databaseOpened)
 	// mux.HandleFunc("/createcookie", CreateCookie)
 	// http.ListenAndServe(":8080", mux)
 	runServer()
