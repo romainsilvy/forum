@@ -1,5 +1,6 @@
 package main
 
+// idée a faire : mettre la base de donnée dans sql web et faire la commande ligne 69 ^^ INSHALLAH CA MARCHE
 import (
 	"database/sql"
 	"fmt"
@@ -54,6 +55,7 @@ func hanldeAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 		seConnecter := r.FormValue("connexionUser")
 		rows, _ := database.Query("select * from User")
 		result := tabUser
+		aprint := tabUser
 		for rows.Next() {
 			item := oneUser
 			err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email, &item.Image)
@@ -63,10 +65,21 @@ func hanldeAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 			if seConnecter != "" {
 				if connexionUser == item.User_name && connexionPassword == item.Password {
 					sql_readall := `
-					"SELECT id FROM User WHERE user_name = Louis
+					SELECT id_user FROM User WHERE user_name = Louis
 						`
 					database.Query(sql_readall)
-					fmt.Println(database.Query(sql_readall))
+					row, err := database.Query(sql_readall)
+					if err != nil {
+						panic(err)
+					}
+					for row.Next() {
+						err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email)
+						if err2 != nil {
+							panic(err2)
+						}
+						aprint = append(result, item)
+					}
+					fmt.Println(aprint)
 				} else {
 					fmt.Println("L")
 				}
