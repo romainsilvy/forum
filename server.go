@@ -50,42 +50,48 @@ func hanldeAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 			}
 		}
 
-		connexionUser := r.FormValue("connexionUser")
-		connexionPassword := r.FormValue("connexionPassword")
-		seConnecter := r.FormValue("connexionUser")
+		var name string
+		err = db.QueryRow("SELECT id_user FROM User WHERE user_name = "Louis" ").Scan(&item.User_name)
+		if err != nil {
+    	log.Fatal(err)
+	}
+		fmt.Println(name)
+		// connexionUser := r.FormValue("connexionUser")
+		// connexionPassword := r.FormValue("connexionPassword")
+		// seConnecter := r.FormValue("connexionUser")
 		rows, _ := database.Query("select * from User")
 		result := tabUser
-		aprint := tabUser
+		// aprint := tabUser
 		for rows.Next() {
 			item := oneUser
 			err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email, &item.Image)
 			if err2 != nil {
 				panic(err2)
 			}
-			if seConnecter != "" {
-				if connexionUser == item.User_name && connexionPassword == item.Password {
-					sql_readall := `
-			 		SELECT id_user FROM User WHERE user_name = "Louis"
-			 			`
-					database.Query(sql_readall)
-					fmt.Println(database.Query(sql_readall))
-					row, err := database.Query(sql_readall)
-					if err != nil {
-						panic(err)
-					}
-					for row.Next() {
-						err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email, &item.Image)
-						if err2 != nil {
-							panic(err2)
-						}
-						aprint = append(result, item)
-					}
-					fmt.Println(aprint)
-					// 	} else {
-					// 		fmt.Println("L")
-				}
-			}
-			result = append(result, item)
+			// if seConnecter != "" {
+			// 	if connexionUser == item.User_name && connexionPassword == item.Password {
+			// 		sql_readall := `
+			//  		SELECT id_user FROM User WHERE user_name = "Louis"
+			//  			`
+			// 		database.Query(sql_readall)
+			// 		fmt.Println(database.Query(sql_readall))
+			// 		row, err := database.Query(sql_readall)
+			// 		if err != nil {
+			// 			panic(err)
+			// 		}
+			// 		for row.Next() {
+			// 			err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email, &item.Image)
+			// 			if err2 != nil {
+			// 				panic(err2)
+			// 			}
+			// 			aprint = append(result, item)
+			// 		}
+			// 		fmt.Println(aprint)
+			// 		// 	} else {
+			// 		// 		fmt.Println("L")
+			// 	}
+			// }
+			// result = append(result, item)
 		}
 		variable.Execute(w, result)
 	})
