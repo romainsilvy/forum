@@ -10,8 +10,9 @@ import (
 	databaseTools "test/dataBase"
 
 	// "forum/dataBase/database"
+
+	"github.com/gorilla/sessions"
 	_ "github.com/mattn/go-sqlite3"
-	// "github.com/gorilla/sessions"
 )
 
 // type User struct {
@@ -29,7 +30,7 @@ func runServer() {
 	}
 }
 
-func hanldeAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
+func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		variable, _ := template.ParseFiles("index.html")
 		http.SetCookie(w, &http.Cookie{
@@ -58,17 +59,37 @@ func hanldeAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 			if checkIfExist {
 				userPassword := singleRowQuerry(database, "password", "User", "user_name", connexionUser)
 				if userPassword != "notExist" {
-					if userPassword == connexionPassword  {
+					if userPassword == connexionPassword {
 						fmt.Println("tu est co chacal")
+					} else {
+						fmt.Println("mauvais mdp chacal")
 					}
 				}
 			} else {
-				fmt.Println("loupé chacal")
-			}	
+				fmt.Println("mauvais pseudo chacal")
+			}
 		}
-		
+
 		variable.Execute(w, tabUser)
 	})
+}
+
+var (
+	key   = []byte("super-secret-key")
+	store = sessions.NewCookieStore(key)
+)
+
+func secret(w http.ResponseWriter, r *http.Request) {
+	session, _ := store.Get(r, "cookie-name")
+
+	// Check if user is authenticated
+	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
+
+	// Print secret message
+	fmt.Fprintln(w, "The cake is a lie!")
 }
 
 // get Data from the sqlite database and print them int the html page
@@ -174,7 +195,6 @@ func singleRowQuerry(db *sql.DB, rowName string, tableName string, comparator1 s
 	return toReturn
 }
 
-
 func checkIfExist(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 string) bool {
 	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
 	if err != nil {
@@ -193,8 +213,8 @@ func main() {
 	databaseOpened, _ := sql.Open("sqlite3", "dataBase/forum.db")
 	fileServer := http.FileServer(http.Dir("./data"))
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
-	
-	hanldeAccueil(databaseTools.User{}, []databaseTools.User{}, databaseOpened)
+
+	handleAccueil(databaseTools.User{}, []databaseTools.User{}, databaseOpened)
 	// handleProfil(databaseTools.User{}, []databaseTools.User{}, databaseOpened)
 	runServer()
 }
