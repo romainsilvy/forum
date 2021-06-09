@@ -50,50 +50,24 @@ func hanldeAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 			}
 		}
 
-		var name string
-		err = db.QueryRow("SELECT id_user FROM User WHERE user_name = "Louis" ").Scan(&item.User_name)
-		if err != nil {
-    	log.Fatal(err)
-	}
-		fmt.Println(name)
-		// connexionUser := r.FormValue("connexionUser")
-		// connexionPassword := r.FormValue("connexionPassword")
-		// seConnecter := r.FormValue("connexionUser")
-		rows, _ := database.Query("select * from User")
-		result := tabUser
-		// aprint := tabUser
-		for rows.Next() {
-			item := oneUser
-			err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email, &item.Image)
-			if err2 != nil {
-				panic(err2)
-			}
-			// if seConnecter != "" {
-			// 	if connexionUser == item.User_name && connexionPassword == item.Password {
-			// 		sql_readall := `
-			//  		SELECT id_user FROM User WHERE user_name = "Louis"
-			//  			`
-			// 		database.Query(sql_readall)
-			// 		fmt.Println(database.Query(sql_readall))
-			// 		row, err := database.Query(sql_readall)
-			// 		if err != nil {
-			// 			panic(err)
-			// 		}
-			// 		for row.Next() {
-			// 			err2 := rows.Scan(&item.Id_user, &item.User_name, &item.Password, &item.Email, &item.Image)
-			// 			if err2 != nil {
-			// 				panic(err2)
-			// 			}
-			// 			aprint = append(result, item)
-			// 		}
-			// 		fmt.Println(aprint)
-			// 		// 	} else {
-			// 		// 		fmt.Println("L")
-			// 	}
-			// }
-			// result = append(result, item)
+		if r.FormValue("connect") != "" {
+			connexionUser := r.FormValue("connexionUser")
+			connexionPassword := r.FormValue("connexionPassword")
+			checkIfExist := checkIfExist(database, "password", "User", "user_name", connexionUser)
+
+			if checkIfExist {
+				userPassword := singleRowQuerry(database, "password", "User", "user_name", connexionUser)
+				if userPassword != "notExist" {
+					if userPassword == connexionPassword  {
+						fmt.Println("tu est co chacal")
+					}
+				}
+			} else {
+				fmt.Println("loupé chacal")
+			}	
 		}
-		variable.Execute(w, result)
+		
+		variable.Execute(w, tabUser)
 	})
 }
 
@@ -186,17 +160,42 @@ func set(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintln(w, "in chrome go to: dev tools / application / cookies")
 }
 
+func singleRowQuerry(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 string) string {
+	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	// defer stmt.Close()
+	var toReturn string
+	err = stmt.QueryRow(comparator2).Scan(&toReturn)
+	if err != nil {
+		return "notExist"
+	}
+	return toReturn
+}
+
+
+func checkIfExist(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 string) bool {
+	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	// defer stmt.Close()
+	var toReturn string
+	err = stmt.QueryRow(comparator2).Scan(&toReturn)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
 func main() {
 	databaseOpened, _ := sql.Open("sqlite3", "dataBase/forum.db")
 	fileServer := http.FileServer(http.Dir("./data"))
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
+	
 	hanldeAccueil(databaseTools.User{}, []databaseTools.User{}, databaseOpened)
-	// getIncrisption(databaseTools.User{}, []databaseTools.User{}, databaseOpened)
-	handleProfil(databaseTools.User{}, []databaseTools.User{}, databaseOpened)
-	// getConnexion(databaseTools.User{}, []databaseTools.User{}, databaseOpened)
-	// mux.HandleFunc("/createcookie", CreateCookie)
-	// http.ListenAndServe(":8080", mux)
-	// getUsers(databaseTools.User{}, []databaseTools.User{})
+	// handleProfil(databaseTools.User{}, []databaseTools.User{}, databaseOpened)
 	runServer()
 }
 
