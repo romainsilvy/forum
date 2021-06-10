@@ -89,6 +89,39 @@ func InsertIntoUsers(user_name string, email string, password string, image stri
 	defer db.Close()
 }
 
+
+//singleRowQuerry retrieve a value in the db with a where comparator
+func SingleRowQuerry(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 string) string {
+	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var toReturn string
+	err = stmt.QueryRow(comparator2).Scan(&toReturn)
+	if err != nil {
+		return "notExist"
+	}
+	return toReturn
+}
+
+//checkIfExist return true or false depending if the comparator 1 passed as parameter exist in the db 
+func CheckIfExist(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 string) bool {
+	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var toReturn string
+	err = stmt.QueryRow(comparator2).Scan(&toReturn)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			log.Fatal(err)
+		} else {
+			return false
+		}
+	}
+	return true
+}
+
 // func main() {
 // 	db := initDatabase("test.db")
 // 	InsertIntoUsers(db, "Louis", "mail", "mdp", "image")
