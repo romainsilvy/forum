@@ -12,7 +12,6 @@ import (
 	// "forum/dataBase/database"
 
 	"github.com/gorilla/sessions"
-	_ "github.com/gorilla/sessions"
 	_ "github.com/mattn/go-sqlite3"
 )
 
