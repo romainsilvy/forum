@@ -144,15 +144,14 @@ div #profile-picture {
     margin-left: 50px;
 }
 
-div #like-picture{
-    height: 50px;
-    align-items: left;
-    display: flex;
+div #like{
+    text-align: right;
+    align-items: flex-start;
 }
 
 #parametre {
     border: none;
-    background: #593C8F;
+    background: #2d2836;
     color: white;
     font-size: 2em;
     display: flex;
