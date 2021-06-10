@@ -147,22 +147,28 @@
     </form>
     
     <script>
+
         document.querySelector('#profile-picture').addEventListener('click', ()=>{
-            document.querySelector('#pop-up').classList.add("connexion-background")
-            document.querySelector('#connexion').classList.add("popUp")
 
-        })
-        document.querySelector('#sInscrire').addEventListener('click', ()=>{
-            document.querySelector('#connexion').classList.remove("popUp")
-            document.querySelector('#inscription').classList.add("popUp")
-        })
+            if (document.cookie.includes("auth")) {
+                window.location.replace('http://localhost:8080/profil')
+            } else {
 
-        document.querySelector('#pop-up').addEventListener('click', ()=>{
-            document.querySelector('#pop-up').classList.remove("connexion-background")
-            document.querySelector('#connexion').classList.remove("popUp")
-            document.querySelector('#inscription').classList.remove("popUp")
+                document.querySelector('#pop-up').classList.add("connexion-background")
+                document.querySelector('#connexion').classList.add("popUp")
 
-        })
+                document.querySelector('#sInscrire').addEventListener('click', ()=>{
+                    document.querySelector('#connexion').classList.remove("popUp")
+                    document.querySelector('#inscription').classList.add("popUp")
+                })
+
+                document.querySelector('#pop-up').addEventListener('click', ()=>{
+                    document.querySelector('#pop-up').classList.remove("connexion-background")
+                    document.querySelector('#connexion').classList.remove("popUp")
+                    document.querySelector('#inscription').classList.remove("popUp")
+                })
+            }
+        }) 
     </script>
 </body>
 </html>
