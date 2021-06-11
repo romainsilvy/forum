@@ -53,11 +53,11 @@
             <div id="mail" class="box">
                 <h2>Adresse mail</h2>
                 <div>
-                    Mon adresse : exemple@gmail.com
+                    Mon adresse : {{.Email}}
                 </div>
                     <input type="text" placeholder="Nouvelle adresse :" name="name">
                     <input type="text" placeholder="Confirmer l'adresse :" name="name2">
-                    <input type="text" placeholder="Mot de passe :" name="">
+                    <input type="text" placeholder="Mot de passe :" name="password">
                 <div>
                     <button id="button" name="button2">Valider</button>
                 </div>
@@ -71,7 +71,7 @@
             <button id="parametre" type="button">+</button>
             <img id="profile-picture" src="/static/images/profile-picture.png">
             <div class="txt">
-                <h2>Amaury</h2>
+                <h2>{{.User_name}}</h2>
                 <div  class="bannerSubtitle">
                 </div>
             </div>
