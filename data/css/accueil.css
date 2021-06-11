@@ -10,7 +10,7 @@
 #global-center{
     overflow-y: scroll;
 }
-  
+
 #add-thread #input-add-thread {
     border-width: 0 0 2px;
     background: white;
@@ -35,10 +35,3 @@
     margin-top: 0px;
     height: auto;
 }
-
-/* #global #global-center {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-direction: column;
-} */

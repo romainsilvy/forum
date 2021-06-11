@@ -1,64 +1,3 @@
-* {
-    margin: 0;
-    padding: 0;
-    
-}
-
-header {
-    width: 100%;
-    height: 135px;
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: 1fr;
-}
-
-header #logo {
-    grid-row: 1;
-    grid-column: 1;
-    text-align: left;
-    float: left;
-    height: 120px;
-    padding-top: 10px;
-}
-
-header input {
-    grid-row: 1;
-    grid-column: 5;
-}
-
-.item-left {
-    width: 80%;
-    background-color: rgba(238, 238, 238, 0.411);
-    border-radius: 20px;
-    margin-left: auto;
-    margin-right: auto; 
-    padding: 5px;
-    margin: 10px;
-    box-shadow: 0px 8px 24px #7090B0B3;
-    text-align: center;
-}
-.item-left #home {      
-    width : 20px;
-}
-
-
-#cat {
-    width: 80%;
-    height: 60%;
-    margin: 10px;
-    padding: 5px;
-    background-color: rgba(238, 238, 238, 0.411);
-    border-radius: 20px;
-    text-align:center;
-    box-shadow: 0px 8px 24px #7090B0B3;
-}
-
-header #profile-picture {
-    height: 120px;
-    grid-row: 1;
-    grid-column: 10;
-}
-
 div #mdp{
     grid-row: 1;
     grid-column: 1;
@@ -73,7 +12,7 @@ div #mdp{
 
 }
 
-.box input[type = "text"],.box input[type = "password"] {
+.box input {
     border:0;
     background: none;
     display: block;
@@ -86,7 +25,6 @@ div #mdp{
     color: rgb(5, 5, 5);
     border-radius: 24px;
     transition: 0.25s;
-
 }
 
 .box {
@@ -116,7 +54,6 @@ div #mail{
     align-items: center;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     justify-content:space-around;
 
 }
@@ -158,7 +95,6 @@ div #like{
     justify-content: right;
     align-items: right;
     border-radius: 10px;
-    /* text-align: right; */
     float: right;
     height: auto;
     margin-top: 50px;
@@ -178,22 +114,7 @@ textarea {
     box-shadow: 1px 1px 1px #999;
 }
 
-#global{
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: 1fr;
-    height: calc(100vh - 125px);
-    width: 100%;
-    background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
-    ;
-}
-
-#global #global-left {
-    grid-column: 1;
-    grid-row: 1;
-}
-
-#global #global-center {
+#global #center-profil-data {
     grid-column: 2;
     grid-row: 1;
     display: grid;
@@ -201,13 +122,6 @@ textarea {
     grid-template-rows: repeat(2, 1fr);
     grid-gap: 20px;
     padding: 20px;
-    
-}
-
-#global #global-right{
-    text-align: center;
-    grid-column: 3;
-    grid-row: 1;
 }
 
 .frame {
