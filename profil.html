@@ -44,31 +44,36 @@
             </div>
         </div>
         <div class="global-item" id="global-center">
-            <div id="mdp" class="box">
+            <form id="mdp" class="box" action="" method="POST">    
                 <h2>Mot de passe</h2> 
-                <input type="text" placeholder="Ancien mot de passe :" name="" required
+                <input type="text" placeholder="Ancien mot de passe :" name="oldPassword" required
+                minlength="0" maxlength="10" size="10">
+                <input type="text" placeholder="Nouveau mot de passe :" name="newPassword" required
                 minlength="4" maxlength="10" size="10">
-                <input type="text" placeholder="Nouveau mot de passe :" name="name" required
-                minlength="4" maxlength="10" size="10">
-                <input type="text" placeholder="Confirmer le mot de passe :" name="name2" required
+                <input type="text" placeholder="Confirmer le mot de passe :" name="newPasswordConfirm" required
                 minlength="4" maxlength="10" size="10">
                 <div>
-                    <button id="button" name="button2">Valider</button>
+                    <div class="input_box button">
+                        <input type="submit" value="Valider" name="changePasswordButton">
+                    </div>
                 </div>
-            </div>
+            </form>
 
-            <div id="mail" class="box">
+            <form id="mail" class="box" action="" method="POST">
                 <h2>Adresse mail</h2>
                 <div>
                     Mon adresse : {{.Email}}
                 </div>
-                    <input type="text" placeholder="Nouvelle adresse :" name="name">
-                    <input type="text" placeholder="Confirmer l'adresse :" name="name2">
+                    <input type="text" placeholder="Nouvelle adresse :" name="newEmail">
+                    <input type="text" placeholder="Confirmer l'adresse :" name="newEmailConfirm">
                     <input type="text" placeholder="Mot de passe :" name="password">
                 <div>
-                    <button id="button" name="button2">Valider</button>
+                    <div class="input_box button">
+                        <input type="submit" value="Valider" name="changeEmailButton">
+                    </div>
                 </div>
-            </div>
+            </form>
+
             <div id = "stats">
                 <h2>Description</h2>
                 <textarea id="story2" name ="story"></textarea>

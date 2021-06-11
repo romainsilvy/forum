@@ -89,7 +89,6 @@ func InsertIntoUsers(user_name string, email string, password string, image stri
 	defer db.Close()
 }
 
-
 //singleRowQuerry retrieve a value in the db with a where comparator
 func SingleRowQuerry(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 string) string {
 	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
@@ -104,7 +103,7 @@ func SingleRowQuerry(db *sql.DB, rowName string, tableName string, comparator1 s
 	return toReturn
 }
 
-//checkIfExist return true or false depending if the comparator 1 passed as parameter exist in the db 
+//checkIfExist return true or false depending if the comparator 1 passed as parameter exist in the db
 func CheckIfExist(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 string) bool {
 	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
 	if err != nil {
@@ -120,6 +119,14 @@ func CheckIfExist(db *sql.DB, rowName string, tableName string, comparator1 stri
 		}
 	}
 	return true
+}
+
+//UpdateValue change the value of a case
+func UpdateValue(db *sql.DB, tableName string, collumnName string, newValue string, comparator1 string, comparator2 string) {
+	_, err := db.Exec("update " + tableName + " set " + collumnName + " = " + "\"" + newValue + "\"" + " where " + comparator1 + " = " + "\"" + comparator2 + "\"")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // func main() {
