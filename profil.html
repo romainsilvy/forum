@@ -7,7 +7,6 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/static/css/global.css">
     <link rel="stylesheet" type="text/css" href="/static/css/accueil.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -89,6 +88,17 @@
             <div class="frame">
                 <button class="custom-btn btn-6"><span>Logout</span></button>
             </div>
+        </div>
+        <div id="pop-up"></div>
+        <div id="pagePop">
+            <form id="formModif" action="" method="POST">
+                <img id="photoModif" src="/static/images/profile-picture.png">
+                <!-- <div id="doPseu">
+                    <span>Louis</span><input id="changerPseudo" type="text">
+                </div> -->
+                <textarea name="descriptionModif" id="changerDesc" cols="30" rows="10"></textarea>
+                <input type="submit" value="valider" name="valider">
+            </form>
         </div>
     </div>
 </body>
