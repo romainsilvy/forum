@@ -2,13 +2,12 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="/static/css/accueil-droit.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/accueil-gauche.css">
     <link rel="stylesheet" type="text/css" href="/static/css/connexion.css">
     <title>Cham Nation</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/static/css/global.css">
     <link rel="stylesheet" type="text/css" href="/static/css/accueil.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/ajouterthread.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
@@ -17,7 +16,7 @@
         <img id="logo" src="/static/images/logo.png">
         <div id="wrap">
             <div id="search">
-                <input type="text" id="searchTerm" placeholder="What are you looking for?">
+                <input type="text" id="searchTerm" placeholder="What are you looking for?" value="">
                 <button type="submit" id="searchButton">
                     <i id="fa fa-search"></i>
                 </button>
@@ -47,7 +46,7 @@
         <div class="global-item" id="global-center">
             <div class="inside-center" id="add-thread">
                 <button id="button-input-add-thread" type="button">+</button>
-                <input id="input-add-thread" type="text" placeholder="Ajoutez le nom d'un thread....">
+                <input id="input-add-thread" type="text" placeholder="Ajoutez le nom d'un thread...." value="">
             </div>
             <div class="inside-center a-thread">
                 <h3>Nom du Thread</h3>
@@ -189,7 +188,7 @@
             <input type="submit" value="Connexion" name="connect">
         </div>
         <div class="sign_up">
-            Pas de compte ? <span id="sInscrire">S'inscrire</span>
+            <p>Pas de compte ?</p><span id="sInscrire">S'inscrire</span>
         </div>
     </form>
 
@@ -211,7 +210,29 @@
             </div>
     </form>
     
+    <form id="thread-background" class="boxthread" action="" method="POST">
+        <div id ="ajouter-thread">
+            <h1 id="namethread"><u>test</u></h1>
+        </div>
+        <textarea name="créa_thread" id="créa_thread" cols="70" rows="30" placeholder="écrivez votre thread ici"></textarea>
+        <input type="submit" value="Submit" class="sub-thread">
+    </form>
+
     <script>
+    document.querySelector('#button-input-add-thread').addEventListener('click', ()=>{
+        var x = document.getElementById("input-add-thread").value
+        if ( x !== "") {
+            document.querySelector("#namethread").innerHTML = x
+            document.querySelector('#thread-background').classList.add("popUp")
+            document.querySelector('#pop-up').classList.add("connexion-background")
+
+            document.querySelector('#pop-up').addEventListener('click', ()=>{
+            document.querySelector('#thread-background').classList.remove("popUp")
+            document.querySelector('#pop-up').classList.remove("connexion-background")
+            })
+        }
+    })
+
         var i=0;
         function read(){
             if (!i){

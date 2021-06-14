@@ -89,7 +89,7 @@ form a:hover {
 }
 
 .popUp {
-    display: block;
+    display: block !important;
 }
 
 .connexion-background {
