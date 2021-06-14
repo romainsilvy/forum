@@ -25,6 +25,18 @@
     margin-top: 0px;
     height: auto;
 }
+button{
+    cursor: pointer;
+    outline: 0;
+    color: #AAA;
+  }
+  .green{
+    color: green;
+  }
+  
+  .red{
+    color: red;
+  }
 
 #more {
     display: none;
