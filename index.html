@@ -49,52 +49,105 @@
                 <input id="input-add-thread" type="text" placeholder="Ajoutez le nom d'un thread....">
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+                <h3>Nom du Thread</h3>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
+                when an unknown printer took a galley of type and scrambled it to make a type specimen book <span id="first-text">...</span><span id="more">
+                It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
+                It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software 
+                like Aldus PageMaker including versions of Lorem Ipsum.</span>
+                </p> 
+                <button type="button" id="read" onclick="read()">Voir plus...</button>
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+               <h3>Nom du Thread</h3>
+                <p>Première ligne</p>
+                <p>Deuxième ligne</p>
+                <p>Troisième ligne</p>
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+               <h3>Nom du Thread</h3>
+                <p>Première ligne</p>
+                <p>Deuxième ligne</p>
+                <p>Troisième ligne</p>
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+               <h3>Nom du Thread</h3>
+                <p>Première ligne</p>
+                <p>Deuxième ligne</p>
+                <p>Troisième ligne</p>
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+               <h3>Nom du Thread</h3>
+                <p>Première ligne</p>
+                <p>Deuxième ligne</p>
+                <p>Troisième ligne</p>
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+               <h3>Nom du Thread</h3>
+                <p>Première ligne</p>
+                <p>Deuxième ligne</p>
+                <p>Troisième ligne</p>
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+                <h3>Nom du Thread</h3>
+                <p>Première ligne</p>
+                <p>Deuxième ligne</p>
+                <p>Troisième ligne</p>
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+                <h3>Nom du Thread</h3>
+                <p>Première ligne</p>
+                <p>Deuxième ligne</p>
+                <p>Troisième ligne</p>
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+                <h3>Nom du Thread</h3>
+                <p>Première ligne</p>
+                <p>Deuxième ligne</p>
+                <p>Troisième ligne</p>
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+                <h3>Nom du Thread</h3>
+                <p>Première ligne</p>
+                <p>Deuxième ligne</p>
+                <p>Troisième ligne</p>
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+                <h3>Nom du Thread</h3>
+                <p>Première ligne</p>
+                <p>Deuxième ligne</p>
+                <p>Troisième ligne</p>
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+                <h3>Nom du Thread</h3>
+                <p>Première ligne</p>
+                <p>Deuxième ligne</p>
+                <p>Troisième ligne</p>
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+                <h3>Nom du Thread</h3>
+                <p>Première ligne</p>
+                <p>Deuxième ligne</p>
+                <p>Troisième ligne</p>
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+                <h3>Nom du Thread</h3>
+                <p>Première ligne</p>
+                <p>Deuxième ligne</p>
+                <p>Troisième ligne</p>
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+                <h3>Nom du Thread</h3>
+                <p>Première ligne</p>
+                <p>Deuxième ligne</p>
+                <p>Troisième ligne</p>
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+                <h3>Nom du Thread</h3>
+                <p>Première ligne</p>
+                <p>Deuxième ligne</p>
+                <p>Troisième ligne</p>
             </div>
         </div>
         <div class="global-item" id="global-right">
@@ -154,7 +207,20 @@
     </form>
     
     <script>
-
+        var i=0;
+        function read(){
+            if (!i){
+                document.getElementById("more").style.display ="inline";
+                document.getElementById("first-text").style.display ="none";
+                document.getElementById("read").innerHTML ="Voir moins";
+                i=1;
+            } else {
+                document.getElementById("more").style.display ="none";
+                document.getElementById("first-text").style.display ="inline";
+                document.getElementById("read").innerHTML ="Voir plus";
+                i=0;
+            }
+        }
         document.querySelector('#profile-picture').addEventListener('click', ()=>{
 
             if (document.cookie.includes("auth")) {
