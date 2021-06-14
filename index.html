@@ -9,6 +9,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/static/css/global.css">
     <link rel="stylesheet" type="text/css" href="/static/css/accueil.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -55,8 +56,12 @@
                 when an unknown printer took a galley of type and scrambled it to make a type specimen book <span id="first-text">...</span><span id="more">
                 It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
                 It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software 
-                like Aldus PageMaker including versions of Lorem Ipsum.</span>
-                </p> 
+                like Aldus PageMaker including versions of Lorem Ipsum.
+            
+                <button class="btn-like" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span class="like__number">99</span></button>
+                <button class="btn-dislike" id="red"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span class="like__number">100</span></button>
+                    </span>
+                </p>
                 <button type="button" id="read" onclick="read()">Voir plus...</button>
             </div>
             <div class="inside-center a-thread">
@@ -221,6 +226,28 @@
                 i=0;
             }
         }
+        var btn1 = document.querySelector('#green');
+        var btn2 = document.querySelector('#red');
+        
+
+        btn1.addEventListener('click', function() {
+        
+            if (btn2.classList.contains('red')) {
+            btn2.classList.remove('red');
+            } 
+        this.classList.toggle('green');
+        
+        });
+
+        btn2.addEventListener('click', function() {
+        
+            if (btn1.classList.contains('green')) {
+            btn1.classList.remove('green');
+            } 
+        this.classList.toggle('red');
+        
+        });
+
         document.querySelector('#profile-picture').addEventListener('click', ()=>{
 
             if (document.cookie.includes("auth")) {
