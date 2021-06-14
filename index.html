@@ -49,7 +49,13 @@
                 <input id="input-add-thread" type="text" placeholder="Ajoutez le nom d'un thread....">
             </div>
             <div class="inside-center a-thread">
-                <p>un thread</p>
+                <form id="form-add-thread" action="" method="POST">
+                    <input type="text" name="titreThread" placeholder="titre thread" required="required"/>
+                    <input type="contenuThread" name="contenuThread" placeholder="Mot de passe" required="required"/>
+                    <div class="input_box button">
+                        <input type="submit" value="ajouter" name="addThreadButton">
+                    </div>
+                </form>
             </div>
             <div class="inside-center a-thread">
                 <p>un thread</p>

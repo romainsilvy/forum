@@ -22,8 +22,7 @@ CREATE TABLE IF NOT EXISTS Thread(
     comment_count INT NOT NULL,
     image TEXT NOT NULL,
 
- 	FOREIGN KEY(id_user) REFERENCES User(id_user),
-    FOREIGN KEY(image) REFERENCES User(image)
+ 	FOREIGN KEY(id_user) REFERENCES User(id_user)
 );
 
 

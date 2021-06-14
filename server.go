@@ -58,12 +58,21 @@ func connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 	}
 }
 
+func addThreadToDb(r *http.Request) {
+	addThreadButton := r.FormValue("addThreadButton")
+	if addThreadButton != "" {
+		databaseTools.InsertIntoThread(1, "myFirstThread", "mydescription")
+
+	}
+}
+
 //handleAccueil is the handlefunc for the main page
 func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		variable, _ := template.ParseFiles("index.html")
 		inscription(r)
 		connexion(w, r, database)
+		addThreadToDb(r)
 		variable.Execute(w, tabUser)
 	})
 }

@@ -89,6 +89,15 @@ func InsertIntoUsers(user_name string, email string, password string, image stri
 	defer db.Close()
 }
 
+func InsertIntoThread(id_user int, title string, content string) {
+	db := initDatabase("dataBase/forum.db")
+	_, err := db.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count, image) VALUES (?, ?, ?, "date", "false", 0, 0, 0, "image")`, id_user, title, content)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+}
+
 //singleRowQuerry retrieve a value in the db with a where comparator
 func SingleRowQuerry(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 string) string {
 	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
