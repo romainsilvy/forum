@@ -29,14 +29,15 @@ button{
     cursor: pointer;
     outline: 0;
     color: #AAA;
-  }
-  .green{
+}
+
+.green{
     color: green;
-  }
-  
-  .red{
+}
+
+.red{
     color: red;
-  }
+}
 
 #more {
     display: none;
