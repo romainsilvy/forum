@@ -10,6 +10,7 @@ import (
 
 	"github.com/gorilla/sessions"
 	_ "github.com/mattn/go-sqlite3"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var (
@@ -27,7 +28,8 @@ func inscription(r *http.Request) {
 		inscriptionPasswordConfirm := r.FormValue("inscriptionPasswordConfirm")
 
 		if inscriptionEmail == inscriptionEmailConfirm && inscriptionPassword == inscriptionPasswordConfirm {
-			databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, inscriptionPassword, "img")
+			hashed := hashAndSalt(inscriptionPassword)
+			databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, hashed, "img")
 		}
 	}
 }
@@ -37,12 +39,13 @@ func connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 	if r.FormValue("connect") != "" {
 		connexionUser := r.FormValue("connexionUser")
 		connexionPassword := r.FormValue("connexionPassword")
+
+		passwordHashed := databaseTools.SingleRowQuerry(database, "password", "User", "user_name", connexionUser)
 		checkIfExist := databaseTools.CheckIfExist(database, "password", "User", "user_name", connexionUser)
 
 		if checkIfExist {
-			userPassword := databaseTools.SingleRowQuerry(database, "password", "User", "user_name", connexionUser)
-			if userPassword != "notExist" {
-				if userPassword == connexionPassword {
+			if passwordHashed != "notExist" {
+				if comparePasswords(passwordHashed, connexionPassword) {
 					session, _ := store.Get(r, "auth")
 					session.Values["authenticated"] = true
 					session.Values["user"] = connexionUser
@@ -68,16 +71,19 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 	})
 }
 
-func changePassword(r *http.Request, userPassword string, userName string, db *sql.DB) {
+func changePassword(r *http.Request, userPassword string, userName string, database *sql.DB) {
 	changePasswordButton := r.FormValue("changePasswordButton")
+
 	if changePasswordButton != "" {
 		oldPassword := r.FormValue("oldPassword")
-		if oldPassword == userPassword {
+		if comparePasswords(userPassword, oldPassword) {
 			newPassword := r.FormValue("newPassword")
 			newPasswordConfirm := r.FormValue("newPasswordConfirm")
+			newPasswordHashed := hashAndSalt(newPassword)
+			// newPasswordConfirmHashed := hashAndSalt(newPasswordConfirm)
+
 			if newPassword == newPasswordConfirm {
-				// databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, inscriptionPassword, "img")
-				databaseTools.UpdateValue(db, "User", "password", newPassword, "user_name", userName)
+				databaseTools.UpdateValue(database, "User", "password", newPasswordHashed, "user_name", userName)
 				fmt.Println("mot de passe changé ")
 			} else {
 				fmt.Println("confirmation de mdp pas bonne")
@@ -137,6 +143,28 @@ func handleAll(db *sql.DB) {
 	handleProfil(databaseTools.User{}, []databaseTools.User{}, db)
 }
 
+func hashAndSalt(pwd string) string {
+
+	pwdByte := []byte(pwd)
+	hash, err := bcrypt.GenerateFromPassword(pwdByte, bcrypt.MinCost)
+	if err != nil {
+		log.Println(err)
+	}
+	return string(hash)
+}
+
+func comparePasswords(hashedPwd string, plainPwd string) bool {
+	BytePwd := []byte(plainPwd)
+	byteHash := []byte(hashedPwd)
+	err := bcrypt.CompareHashAndPassword(byteHash, BytePwd)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+
+	return true
+}
+
 //runServer sets the listenandserve port to 8080
 func runServer() {
 	fmt.Println("server is runing")
@@ -147,6 +175,7 @@ func runServer() {
 
 func main() {
 	db, _ := sql.Open("sqlite3", "dataBase/forum.db")
+
 	handleAll(db)
 	runServer()
 }
