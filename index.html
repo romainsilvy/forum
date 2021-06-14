@@ -27,18 +27,18 @@
 
     <div id="global">
         <div class="global-item" id="global-left">
-            <div class="item-left item">
+            <button class="item-left item">
                 <img id="home" src="/static/images/home.png">
                 <p>Accueil</p>
-            </div>
-            <div class="item-left" id="item">
+            </button>
+            <button class="item-left" id="item">
                 <img id="home" src="/static/images/thread.png">
                 <p>Mes threads</p>
-            </div>
-            <div class="item-left" id="item">
+            </button>
+            <button class="item-left" id="item">
                 <img id="home" src="/static/images/follow.png">
                 <p>Suivis</p>
-            </div>
+            </button>
             <div id="cat">
                 <p>Catégories</p>   
             </div>
@@ -205,7 +205,12 @@
                 <input type="submit" value="Créer un compte" name="submit">
             </div>
     </form>
-    
+    <script>
+        document.querySelector('#item').addEventListener('click', ()=>{
+            document.querySelector('#index').classList.remove("accueil")
+            document.querySelector('#index').classList.add("item")
+        })
+    </script>
     <script>
         var i=0;
         function read(){
