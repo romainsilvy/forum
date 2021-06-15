@@ -62,9 +62,13 @@ func connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 }
 
 //handleAccueil is the handlefunc for the main page
-func handleAccueil(tabUser []databaseTools.User, database *sql.DB) {
+func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		variable, _ := template.ParseFiles("index.html")
+		title := r.FormValue("threadTitle")
+		thread := r.FormValue("créa_thread")
+		fmt.Println(title)
+		fmt.Println(thread)
 		inscription(r, database)
 		connexion(w, r, database)
 		variable.Execute(w, tabUser)

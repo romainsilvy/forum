@@ -47,8 +47,8 @@
         </div>
         <div class="global-item" id="global-center">
             <div class="inside-center" id="add-thread">
-                <button id="button-input-add-thread" type="button">+</button>
-                <input id="input-add-thread" type="text" placeholder="Ajoutez le nom d'un thread...." value="">
+                <button id="button-input-add-thread" type="button" name="">+</button>
+                <input id="input-add-thread" type="text" placeholder="Ajoutez le nom d'un thread...." value="" name="">
             </div>
             <div class="inside-center a-thread">
                 <h3>Nom du Thread</h3>
@@ -214,17 +214,19 @@
     
     <form id="thread-background" class="boxthread" action="" method="POST">
         <div id ="ajouter-thread">
-            <h1 id="namethread"><u>test</u></h1>
+            <input value="" type="text" id="namethread" name="threadTitle"></input>
         </div>
         <textarea name="créa_thread" id="créa_thread" cols="70" rows="30" placeholder="écrivez votre thread ici"></textarea>
-        <input type="submit" value="Submit" class="sub-thread">
+        <input type="submit" value="Submit" name="" class="sub-thread">
     </form>
 
     <script>
+
+
     document.querySelector('#button-input-add-thread').addEventListener('click', ()=>{
         var x = document.getElementById("input-add-thread").value
         if ( x !== "") {
-            document.querySelector("#namethread").innerHTML = x
+            document.querySelector("#namethread").value = x
             document.querySelector('#thread-background').classList.add("popUp")
             document.querySelector('#pop-up').classList.add("connexion-background")
 
