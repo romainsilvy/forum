@@ -46,7 +46,6 @@ header #profile-picture {
     height: 100px;
     grid-row: 1;
     grid-column: 10;
-    cursor: pointer;
 }
 
 #global{
