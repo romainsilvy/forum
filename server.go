@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 	databaseTools "test/dataBase"
 
 	"github.com/gorilla/sessions"
@@ -64,15 +65,36 @@ func connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 //handleAccueil is the handlefunc for the main page
 func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		var dataToSend databaseTools.Data
 		variable, _ := template.ParseFiles("index.html")
 		title := r.FormValue("threadTitle")
 		thread := r.FormValue("créa_thread")
-		fmt.Println(title)
-		fmt.Println(thread)
+		addThread(databaseTools.User{}, title, thread, database)
 		inscription(r, database)
 		connexion(w, r, database)
-		variable.Execute(w, tabUser)
+		req := `SELECT Thread.id_user, 
+		Thread.title, 
+		Thread.content, 
+		User.user_name
+		FROM Thread, User`
+		rows, _ := database.Query(req)
+		for rows.Next() {
+			item := databaseTools.ThreadData{}
+			err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.User_name)
+			if err2 != nil {
+				panic(err2)
+			}
+			dataToSend.Posts = append(dataToSend.Posts, item)
+		}
+		variable.Execute(w, dataToSend)
 	})
+}
+
+// requete slq de tout; request
+func addThread(oneUser databaseTools.User, title string, content string, database *sql.DB) {
+	idUser := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", oneUser.User_name)
+	id, _ := strconv.Atoi(idUser)
+	databaseTools.InsertIntoThreads(id, title, content, "10/06/21 10:35", database)
 }
 
 func changePassword(r *http.Request, userPassword string, userName string, database *sql.DB) {
@@ -180,6 +202,6 @@ func runServer() {
 func main() {
 	db, _ := sql.Open("sqlite3", "dataBase/forum.db")
 	handleAll(db)
-	databaseTools.InsertIntoThreads(10, "mon histoire", "blablabla", "crée le blabla", db)
+	// databaseTools.InsertIntoThreads(10, "mon histoire", "blablabla", "crée le blabla", db)
 	runServer()
 }

@@ -28,6 +28,13 @@ type Thread struct {
 	Comment_count int
 }
 
+type ThreadData struct {
+	Id_user   int
+	Title     string
+	Content   string
+	User_name string
+}
+
 type ThreadMessage struct {
 	Id_th_msg   int
 	Id_th       int
@@ -59,6 +66,11 @@ type ThreadCategory struct {
 type Category struct {
 	Id_cat   int
 	Cat_name string
+}
+
+type Data struct {
+	Participant []User
+	Posts       []ThreadData
 }
 
 func initDatabase(database string) *sql.DB {

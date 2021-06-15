@@ -160,3 +160,9 @@ div #tableau{
     margin-left: 50px;
     margin-top: 50px;
 }
+
+.elipse {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
