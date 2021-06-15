@@ -80,13 +80,18 @@ func initDatabase(database string) *sql.DB {
 	return db
 }
 
-func InsertIntoUsers(user_name string, email string, password string, image string) {
-	db := initDatabase("dataBase/forum.db")
+func InsertIntoUsers(user_name string, email string, password string, image string, db *sql.DB) {
 	_, err := db.Exec(`INSERT INTO User (user_name, email, password, image) VALUES (?, ?, ?, ?)`, user_name, email, password, image)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
+}
+
+func InsertIntoThreads(id_user int, title string, content string, created_at string, db *sql.DB) {
+	_, err := db.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count, image) VALUES (?, ?, ?, ?, false, 0, 0, 0, "image")`, id_user, title, content, created_at)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 //singleRowQuerry retrieve a value in the db with a where comparator

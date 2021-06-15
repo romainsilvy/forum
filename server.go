@@ -19,7 +19,7 @@ var (
 )
 
 //inscription manage the inscription form
-func inscription(r *http.Request) {
+func inscription(r *http.Request, database *sql.DB) {
 	inscriptionPseudo := r.FormValue("inscriptionPseudo")
 	if inscriptionPseudo != "" {
 		inscriptionEmail := r.FormValue("inscriptionEmail")
@@ -29,7 +29,7 @@ func inscription(r *http.Request) {
 
 		if inscriptionEmail == inscriptionEmailConfirm && inscriptionPassword == inscriptionPasswordConfirm {
 			hashed := hashAndSalt(inscriptionPassword)
-			databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, hashed, "img")
+			databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, hashed, "img", database)
 		}
 	}
 }
@@ -62,10 +62,10 @@ func connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 }
 
 //handleAccueil is the handlefunc for the main page
-func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
+func handleAccueil(tabUser []databaseTools.User, database *sql.DB) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		variable, _ := template.ParseFiles("index.html")
-		inscription(r)
+		inscription(r, database)
 		connexion(w, r, database)
 		variable.Execute(w, tabUser)
 	})
@@ -175,7 +175,7 @@ func runServer() {
 
 func main() {
 	db, _ := sql.Open("sqlite3", "dataBase/forum.db")
-
 	handleAll(db)
+	databaseTools.InsertIntoThreads(10, "mon histoire", "blablabla", "crée le blabla", db)
 	runServer()
 }
