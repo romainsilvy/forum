@@ -22,16 +22,13 @@ var (
 //inscription manage the inscription form
 func inscription(r *http.Request) {
 	inscriptionPseudo := r.FormValue("inscriptionPseudo")
-		
-		inscriptionEmail := r.FormValue("inscriptionEmail")
-		inscriptionEmailConfirm := r.FormValue("inscriptionEmailConfirm")
-		inscriptionPassword := r.FormValue("inscriptionPassword")
-		inscriptionPasswordConfirm := r.FormValue("inscriptionPasswordConfirm")
-
-		if inscriptionEmail == inscriptionEmailConfirm && inscriptionPassword == inscriptionPasswordConfirm {
-			hashed := hashAndSalt(inscriptionPassword)
-			databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, hashed)
-		}
+	inscriptionEmail := r.FormValue("inscriptionEmail")
+	inscriptionEmailConfirm := r.FormValue("inscriptionEmailConfirm")
+	inscriptionPassword := r.FormValue("inscriptionPassword")
+	inscriptionPasswordConfirm := r.FormValue("inscriptionPasswordConfirm")
+	if inscriptionEmail == inscriptionEmailConfirm && inscriptionPassword == inscriptionPasswordConfirm {
+		hashed := hashAndSalt(inscriptionPassword)
+		databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, hashed)
 	}
 }
 
@@ -165,7 +162,13 @@ func handleAccueil(database *sql.DB) {
 		title := r.FormValue("threadTitle")
 		thread := r.FormValue("créa_thread")
 		addThread(r, databaseTools.User{}, title, thread, database)
-		inscription(r)
+		inscriptionEmail := r.FormValue("inscriptionEmail")
+		if inscriptionEmail == "" {
+			return
+		} else {
+			fmt.Println("wtf")
+			inscription(r)
+		}
 		connexion(w, r, database)
 
 		// req := `SELECT Thread.id_user,
@@ -186,8 +189,6 @@ func handleAccueil(database *sql.DB) {
 		// 	dataToSend.Posts = append(dataToSend.Posts, item)
 		// }
 
-
-		
 		req := `SELECT Thread.Content FROM Thread`
 		rows, _ := database.Query(req)
 		for rows.Next() {
@@ -212,7 +213,7 @@ func handleAccueil(database *sql.DB) {
 }
 
 func addThread(r *http.Request, oneUser databaseTools.User, title string, content string, database *sql.DB) {
-	if r.FormValue("créa_thread") != "" {
+	if r.FormValue("créa_thread") == "Submit" {
 		idUser := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", oneUser.User_name)
 		id, _ := strconv.Atoi(idUser)
 		databaseTools.InsertIntoThreads(id, title, content, "10/06/21 10:35", database)
