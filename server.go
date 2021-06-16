@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 	databaseTools "test/dataBase"
 
 	"github.com/gorilla/sessions"
@@ -61,14 +62,45 @@ func connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 	}
 }
 
-//handleAccueil is the handlefunc for the main page
-func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
+func handleAccueil(database *sql.DB) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		var dataToSend databaseTools.Data
 		variable, _ := template.ParseFiles("index.html")
+		title := r.FormValue("threadTitle")
+		thread := r.FormValue("créa_thread")
+		addThread(r, databaseTools.User{}, title, thread, database)
 		inscription(r)
+
 		connexion(w, r, database)
-		variable.Execute(w, tabUser)
+		req := `SELECT Thread.Content FROM Thread`
+		rows, _ := database.Query(req)
+		for rows.Next() {
+			item := databaseTools.ThreadData{}
+			err2 := rows.Scan(&item.Content)
+			if err2 != nil {
+				panic(err2)
+			}
+			fmt.Println(item)
+			fmt.Println("")
+			fmt.Println("")
+			fmt.Println("")
+			fmt.Println("")
+			fmt.Println("")
+
+			dataToSend.Posts = append(dataToSend.Posts, item)
+		}
+
+		fmt.Println(dataToSend.Posts)
+		variable.Execute(w, dataToSend)
 	})
+}
+
+func addThread(r *http.Request, oneUser databaseTools.User, title string, content string, database *sql.DB) {
+	if r.FormValue("créa_thread") == "Submit" {
+		idUser := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", oneUser.User_name)
+		id, _ := strconv.Atoi(idUser)
+		databaseTools.InsertIntoThreads(id, title, content, "10/06/21 10:35", database)
+	}
 }
 
 func changePassword(r *http.Request, userPassword string, userName string, database *sql.DB) {
@@ -139,7 +171,7 @@ func handleProfil(oneUser databaseTools.User, tabUser []databaseTools.User, data
 func handleAll(db *sql.DB) {
 	fileServer := http.FileServer(http.Dir("./data"))
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
-	handleAccueil(databaseTools.User{}, []databaseTools.User{}, db)
+	handleAccueil(db)
 	handleProfil(databaseTools.User{}, []databaseTools.User{}, db)
 }
 

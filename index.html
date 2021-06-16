@@ -50,111 +50,17 @@
                 <button id="button-input-add-thread" type="button">+</button>
                 <input id="input-add-thread" type="text" placeholder="Ajoutez le nom d'un thread...." value="">
             </div>
-            <div class="inside-center a-thread">
-                <h3>Nom du Thread</h3>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, 
-                when an unknown printer took a galley of type and scrambled it to make a type specimen book <span id="first-text">...</span><span id="more">
-                It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
-                It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software 
-                like Aldus PageMaker including versions of Lorem Ipsum.
+                <div class="inside-center a-thread">
+                    <h3></h3>
+                    <p class="zeub">
+                    It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
+                    It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software 
+                    like Aldus PageMaker including versions of Lorem Ipsum.
             
-                <button class="btn-like" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span class="like__number">99</span></button>
-                <button class="btn-dislike" id="red"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span class="like__number">100</span></button>
-                    </span>
-                </p>
-                <button type="button" id="read" onclick="read()">Voir plus...</button>
-            </div>
-            <div class="inside-center a-thread">
-                <h3>Nom du Thread</h3>
-                <p>Première ligne</p>
-                <p>Deuxième ligne</p>
-                <p>Troisième ligne</p>
-            </div>
-            <div class="inside-center a-thread">
-                <h3>Nom du Thread</h3>
-                <p>Première ligne</p>
-                <p>Deuxième ligne</p>
-                <p>Troisième ligne</p>
-            </div>
-            <div class="inside-center a-thread">
-                <h3>Nom du Thread</h3>
-                <p>Première ligne</p>
-                <p>Deuxième ligne</p>
-                <p>Troisième ligne</p>
-            </div>
-            <div class="inside-center a-thread">
-                <h3>Nom du Thread</h3>
-                <p>Première ligne</p>
-                <p>Deuxième ligne</p>
-                <p>Troisième ligne</p>
-            </div>
-            <div class="inside-center a-thread">
-                <h3>Nom du Thread</h3>
-                <p>Première ligne</p>
-                <p>Deuxième ligne</p>
-                <p>Troisième ligne</p>
-            </div>
-            <div class="inside-center a-thread">
-                <h3>Nom du Thread</h3>
-                <p>Première ligne</p>
-                <p>Deuxième ligne</p>
-                <p>Troisième ligne</p>
-            </div>
-            <div class="inside-center a-thread">
-                <h3>Nom du Thread</h3>
-                <p>Première ligne</p>
-                <p>Deuxième ligne</p>
-                <p>Troisième ligne</p>
-            </div>
-            <div class="inside-center a-thread">
-                <h3>Nom du Thread</h3>
-                <p>Première ligne</p>
-                <p>Deuxième ligne</p>
-                <p>Troisième ligne</p>
-            </div>
-            <div class="inside-center a-thread">
-                <h3>Nom du Thread</h3>
-                <p>Première ligne</p>
-                <p>Deuxième ligne</p>
-                <p>Troisième ligne</p>
-            </div>
-            <div class="inside-center a-thread">
-                <h3>Nom du Thread</h3>
-                <p>Première ligne</p>
-                <p>Deuxième ligne</p>
-                <p>Troisième ligne</p>
-            </div>
-            <div class="inside-center a-thread">
-                <h3>Nom du Thread</h3>
-                <p>Première ligne</p>
-                <p>Deuxième ligne</p>
-                <p>Troisième ligne</p>
-            </div>
-            <div class="inside-center a-thread">
-                <h3>Nom du Thread</h3>
-                <p>Première ligne</p>
-                <p>Deuxième ligne</p>
-                <p>Troisième ligne</p>
-            </div>
-            <div class="inside-center a-thread">
-                <h3>Nom du Thread</h3>
-                <p>Première ligne</p>
-                <p>Deuxième ligne</p>
-                <p>Troisième ligne</p>
-            </div>
-            <div class="inside-center a-thread">
-                <h3>Nom du Thread</h3>
-                <p>Première ligne</p>
-                <p>Deuxième ligne</p>
-                <p>Troisième ligne</p>
-            </div>
-            <div class="inside-center a-thread">
-                <h3>Nom du Thread</h3>
-                <p>Première ligne</p>
-                <p>Deuxième ligne</p>
-                <p>Troisième ligne</p>
-            </div>
+                    <button class="btn-like" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span class="like__number">99</span></button>
+                    <button class="btn-dislike" id="red"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span class="like__number">100</span></button>
+                    </p>
+                    </div>
         </div>
         <div class="global-item" id="global-right">
             <img id="profile-picture" src="/static/images/profile-picture.png">
@@ -164,9 +70,6 @@
                 </div>
                 <h2 id="Participant"> Participant</h2>
                 <ul id="tableau">
-                    {{range .}}
-                    <li>{{.User_name}}</li>
-                    {{end}}
                 </ul>
             </div>
         </div>
@@ -214,17 +117,17 @@
     
     <form id="thread-background" class="boxthread" action="" method="POST">
         <div id ="ajouter-thread">
-            <h1 id="namethread"><u>test</u></h1>
+            <input value="" type="text" id="namethread" name="threadTitle"></input>
         </div>
         <textarea name="créa_thread" id="créa_thread" cols="70" rows="30" placeholder="écrivez votre thread ici"></textarea>
-        <input type="submit" value="Submit" class="sub-thread">
+        <input type="submit" value="Submit" name="" class="sub-thread">
     </form>
 
     <script>
     document.querySelector('#button-input-add-thread').addEventListener('click', ()=>{
         var x = document.getElementById("input-add-thread").value
         if ( x !== "") {
-            document.querySelector("#namethread").innerHTML = x
+            document.querySelector("#namethread").value = x
             document.querySelector('#thread-background').classList.add("popUp")
             document.querySelector('#pop-up').classList.add("connexion-background")
 
