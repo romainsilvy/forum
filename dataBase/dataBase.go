@@ -29,10 +29,9 @@ type Thread struct {
 }
 
 type ThreadData struct {
-	Id_user   int
-	Title     string
-	Content   string
-	User_name string
+	Id_user int
+	Title   string
+	Content string
 }
 
 type ThreadMessage struct {

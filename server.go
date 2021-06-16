@@ -73,20 +73,21 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 		content := r.FormValue("créa_thread")
 		sub := r.FormValue("submitthread")
 		session, _ := store.Get(r, "auth")
-		if (sub == "Submit") && (session.Values["authenticated"] == true) {
+		if (sub == "Enregistrer") && (session.Values["authenticated"] == true) {
 			addThread(session, title, content, "16/06/2021", database)
 		}
 		connexion(w, r, database)
 		inscription(r, database)
-		req := `SELECT Thread.id_user, 
-		Thread.title, 
-		Thread.content, 
-		User.user_name
-		FROM Thread, User`
+		req := `SELECT 
+			id_user,
+			title,
+			content 
+			FROM 
+			Thread`
 		rows, _ := database.Query(req)
 		for rows.Next() {
 			item := databaseTools.ThreadData{}
-			err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.User_name)
+			err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content)
 			if err2 != nil {
 				panic(err2)
 			}
