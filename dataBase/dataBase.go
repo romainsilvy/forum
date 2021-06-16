@@ -13,7 +13,6 @@ type User struct {
 	User_name string
 	Password  string
 	Email     string
-	Image     string
 }
 
 type Thread struct {
@@ -44,12 +43,6 @@ type Like struct {
 	Id_th   int
 }
 
-type Following struct {
-	Id_following int
-	Id_user      int
-	Id_th        int
-}
-
 type ThreadCategory struct {
 	Id_th_cat int
 	Id_cat    int
@@ -61,7 +54,28 @@ type Category struct {
 	Cat_name string
 }
 
-func initDatabase(database string) *sql.DB {
+type ThreadData struct {
+	Id_user   int
+	Title     string
+	Content   string
+	User_name string
+}
+
+type Data struct {
+	Participant []User
+	Posts       []ThreadData
+}
+
+// type Data struct {
+// 	DataUser           []User
+// 	DataThread         []Thread
+// 	DataThreadMessage  []ThreadMessage
+// 	DataLike           []Like
+// 	DataThreadCategory []ThreadCategory
+// 	DataCategory       []Category
+// }
+
+func InitDatabase(database string) *sql.DB {
 	db, err := sql.Open("sqlite3", database)
 	if err != nil {
 		log.Fatal(err)
@@ -80,9 +94,18 @@ func initDatabase(database string) *sql.DB {
 	return db
 }
 
-func InsertIntoUsers(user_name string, email string, password string, image string) {
-	db := initDatabase("dataBase/forum.db")
-	_, err := db.Exec(`INSERT INTO User (user_name, email, password, image) VALUES (?, ?, ?, ?)`, user_name, email, password, image)
+func InsertIntoUsers(user_name string, email string, password string) {
+	db := InitDatabase("dataBase/forum.db")
+	_, err := db.Exec(`INSERT INTO User (user_name, email, password) VALUES (?, ?, ?)`, user_name, email, password)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+}
+
+func InsertIntoThread(title string, content string, created_at string) {
+	db := InitDatabase("dataBase/forum.db")
+	_, err := db.Exec(`INSERT INTO Thread (title, content, created_at) VALUES (?, ?, ?)`, title, content, created_at)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -124,6 +147,13 @@ func CheckIfExist(db *sql.DB, rowName string, tableName string, comparator1 stri
 //UpdateValue change the value of a case
 func UpdateValue(db *sql.DB, tableName string, collumnName string, newValue string, comparator1 string, comparator2 string) {
 	_, err := db.Exec("update " + tableName + " set " + collumnName + " = " + "\"" + newValue + "\"" + " where " + comparator1 + " = " + "\"" + comparator2 + "\"")
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func InsertIntoThreads(id_user int, title string, content string, created_at string, db *sql.DB) {
+	_, err := db.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, false, 0, 0, 0)`, id_user, title, content, created_at)
 	if err != nil {
 		log.Fatal(err)
 	}

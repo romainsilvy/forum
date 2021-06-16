@@ -4,10 +4,7 @@ CREATE TABLE IF NOT EXISTS User(
     id_user INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     user_name TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    image TEXT NOT NULL,
-    description TEXT
-
+    email TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Thread(
@@ -20,10 +17,8 @@ CREATE TABLE IF NOT EXISTS Thread(
     like_count INT NOT NULL,
     dislike_count INT NOT NULL,
     comment_count INT NOT NULL,
-    image TEXT NOT NULL,
 
- 	FOREIGN KEY(id_user) REFERENCES User(id_user),
-    FOREIGN KEY(image) REFERENCES User(image)
+FOREIGN KEY(id_user) REFERENCES User(id_user)
 );
 
 
@@ -33,11 +28,8 @@ CREATE TABLE IF NOT EXISTS ThreadMessage(
     id_user INTEGER NOT NULL,
     created_at TEXT NOT NULL,
     msg_content TEXT NOT NULL,
-    image TEXT NOT NULL,
 
-    FOREIGN KEY(id_user) REFERENCES User(id_user),
-    FOREIGN KEY(id_th) REFERENCES Thread(id_th),
-    FOREIGN KEY(image) REFERENCES User(image)
+    FOREIGN KEY(id_th) REFERENCES Thread(id_th)
 );
 
 
@@ -48,19 +40,7 @@ CREATE TABLE IF NOT EXISTS Like(
     dislike BOOL NOT NULL DEFAULT 0,
     id_th INT NOT NULL,
 
-    FOREIGN KEY(id_user) REFERENCES User(id_user),
     FOREIGN KEY(id_th) REFERENCES Thread(id_th)
-);
-
-CREATE TABLE IF NOT EXISTS Following(
-    id_following INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    id_user INTEGER NOT NULL,
-    id_th INTEGER NOT NULL,
-    image TEXT NOT NULL,
-
-    FOREIGN KEY(id_user) REFERENCES User(id_user),
-    FOREIGN KEY(id_th) REFERENCES Thread(id_th),
-    FOREIGN KEY(image) REFERENCES User(image)
 );
 
 
@@ -69,8 +49,7 @@ CREATE TABLE IF NOT EXISTS ThreadCategory(
     id_cat INTEGER NOT NULL,
     id_th INT NOT NULL,
 
-    FOREIGN KEY(id_cat) REFERENCES Category(id_cat),
-    FOREIGN KEY(id_th) REFERENCES Thread(id_th)
+    FOREIGN KEY(id_cat) REFERENCES Category(id_cat)
 );
 
 

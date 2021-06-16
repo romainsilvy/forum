@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 	databaseTools "test/dataBase"
 
 	"github.com/gorilla/sessions"
@@ -29,7 +30,7 @@ func inscription(r *http.Request) {
 
 		if inscriptionEmail == inscriptionEmailConfirm && inscriptionPassword == inscriptionPasswordConfirm {
 			hashed := hashAndSalt(inscriptionPassword)
-			databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, hashed, "img")
+			databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, hashed)
 		}
 	}
 }
@@ -59,16 +60,6 @@ func connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 			fmt.Println("pseudo incorrect")
 		}
 	}
-}
-
-//handleAccueil is the handlefunc for the main page
-func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		variable, _ := template.ParseFiles("index.html")
-		inscription(r)
-		connexion(w, r, database)
-		variable.Execute(w, tabUser)
-	})
 }
 
 func changePassword(r *http.Request, userPassword string, userName string, database *sql.DB) {
@@ -136,13 +127,6 @@ func handleProfil(oneUser databaseTools.User, tabUser []databaseTools.User, data
 	})
 }
 
-func handleAll(db *sql.DB) {
-	fileServer := http.FileServer(http.Dir("./data"))
-	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
-	handleAccueil(databaseTools.User{}, []databaseTools.User{}, db)
-	handleProfil(databaseTools.User{}, []databaseTools.User{}, db)
-}
-
 func hashAndSalt(pwd string) string {
 
 	pwdByte := []byte(pwd)
@@ -165,6 +149,49 @@ func comparePasswords(hashedPwd string, plainPwd string) bool {
 	return true
 }
 
+func handleAll(db *sql.DB) {
+	fileServer := http.FileServer(http.Dir("./data"))
+	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
+	handleAccueil(db)
+	handleProfil(databaseTools.User{}, []databaseTools.User{}, db)
+}
+
+//------------------------------------------------- A REFAIRE -------------------------------------------------
+//handleAccueil is the handlefunc for the main page
+func handleAccueil(database *sql.DB) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		var dataToSend databaseTools.Data
+		variable, _ := template.ParseFiles("index.html")
+		title := r.FormValue("threadTitle")
+		thread := r.FormValue("créa_thread")
+		addThread(databaseTools.User{}, title, thread, database)
+		inscription(r)
+		connexion(w, r, database)
+		req := `SELECT Thread.id_user, 
+		Thread.title, 
+		Thread.content, 
+		User.user_name
+		FROM Thread, User`
+		rows, _ := database.Query(req)
+		for rows.Next() {
+			item := databaseTools.ThreadData{}
+			err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.User_name)
+			if err2 != nil {
+				panic(err2)
+			}
+			dataToSend.Posts = append(dataToSend.Posts, item)
+		}
+
+		variable.Execute(w, dataToSend)
+	})
+}
+
+func addThread(oneUser databaseTools.User, title string, content string, database *sql.DB) {
+	idUser := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", oneUser.User_name)
+	id, _ := strconv.Atoi(idUser)
+	databaseTools.InsertIntoThreads(id, title, content, "10/06/21 10:35", database)
+}
+
 //runServer sets the listenandserve port to 8080
 func runServer() {
 	fmt.Println("server is runing")
@@ -174,8 +201,8 @@ func runServer() {
 }
 
 func main() {
+	databaseTools.InitDatabase("dataBase/forum.db")
 	db, _ := sql.Open("sqlite3", "dataBase/forum.db")
-
 	handleAll(db)
 	runServer()
 }
