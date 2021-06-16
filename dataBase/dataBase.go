@@ -28,6 +28,13 @@ type Thread struct {
 	Comment_count int
 }
 
+type ThreadData struct {
+	Id_user   int
+	Title     string
+	Content   string
+	User_name string
+}
+
 type ThreadMessage struct {
 	Id_th_msg   int
 	Id_th       int
@@ -61,19 +68,12 @@ type Category struct {
 	Cat_name string
 }
 
-type ThreadData struct {
-	Id_user   int
-	Title     string
-	Content   string
-	User_name string
-}
-
 type Data struct {
 	Participant []User
 	Posts       []ThreadData
 }
 
-func initDatabase(database string) *sql.DB {
+func InitDatabase(database string) *sql.DB {
 	db, err := sql.Open("sqlite3", database)
 	if err != nil {
 		log.Fatal(err)
@@ -92,13 +92,18 @@ func initDatabase(database string) *sql.DB {
 	return db
 }
 
-func InsertIntoUsers(user_name string, email string, password string, image string) {
-	db := initDatabase("dataBase/forum.db")
-	_, err := db.Exec(`INSERT INTO User (user_name, email, password, image) VALUES (?, ?, ?, ?)`, user_name, email, password, image)
+func InsertIntoUsers(user_name string, email string, password string, db *sql.DB) {
+	_, err := db.Exec(`INSERT INTO User (user_name, email, password) VALUES (?, ?, ?)`, user_name, email, password)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
+}
+
+func InsertIntoThreads(id_user int, title string, content string, created_at string, db *sql.DB) {
+	_, err := db.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, false, 0, 0, 0)`, id_user, title, content, created_at)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 //singleRowQuerry retrieve a value in the db with a where comparator
@@ -140,42 +145,3 @@ func UpdateValue(db *sql.DB, tableName string, collumnName string, newValue stri
 		log.Fatal(err)
 	}
 }
-
-func InsertIntoThreads(id_user int, title string, content string, created_at string, db *sql.DB) {
-	_, err := db.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, false, 0, 0, 0)`, id_user, title, content, created_at)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-// func main() {
-// 	db := initDatabase("test.db")
-// 	InsertIntoUsers(db, "Louis", "mail", "mdp", "image")
-// 	// ReadItem(db)
-// 	defer db.Close()
-
-// }
-
-// func ReadItem(db *sql.DB) {
-// 	sql_readall := `
-// 	SELECT Id_user, User_name, Password, Email FROM items
-// 	ORDER BY datetime(InsertedDatetime) DESC
-// 	`
-
-// 	rows, err := db.Query(sql_readall)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	defer rows.Close()
-
-// 	var result []User
-// 	for rows.Next() {
-// 		item := User{}
-// 		err2 := rows.Scan(&item.id_user, &item.user_name, &item.password, &item.email, &item.image)
-// 		if err2 != nil {
-// 			panic(err2)
-// 		}
-// 		result = append(result, item)
-// 	}
-// 	fmt.Println(result)
-// }

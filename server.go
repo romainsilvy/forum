@@ -20,7 +20,7 @@ var (
 )
 
 //inscription manage the inscription form
-func inscription(r *http.Request) {
+func inscription(r *http.Request, database *sql.DB) {
 	inscriptionPseudo := r.FormValue("inscriptionPseudo")
 	if inscriptionPseudo != "" {
 		inscriptionEmail := r.FormValue("inscriptionEmail")
@@ -30,7 +30,7 @@ func inscription(r *http.Request) {
 
 		if inscriptionEmail == inscriptionEmailConfirm && inscriptionPassword == inscriptionPasswordConfirm {
 			hashed := hashAndSalt(inscriptionPassword)
-			databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, hashed, "img")
+			databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, hashed, database)
 		}
 	}
 }
@@ -62,45 +62,39 @@ func connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 	}
 }
 
-func handleAccueil(database *sql.DB) {
+//handleAccueil is the handlefunc for the main page
+func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		var dataToSend databaseTools.Data
 		variable, _ := template.ParseFiles("index.html")
 		title := r.FormValue("threadTitle")
 		thread := r.FormValue("créa_thread")
-		addThread(r, databaseTools.User{}, title, thread, database)
-		inscription(r)
-
+		addThread(databaseTools.User{}, title, thread, database)
+		inscription(r, database)
 		connexion(w, r, database)
-		req := `SELECT Thread.Content FROM Thread`
+		req := `SELECT Thread.id_user, 
+		Thread.title, 
+		Thread.content, 
+		User.user_name
+		FROM Thread, User`
 		rows, _ := database.Query(req)
 		for rows.Next() {
 			item := databaseTools.ThreadData{}
-			err2 := rows.Scan(&item.Content)
+			err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.User_name)
 			if err2 != nil {
 				panic(err2)
 			}
-			fmt.Println(item)
-			fmt.Println("")
-			fmt.Println("")
-			fmt.Println("")
-			fmt.Println("")
-			fmt.Println("")
-
 			dataToSend.Posts = append(dataToSend.Posts, item)
 		}
-
-		fmt.Println(dataToSend.Posts)
 		variable.Execute(w, dataToSend)
 	})
 }
 
-func addThread(r *http.Request, oneUser databaseTools.User, title string, content string, database *sql.DB) {
-	if r.FormValue("créa_thread") == "Submit" {
-		idUser := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", oneUser.User_name)
-		id, _ := strconv.Atoi(idUser)
-		databaseTools.InsertIntoThreads(id, title, content, "10/06/21 10:35", database)
-	}
+// requete slq de tout; request
+func addThread(oneUser databaseTools.User, title string, content string, database *sql.DB) {
+	idUser := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", oneUser.User_name)
+	id, _ := strconv.Atoi(idUser)
+	databaseTools.InsertIntoThreads(id, title, content, "10/06/21 10:35", database)
 }
 
 func changePassword(r *http.Request, userPassword string, userName string, database *sql.DB) {
@@ -113,7 +107,6 @@ func changePassword(r *http.Request, userPassword string, userName string, datab
 			newPasswordConfirm := r.FormValue("newPasswordConfirm")
 			newPasswordHashed := hashAndSalt(newPassword)
 			// newPasswordConfirmHashed := hashAndSalt(newPasswordConfirm)
-
 			if newPassword == newPasswordConfirm {
 				databaseTools.UpdateValue(database, "User", "password", newPasswordHashed, "user_name", userName)
 				fmt.Println("mot de passe changé ")
@@ -171,7 +164,7 @@ func handleProfil(oneUser databaseTools.User, tabUser []databaseTools.User, data
 func handleAll(db *sql.DB) {
 	fileServer := http.FileServer(http.Dir("./data"))
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
-	handleAccueil(db)
+	handleAccueil(databaseTools.User{}, []databaseTools.User{}, db)
 	handleProfil(databaseTools.User{}, []databaseTools.User{}, db)
 }
 
@@ -206,8 +199,9 @@ func runServer() {
 }
 
 func main() {
+	databaseTools.InitDatabase("dataBase/forum.db")
 	db, _ := sql.Open("sqlite3", "dataBase/forum.db")
-
 	handleAll(db)
+	// databaseTools.InsertIntoThreads(10, "mon histoire", "blablabla", "crée le blabla", db)
 	runServer()
 }
