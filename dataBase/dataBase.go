@@ -103,6 +103,8 @@ func InsertIntoThreads(id_user int, title string, content string, created_at str
 
 //singleRowQuerry retrieve a value in the db with a where comparator
 func SingleRowQuerry(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 string) string {
+	// SELECT password FROM User WHERE User_name = " ?"
+	//recup le mdp
 	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
 	if err != nil {
 		log.Fatal(err)

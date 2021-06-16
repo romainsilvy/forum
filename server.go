@@ -52,6 +52,7 @@ func connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 					session.Values["user"] = connexionUser
 					session.Save(r, w)
 					fmt.Println("utilisateur connecté")
+
 				} else {
 					fmt.Println("mot de passe incorrect")
 				}
@@ -71,8 +72,11 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 		thread := r.FormValue("créa_thread")
 		connexion(w, r, database)
 		inscription(r, database)
-		if title != "" && thread != "" {
-			addThread(databaseTools.User{}, title, thread, database)
+		session, _ := store.Get(r, "auth")
+		if (title != "") && (thread != "") && (session.Values["authenticated"] == true) {
+			check := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", "Louis")
+			id_user, _ := strconv.Atoi(check)
+			addThread(databaseTools.User{}, id_user, title, thread, database)
 		}
 		req := `SELECT Thread.id_user, 
 		Thread.title, 
@@ -93,10 +97,12 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 }
 
 // requete slq de tout; request
-func addThread(oneUser databaseTools.User, title string, content string, database *sql.DB) {
-	idUser := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", oneUser.User_name)
-	id, _ := strconv.Atoi(idUser)
-	databaseTools.InsertIntoThreads(id, title, content, "10/06/21 10:35", database)
+func addThread(oneUser databaseTools.User, id_user int, title string, content string, database *sql.DB) {
+	fmt.Print(id_user)
+	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, false, 0, 0, 0)`, id_user, title, content, "ajd")
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func changePassword(r *http.Request, userPassword string, userName string, database *sql.DB) {
