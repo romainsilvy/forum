@@ -69,9 +69,11 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 		variable, _ := template.ParseFiles("index.html")
 		title := r.FormValue("threadTitle")
 		thread := r.FormValue("créa_thread")
-		addThread(databaseTools.User{}, title, thread, database)
-		inscription(r, database)
 		connexion(w, r, database)
+		inscription(r, database)
+		if title != "" && thread != "" {
+			addThread(databaseTools.User{}, title, thread, database)
+		}
 		req := `SELECT Thread.id_user, 
 		Thread.title, 
 		Thread.content, 
