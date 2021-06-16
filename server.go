@@ -50,6 +50,7 @@ func connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 					session, _ := store.Get(r, "auth")
 					session.Values["authenticated"] = true
 					session.Values["user"] = connexionUser
+					fmt.Println(session.Values["user"])
 					session.Save(r, w)
 					fmt.Println("utilisateur connecté")
 
@@ -69,15 +70,14 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 		var dataToSend []databaseTools.ThreadData
 		variable, _ := template.ParseFiles("index.html")
 		title := r.FormValue("threadTitle")
-		thread := r.FormValue("créa_thread")
+		content := r.FormValue("créa_thread")
+		sub := r.FormValue("submitthread")
+		session, _ := store.Get(r, "auth")
+		if (sub == "Submit") && (session.Values["authenticated"] == true) {
+			addThread(session, title, content, "16/06/2021", database)
+		}
 		connexion(w, r, database)
 		inscription(r, database)
-		session, _ := store.Get(r, "auth")
-		if (title != "") && (thread != "") && (session.Values["authenticated"] == true) {
-			check := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", "Louis")
-			id_user, _ := strconv.Atoi(check)
-			addThread(databaseTools.User{}, id_user, title, thread, database)
-		}
 		req := `SELECT Thread.id_user, 
 		Thread.title, 
 		Thread.content, 
@@ -96,10 +96,13 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 	})
 }
 
-// requete slq de tout; request
-func addThread(oneUser databaseTools.User, id_user int, title string, content string, database *sql.DB) {
-	fmt.Print(id_user)
-	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, false, 0, 0, 0)`, id_user, title, content, "ajd")
+// requete ajoute un tread
+func addThread(session *sessions.Session, title string, content string, created_at string, database *sql.DB) {
+	littlecookie := session.Values["user"]
+	convertissor := fmt.Sprintf("%v", littlecookie)
+	check := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", convertissor)
+	id_user, _ := strconv.Atoi(check)
+	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, false, 0, 0, 0)`, id_user, title, content, created_at)
 	if err != nil {
 		log.Fatal(err)
 	}
