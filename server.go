@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	databaseTools "test/dataBase"
+	databaseTools "test2/dataBase"
 
 	"github.com/gorilla/sessions"
 	_ "github.com/mattn/go-sqlite3"
@@ -22,7 +22,7 @@ var (
 //inscription manage the inscription form
 func inscription(r *http.Request) {
 	inscriptionPseudo := r.FormValue("inscriptionPseudo")
-	if inscriptionPseudo != "" {
+		
 		inscriptionEmail := r.FormValue("inscriptionEmail")
 		inscriptionEmailConfirm := r.FormValue("inscriptionEmailConfirm")
 		inscriptionPassword := r.FormValue("inscriptionPassword")
@@ -164,32 +164,59 @@ func handleAccueil(database *sql.DB) {
 		variable, _ := template.ParseFiles("index.html")
 		title := r.FormValue("threadTitle")
 		thread := r.FormValue("créa_thread")
-		addThread(databaseTools.User{}, title, thread, database)
+		addThread(r, databaseTools.User{}, title, thread, database)
 		inscription(r)
 		connexion(w, r, database)
-		req := `SELECT Thread.id_user, 
-		Thread.title, 
-		Thread.content, 
-		User.user_name
-		FROM Thread, User`
+
+		// req := `SELECT Thread.id_user,
+		// Thread.title,
+		// Thread.content,
+		// User.user_name
+		// FROM Thread, User`
+		// rows, _ := database.Query(req)
+		// fmt.Println(rows)
+		// for rows.Next() {
+		// 	item := databaseTools.ThreadData{}
+		// 	fmt.Println("dans le row next")
+		// 	fmt.Println(item)
+		// 	err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.User_name)
+		// 	if err2 != nil {
+		// 		panic(err2)
+		// 	}
+		// 	dataToSend.Posts = append(dataToSend.Posts, item)
+		// }
+
+
+		
+		req := `SELECT Thread.Content FROM Thread`
 		rows, _ := database.Query(req)
 		for rows.Next() {
 			item := databaseTools.ThreadData{}
-			err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.User_name)
+			err2 := rows.Scan(&item.Content)
 			if err2 != nil {
 				panic(err2)
 			}
+			fmt.Println(item)
+			fmt.Println("")
+			fmt.Println("")
+			fmt.Println("")
+			fmt.Println("")
+			fmt.Println("")
+
 			dataToSend.Posts = append(dataToSend.Posts, item)
 		}
 
+		fmt.Println(dataToSend.Posts)
 		variable.Execute(w, dataToSend)
 	})
 }
 
-func addThread(oneUser databaseTools.User, title string, content string, database *sql.DB) {
-	idUser := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", oneUser.User_name)
-	id, _ := strconv.Atoi(idUser)
-	databaseTools.InsertIntoThreads(id, title, content, "10/06/21 10:35", database)
+func addThread(r *http.Request, oneUser databaseTools.User, title string, content string, database *sql.DB) {
+	if r.FormValue("créa_thread") != "" {
+		idUser := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", oneUser.User_name)
+		id, _ := strconv.Atoi(idUser)
+		databaseTools.InsertIntoThreads(id, title, content, "10/06/21 10:35", database)
+	}
 }
 
 //runServer sets the listenandserve port to 8080
