@@ -65,7 +65,7 @@ func connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 //handleAccueil is the handlefunc for the main page
 func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		var dataToSend databaseTools.Data
+		var dataToSend []databaseTools.ThreadData
 		variable, _ := template.ParseFiles("index.html")
 		title := r.FormValue("threadTitle")
 		thread := r.FormValue("créa_thread")
@@ -84,7 +84,7 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 			if err2 != nil {
 				panic(err2)
 			}
-			dataToSend.Posts = append(dataToSend.Posts, item)
+			dataToSend = append(dataToSend, item)
 		}
 		variable.Execute(w, dataToSend)
 	})

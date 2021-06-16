@@ -68,11 +68,6 @@ type Category struct {
 	Cat_name string
 }
 
-type Data struct {
-	Participant []User
-	Posts       []ThreadData
-}
-
 func InitDatabase(database string) *sql.DB {
 	db, err := sql.Open("sqlite3", database)
 	if err != nil {

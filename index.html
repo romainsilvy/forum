@@ -50,17 +50,17 @@
                 <button id="button-input-add-thread" type="button">+</button>
                 <input id="input-add-thread" type="text" placeholder="Ajoutez le nom d'un thread...." value="">
             </div>
-                <div class="inside-center a-thread">
-                    <h3></h3>
-                    <p class="zeub">
-                    It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. 
-                    It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software 
-                    like Aldus PageMaker including versions of Lorem Ipsum.
-            
-                    <button class="btn-like" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span class="like__number">99</span></button>
-                    <button class="btn-dislike" id="red"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span class="like__number">100</span></button>
-                    </p>
-                    </div>
+            {{range .}}
+            <div class="inside-center a-thread">
+                <h3>{{.Title}}</h3>
+                <p class="zeub">
+                    {{.Content}}
+                <button class="btn-like" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span class="like__number">99</span></button>
+                <button class="btn-dislike" id="red"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span class="like__number">100</span></button>
+                </p>
+            </div>
+            {{end}}
+                
         </div>
         <div class="global-item" id="global-right">
             <img id="profile-picture" src="/static/images/profile-picture.png">
