@@ -1,3 +1,6 @@
+/* ------- CSS THREAD ------- */
+
+
 .inside-center {
     width: auto;
     background-color: white;
@@ -5,10 +8,6 @@
     box-shadow: 0px 8px 24px #7090B0B3;
     padding: 20px;
     margin: 50px;
-}
-
-#global-center{
-    overflow-y: scroll;
 }
 
 #add-thread #input-add-thread {
@@ -39,3 +38,120 @@ a, a:hover, a:focus, a:active {
     text-decoration: none;
     color: inherit;
 }
+
+
+/* ------- CSS GLOBAL POP UP ------- */
+
+
+.popUp {
+    display: block !important;
+}
+
+.option_div {
+    display: flex; 
+}
+
+.check_box {
+    color: rgb(107, 107, 107)
+}
+
+.box {
+    width: 300px;
+    padding: 40px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background-image: linear-gradient( #fde8f7 0%, #d5e3fb 100%);
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 0px 8px 24px #7090B0B3;
+    display: none;
+}
+
+.box h1 {
+    color: rgb(107, 107, 107);
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.box input[type = "text"],.box input[type = "password"], .box input[type="email"] {
+    border:0;
+    background: none;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #f8d5ee;
+    padding: 14px 10px;
+    width: 200px;
+    outline: none;
+    color: rgb(107, 107, 107);
+    border-radius: 24px;
+    transition: 0.25s;
+}
+
+.box input[type = "text"]:focus,.box input[type = "password"]:focus, .box input[type="email"]:focus {
+    width: 280px;
+    border-color: rgb(138, 197, 224)
+}
+
+.box input[type = "submit"]{
+    background: none;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #f8d5ee;
+    padding: 14px 40px;
+    color: rgb(107, 107, 107);
+    border-radius: 24px;
+    transition: 0.25s;
+    cursor: pointer;
+    font-size: large;
+}
+
+.box input[type = "submit"]:hover {
+    background: rgb(138, 197, 224)
+}
+
+
+/* ------- CSS CONNEXION POP UP ------- */
+
+
+.sign_up {
+    color: rgb(107, 107, 107)
+}
+
+.forget a {
+    color:rgb(138, 197, 224);
+}
+
+#sInscrire {
+    color:rgb(138, 197, 224);
+}
+
+form a {
+    text-decoration: none;
+}
+
+form a:hover {
+    text-decoration: underline;
+}
+
+#sInscrire:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.connexion-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(32, 32, 32, 0.568);
+}
+
+
+/* ------- CSS INSCRIPTION POP UP ------- */
+/* ------- rien de spécifique uniquement à la pop up ------- */
+
+

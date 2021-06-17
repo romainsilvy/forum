@@ -1,5 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 
+/* ------- CSS ALL ------- */
+
+
 * {
     margin: 0;
     padding: 0;
@@ -10,14 +13,14 @@
 
 body {
     background-image: linear-gradient(to right, #fde8f7 0%, #d5e3fb 100%);
-    /* overflow: hidden; */
+    overflow: hidden;
     background: #f2f2f2;
     font-family: 'Open Sans', sans-serif;
 }
 
 header {
     width: 100%;
-    height: 100px;
+    /* height: 100px; */
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: 1fr;
@@ -27,26 +30,63 @@ header {
 header #logo {
     grid-row: 1;
     grid-column: 1;
-    text-align: left;
     float: left;
     height: 90px;
     padding-top: 10px;
 }
 
-header input {
-    grid-row: 1;
-    grid-column: 5;
+header #wrap{
+    width: 30%;
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-header a {
-    grid-row: 1;
-    grid-column: 10;
+header #search {
+    width: 100%;
+    position: relative;
+    display: flex;
 }
+
+header #searchTerm {
+    grid-row: 1;
+    grid-column: 5;
+    width: 100%;
+    border: 3px solid #ceb3fa;
+    border-right: none;
+    padding: 5px;
+    height: 20px;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+    color: #9DBFAF;
+}
+
+header #searchTerm:focus{
+    color: #ceb3fa;
+}
+
+header #searchButton {
+    width: 40px;
+    height: 36px;
+    border: 1px solid #ceb3fa;
+    background: #ceb3fa;
+    text-align: center;
+    color: #fff;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    font-size: 20px;
+}
+
 header #profile-picture {
     height: 100px;
     grid-row: 1;
     grid-column: 10;
 }
+
+
+/* ------- CSS GLOBAL DESIGN GRID ------- */
+
 
 #global{
     display: grid;
@@ -67,6 +107,7 @@ header #profile-picture {
     grid-row: 1;
     border-left: solid 1px grey;
     border-right: solid 1px grey;
+    overflow-y: scroll;
 }
 
 #global #global-right {
@@ -75,48 +116,10 @@ header #profile-picture {
     grid-row: 1;
 }
 
-#search {
-    width: 100%;
-    position: relative;
-    display: flex;
-}
 
-#searchTerm {
-    width: 100%;
-    border: 3px solid #ceb3fa;
-    border-right: none;
-    padding: 5px;
-    height: 20px;
-    border-radius: 5px 0 0 5px;
-    outline: none;
-    color: #9DBFAF;
-}
+/* ------- Partie gauche ------- */
 
-#searchTerm:focus{
-    color: #ceb3fa;
-}
 
-#searchButton {
-    width: 40px;
-    height: 36px;
-    border: 1px solid #ceb3fa;
-    background: #ceb3fa;
-    text-align: center;
-    color: #fff;
-    border-radius: 0 5px 5px 0;
-    cursor: pointer;
-    font-size: 20px;
-}
-
-#wrap{
-    width: 30%;
-    position: absolute;
-    top: 5%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-/* Partie gauche  */
 .item-left {
     width: 80%;
     background-color: rgba(238, 238, 238, 0.411);
@@ -132,7 +135,7 @@ header #profile-picture {
     width : 20px;
 }
 
-#cat {
+#category {
     width: 80%;
     height: 60%;
     margin: 10px;
@@ -143,20 +146,14 @@ header #profile-picture {
     box-shadow: 0px 8px 24px #7090B0B3;
 }
 
-/* Partie droite */
+
+/* ------- Partie droite ------- */
+
+
 div #profile-picture {
     margin-top: 50px;
     height: 100px;
     grid-row: 1;
     grid-column: 10;
     align-items: center;
-}
-
-div #Participant{
-    margin-top: 75px;
-}
-div #tableau{
-    text-align: start;
-    margin-left: 50px;
-    margin-top: 50px;
 }
