@@ -6,37 +6,30 @@
     <title>Cham Nation</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/static/css/global.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/accueil.css">
 </head>
 
 <body>
     <header>
-        
         <img id="logo" src="/static/images/logo.png">
         <div id="wrap">
             <div id="search">
-                <input type="text" id="searchTerm" placeholder="What are you looking for?">
+                <input type="text" id="searchTerm" placeholder="What are you looking for?" value="">
                 <button type="submit" id="searchButton">
                     <i id="fa fa-search"></i>
                 </button>
             </div>
         </div>
-        <img id="profile-picture" src="/static/images/profile-picture.png">
+        <img id="profile-picture" src="/static/images/profile-picture.png"> 
     </header>
 
     <div id="global">
         <div class="global-item" id="global-left">
             <div class="item-left item">
-                <img id="home" src="/static/images/home.png">
-                <p>Accueil</p>
-            </div>
-            <div class="item-left" id="item">
-                <img id="home" src="/static/images/thread.png">
-                <p>Mes threads</p>
-            </div>
-            <div class="item-left" id="item">
-                <img id="home" src="/static/images/follow.png">
-                <p>Suivis</p>
+                <a href="/">
+                    <img id="home" src="/static/images/home.png">
+                    <p>Accueil</p>
+                </a>
             </div>
             <div id="cat">
                 <p>Catégories</p>   
@@ -72,22 +65,17 @@
                     </div>
                 </div>
             </form>
-            <div id = "stats">
-                <h2>Description</h2>
-                <textarea id="story2" name ="story"></textarea>
-            </div>
         </div>
         <div class="global-item" id="global-right">
-            <button id="parametre" type="button">+</button>
-            <img id="profile-picture" src="/static/images/profile-picture.png">
+            <img id="profilePicture" src="/static/images/profile-picture.png">
             <div class="txt">
                 <h2>{{.User_name}}</h2>
                 <div  class="bannerSubtitle">
                 </div>
             </div>
             <div>
-                10000 <i id="like" class="glyphicon glyphicon-thumbs-up"></i>
-                5 <i id="like" class="glyphicon glyphicon-thumbs-down"></i>
+                10000
+                5
             </div>
             <div class="frame">
                 <button class="custom-btn btn-6"><span>Logout</span></button>
