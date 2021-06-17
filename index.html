@@ -110,11 +110,11 @@
         var x = document.getElementById("input-add-thread").value
         if ( x !== "") {
             document.querySelector("#namethread").value = x
-            document.querySelector('#thread-background').classList.add("popUp")
+            document.querySelector('#thread-background').classList.add("threadGrid")
             document.querySelector('#pop-up').classList.add("connexion-background")
 
             document.querySelector('#pop-up').addEventListener('click', ()=>{
-            document.querySelector('#thread-background').classList.remove("popUp")
+            document.querySelector('#thread-background').classList.remove("threadGrid")
             document.querySelector('#pop-up').classList.remove("connexion-background")
             })
         }

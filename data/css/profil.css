@@ -1,3 +1,14 @@
+/* ------- CSS GLOBAL FOR PROFIL ------- */
+
+
+a, a:hover, a:focus, a:active {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ------- CSS PROFIL DATA ------- */
+
+
 div #mdp{
     grid-row: 1;
     grid-column: 1;
@@ -119,6 +130,8 @@ div #story{
 }
 
 
+/* ------- CSS INPUT LOGOUT ------- */
+
 
 .frame {
     width: 90%;
@@ -234,4 +247,44 @@ div #story{
 
 .btn-6 span:hover:after {
     width: 100%;
+}
+
+
+/* ------- CSS INPUT CHANGE ------- */
+
+.box input[type = "text"],.box input[type = "password"], .box input[type="email"] {
+    border:0;
+    background: none;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #f8d5ee;
+    padding: 14px 10px;
+    width: 200px;
+    outline: none;
+    color: rgb(107, 107, 107);
+    border-radius: 24px;
+    transition: 0.25s;
+}
+
+.box input[type = "text"]:focus,.box input[type = "password"]:focus, .box input[type="email"]:focus {
+    width: 280px;
+    border-color: rgb(138, 197, 224)
+}
+
+.box input[type = "submit"]{
+    background: none;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #f8d5ee;
+    padding: 14px 40px;
+    color: rgb(107, 107, 107);
+    border-radius: 24px;
+    transition: 0.25s;
+    cursor: pointer;
+    font-size: large;
+}
+
+.box input[type = "submit"]:hover {
+    background: rgb(138, 197, 224)
 }
