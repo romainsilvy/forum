@@ -251,3 +251,17 @@ form a:hover {
 /* ------- rien de spécifique uniquement à la pop up ------- */
 
 
+/* ------- LIKES AND DISLIKES ------- */
+.btn-like .btn-dislike{
+    cursor: pointer;
+    outline: 0;
+    color: #AAA;
+}
+
+.green{
+    color: green;
+}
+  
+.red{
+    color: red;
+}

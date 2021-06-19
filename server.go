@@ -89,13 +89,15 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 		req := `SELECT 
 			id_user,
 			title,
-			content 
+			content,
+			created_at
 			FROM 
-			Thread`
+			Thread
+			ORDER BY created_at DESC`
 		rows, _ := database.Query(req)
 		for rows.Next() {
 			item := databaseTools.ThreadData{}
-			err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content)
+			err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at)
 			if err2 != nil {
 				panic(err2)
 			}
