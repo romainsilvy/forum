@@ -17,7 +17,12 @@ body {
     font-family: 'Open Sans', sans-serif;
     height: calc(100vh);
     width: 100%;
-    background-image: linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);
+    background-image: linear-gradient(to top, #fc7cd7 0%, #a6c1ee 100%);
+}
+
+a, a:hover, a:focus, a:active {
+    text-decoration: none;
+    color: inherit;
 }
 
 input {
@@ -25,6 +30,7 @@ input {
 }
 
 header {
+    position: static;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: 1fr;
@@ -72,7 +78,6 @@ header #searchTerm:focus{
 
 header #searchButton {
     width: 40px;
-    height: 36px;
     border: 1px solid #ceb3fa;
     background: #ceb3fa;
     text-align: center;
@@ -86,6 +91,7 @@ header #profile-picture {
     height: 100px;
     grid-row: 1;
     grid-column: 10;
+    cursor: pointer;
 }
 
 
@@ -94,8 +100,8 @@ header #profile-picture {
 
 #global{
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: 1fr;
+    grid-template-columns: 25% 50% 25%;
+    grid-template-rows: 100%;
     height: calc(100vh - 125px);
     }
 
