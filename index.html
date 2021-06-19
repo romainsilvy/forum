@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/static/css/global.css">
     <link rel="stylesheet" type="text/css" href="/static/css/accueil.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/ajouterthread.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
@@ -104,8 +103,8 @@
         <textarea name="créa_thread" id="créa_thread" cols="70" rows="30" placeholder="écrivez votre thread ici"></textarea>
         <input type="submit" value="Enregistrer" name="submitthread" id="submitthread" class="sub-thread">
     </form>
-
-    <script>
+</body>
+<script>
     
     document.querySelector('#button-input-add-thread').addEventListener('click', ()=>{
         var x = document.getElementById("input-add-thread").value
@@ -178,6 +177,5 @@
                 })
             }
         }) 
-    </script>
-</body>
+</script>
 </html>
