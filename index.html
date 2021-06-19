@@ -42,7 +42,7 @@
                 <input id="input-add-thread" type="text" placeholder="Ajoutez le nom d'un thread...." value="">
             </div>
             {{range .}}
-            <div class="inside-center a-thread">
+            <div id="testHour" class="inside-center a-thread">
                 <h3>{{.Title}}</h3>
                 <p class="zeub">
                     {{.Content}}
@@ -84,8 +84,8 @@
         <input type="text" name="inscriptionPseudo" placeholder="Pseudo" required="required"/>
         <input type="email" id="email" name="inscriptionEmail" placeholder="Email" required="required"/>
         <input type="email" id="email" name="inscriptionEmailConfirm" placeholder="Confirmer l'email" required="required"/>
-        <input type="password" name="inscriptionPassword" placeholder="Mot de passe" required="required"/>
-        <input type="password" name="inscriptionPasswordConfirm" placeholder="Confirmer Mot de passe" required="required"/>
+        <input type="password" name="inscriptionPassword" placeholder="Mot de passe" minlength="4" maxlength="12" size="12" required="required"/>
+        <input type="password" name="inscriptionPasswordConfirm" placeholder="Confirmer Mot de passe" minlength="4" maxlength="12" size="12" required="required"/>
         <div class="option_div">
             <div class="check_box">
                 <input type="checkbox">
@@ -106,6 +106,7 @@
     </form>
 
     <script>
+    
     document.querySelector('#button-input-add-thread').addEventListener('click', ()=>{
         var x = document.getElementById("input-add-thread").value
         if ( x !== "") {

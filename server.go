@@ -21,6 +21,7 @@ var (
 
 //inscription manage the inscription form
 func inscription(r *http.Request, database *sql.DB) {
+	goodCreation := false
 	inscriptionPseudo := r.FormValue("inscriptionPseudo")
 	if inscriptionPseudo != "" {
 		inscriptionEmail := r.FormValue("inscriptionEmail")
@@ -31,6 +32,11 @@ func inscription(r *http.Request, database *sql.DB) {
 		if inscriptionEmail == inscriptionEmailConfirm && inscriptionPassword == inscriptionPasswordConfirm {
 			hashed := hashAndSalt(inscriptionPassword)
 			databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, hashed, database)
+			goodCreation = true
+		}
+
+		if !goodCreation {
+			fmt.Println("Le compte n'a pas pu être créé")
 		}
 	}
 }
@@ -74,7 +80,9 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 		sub := r.FormValue("submitthread")
 		session, _ := store.Get(r, "auth")
 		if (sub == "Enregistrer") && (session.Values["authenticated"] == true) {
-			addThread(session, title, content, "16/06/2021", database)
+			addThread(session, title, content, database)
+		} else if (sub == "Enregistrer") && (session.Values["authenticated"] != true) {
+			fmt.Println("Veuillez vous connecter pour poster un thread !")
 		}
 		connexion(w, r, database)
 		inscription(r, database)
@@ -98,12 +106,12 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 }
 
 // requete ajoute un tread
-func addThread(session *sessions.Session, title string, content string, created_at string, database *sql.DB) {
+func addThread(session *sessions.Session, title string, content string, database *sql.DB) {
 	littlecookie := session.Values["user"]
 	convertissor := fmt.Sprintf("%v", littlecookie)
 	check := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", convertissor)
 	id_user, _ := strconv.Atoi(check)
-	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, false, 0, 0, 0)`, id_user, title, content, created_at)
+	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, time(), false, 0, 0, 0)`, id_user, title, content)
 	if err != nil {
 		log.Fatal(err)
 	}
