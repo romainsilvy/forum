@@ -36,6 +36,7 @@ type ThreadData struct {
 	Content    string
 	Created_at string
 	Category   string
+	Like_count int
 }
 
 type ThreadMessage struct {

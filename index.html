@@ -52,8 +52,12 @@
                 <h3>{{.Title}}</h3>
                 <p class="zeub">
                     {{.Content}}
-                <button class="btn-like" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span class="like__number">99</span></button>
-                <button class="btn-dislike" id="red"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span class="like__number">100</span></button>
+                    <a href="#" class="like-counter">
+                        <button value="likeAdd" name="like" class="btn-like" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span class="like__number">14</span></button>
+                    </a>
+                    <span class="click-text">
+                    <a id="clicks"></span>
+                    <button class="btn-dislike" id="red"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span class="like__number">100</span></button>
                 </p>
             </div>
             {{end}}
@@ -153,27 +157,37 @@
                 i=0;
             }
         }
-        // var btn1 = document.querySelector('#green');
-        // var btn2 = document.querySelector('#red');
-        
 
-        // btn1.addEventListener('click', function() {
-        
-        //     if (btn2.classList.contains('red')) {
-        //     btn2.classList.remove('red');
-        //     } 
-        // this.classList.toggle('green');
-        
-        // });
+        var clicks = 14;
 
-        // btn2.addEventListener('click', function() {
+            document.getElementById("likeAdd").innerHTML = clicks;
+
+            $('.like-counter').click(function() {
+                clicks += 1;
+                document.getElementById("likeAdd").innerHTML = clicks;
+                $('.like-counter').addClass("liked");
+            });
+
+        if (document.querySelector("#testHour")) {
+            var btn1 = document.querySelector('#green');
+            var btn2 = document.querySelector('#red');
+
+            btn1.addEventListener('click', function() {
         
-        //     if (btn1.classList.contains('green')) {
-        //     btn1.classList.remove('green');
-        //     } 
-        // this.classList.toggle('red');
+            if (btn2.classList.contains('red')) {
+                btn2.classList.remove('red');
+            } 
+            this.classList.toggle('green');
+            });
+
+            btn2.addEventListener('click', function() {
         
-        // });
+            if (btn1.classList.contains('green')) {
+                btn1.classList.remove('green');
+            } 
+            this.classList.toggle('red');
+            });
+        }
 
         document.querySelector('#profile-picture').addEventListener('click', ()=>{
 
