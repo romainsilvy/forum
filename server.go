@@ -80,7 +80,7 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 		sub := r.FormValue("submitthread")
 		session, _ := store.Get(r, "auth")
 		if (sub == "Enregistrer") && (session.Values["authenticated"] == true) {
-			addThread(session, title, content, database)
+			addThread(session, title, content, "cat2", database)
 		} else if (sub == "Enregistrer") && (session.Values["authenticated"] != true) {
 			fmt.Println("Veuillez vous connecter pour poster un thread !")
 		}
@@ -107,13 +107,34 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 	})
 }
 
+func scanCategories(database *sql.DB) {
+	req := `SELECT 
+			id_user,
+			title,
+			content,
+			created_at
+			FROM 
+			Thread
+			ORDER BY created_at DESC`
+	rows, _ := database.Query(req)
+	for rows.Next() {
+		item := databaseTools.ThreadData{}
+		err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at)
+		if err2 != nil {
+			panic(err2)
+		}
+		fmt.Println(item)
+	}
+
+}
+
 // requete ajoute un tread
-func addThread(session *sessions.Session, title string, content string, database *sql.DB) {
+func addThread(session *sessions.Session, title string, content string, category string, database *sql.DB) {
 	littlecookie := session.Values["user"]
 	convertissor := fmt.Sprintf("%v", littlecookie)
 	check := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", convertissor)
 	id_user, _ := strconv.Atoi(check)
-	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, time(), false, 0, 0, 0)`, id_user, title, content)
+	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count, category) VALUES (?, ?, ?, time(), false, 0, 0, 0, ?)`, id_user, title, content, category)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -224,6 +245,7 @@ func main() {
 	databaseTools.InitDatabase("dataBase/forum.db")
 	db, _ := sql.Open("sqlite3", "dataBase/forum.db")
 	handleAll(db)
+	fmt.Println(databaseTools.SingleRowQuerry(db, "title", "Thread", "category", "cat2"))
 	// databaseTools.InsertIntoThreads(10, "mon histoire", "blablabla", "crée le blabla", db)
 	runServer()
 }

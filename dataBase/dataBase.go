@@ -95,8 +95,8 @@ func InsertIntoUsers(user_name string, email string, password string, db *sql.DB
 	}
 }
 
-func InsertIntoThreads(id_user int, title string, content string, created_at string, db *sql.DB) {
-	_, err := db.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, false, 0, 0, 0)`, id_user, title, content, created_at)
+func InsertIntoThreads(id_user int, title string, content string, created_at string, category string, db *sql.DB) {
+	_, err := db.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count, category) VALUES (?, ?, ?, ?, false, 0, 0, 0, ?)`, id_user, title, content, created_at, category)
 	if err != nil {
 		log.Fatal(err)
 	}
