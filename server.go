@@ -88,10 +88,8 @@ func displayCategory(inputCatChoisie string, dataToSend []databaseTools.ThreadDa
 		if err2 != nil {
 			panic(err2)
 		}
-		fmt.Println("jsuis rentré dedans")
 		dataToSend = append(dataToSend, item)
 	}
-	fmt.Println("good")
 	variable.Execute(w, dataToSend)
 }
 
@@ -302,6 +300,5 @@ func main() {
 	databaseTools.InitDatabase("dataBase/forum.db")
 	db, _ := sql.Open("sqlite3", "dataBase/forum.db")
 	handleAll(db)
-	// databaseTools.InsertIntoThreads(10, "mon histoire", "blablabla", "crée le blabla", db)
 	runServer()
 }
