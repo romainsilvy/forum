@@ -128,7 +128,7 @@ func displayAccueil(dataToSend []databaseTools.ThreadData, variable *template.Te
 			FROM 
 			Thread
 			ORDER BY created_at DESC`
-	rows, _ := database.Query(req)
+	rows, _ := db.Query(req)
 	for rows.Next() {
 		item := databaseTools.ThreadData{}
 		err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
