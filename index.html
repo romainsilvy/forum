@@ -12,14 +12,16 @@
 <body>
     <header>
         <img id="logo" src="/static/images/logo.png">
+        <form method="POST" action="">
         <div id="wrap">
             <div id="search">
-                <input type="text" id="searchTerm" placeholder="What are you looking for?" value="">
+                <input list="list" id="searchTerm" placeholder="Que recherchez-vous ?" value="" autocomplete="off">
                 <button type="submit" id="searchButton">
-                    <i id="fa fa-search"></i>
+                    <i class="fas fa-search"></i>
                 </button>
             </div>
         </div>
+        </form>
         <img id="profile-picture" src="/static/images/profile-picture.png"> 
     </header>
 
