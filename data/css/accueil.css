@@ -40,6 +40,8 @@
     margin-top: 0px;
     height: auto;
     cursor: pointer;
+    width: 40px;
+    height: 30px;
 }
 
 
@@ -156,6 +158,19 @@ form a:hover {
 
 /* ------- CSS ADD THREAD POP UP ------- */
 
+ul{
+    list-style: none;
+    display:list-item;
+    text-align: left;
+    display: grid;
+    grid-column: 3;
+    grid-row: 1;
+    align-self: flex-start;
+    justify-content: space-around;
+    line-height: 50px;
+}
+
+
 
 .threadGrid {
     display: grid !important;
@@ -193,7 +208,7 @@ form a:hover {
 #namethread {
     border-width: 0 0 2px;
     background: none;
-    width: 50%;
+    width: 100%;
     font-size: xx-large;
     border-bottom: 2px solid rgb(121, 121, 121);
 }
