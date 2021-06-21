@@ -26,6 +26,7 @@ type Thread struct {
 	Like_count    int
 	Dislike_count int
 	Comment_count int
+	Category      string
 }
 
 type ThreadData struct {
@@ -34,6 +35,7 @@ type ThreadData struct {
 	Title      string
 	Content    string
 	Created_at string
+	Category   string
 }
 
 type ThreadMessage struct {

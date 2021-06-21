@@ -33,9 +33,14 @@
                     <p>Accueil</p>
                 </a>
             </div>
-            <div id="category">
-                <p>Catégories</p>   
-            </div>
+            <form action="" method="POST">
+                <div id="category">
+                    <p>Catégories</p>
+                    <input type="submit" name="CHAMEAU" value="Chameau">
+                    <input type="submit" name="DROMADAIRE" value="Dromadaire">
+                    <input type="submit" name="LAMA" value="Lama">
+                </div>
+            </form>
         </div>
         <div class="global-item" id="global-center">
             <div class="inside-center" id="add-thread">
@@ -103,6 +108,18 @@
             <input value="" type="text" id="namethread" name="threadTitle"></input>
         </div>
         <textarea name="créa_thread" id="créa_thread" cols="70" rows="30" placeholder="écrivez votre thread ici"></textarea>
+        <div>
+            <input type="radio" name="drone" value="CHAMEAU"checked>
+            <label for="CHAMEAU">CHAMEAU</label>
+        </div>
+        <div>
+            <input type="radio" name="drone" value="DROMADAIRE">
+            <label for="DROMADAIRE">DROMADAIRE</label>
+        </div>
+        <div>
+            <input type="radio" name="drone" value="LAMA">
+            <label for="LAMA">LAMA</label>
+        </div>
         <input type="submit" value="Enregistrer" name="submitthread" id="submitthread" class="sub-thread">
     </form>
 </body>

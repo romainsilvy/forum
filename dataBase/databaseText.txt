@@ -17,20 +17,11 @@ CREATE TABLE IF NOT EXISTS Thread(
     like_count INT NOT NULL,
     dislike_count INT NOT NULL,
     comment_count INT NOT NULL,
+    category TEXT NOT NULL,
 
 FOREIGN KEY(id_user) REFERENCES User(id_user)
 );
 
-
-CREATE TABLE IF NOT EXISTS ThreadMessage(
-    id_th_msg INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    id_th INTEGER NOT NULL,
-    id_user INTEGER NOT NULL,
-    created_at TEXT NOT NULL,
-    msg_content TEXT NOT NULL,
-
-    FOREIGN KEY(id_th) REFERENCES Thread(id_th)
-);
 
 
 CREATE TABLE IF NOT EXISTS Like(
@@ -41,20 +32,4 @@ CREATE TABLE IF NOT EXISTS Like(
     id_th INT NOT NULL,
 
     FOREIGN KEY(id_th) REFERENCES Thread(id_th)
-);
-
-
-CREATE TABLE IF NOT EXISTS ThreadCategory(
-    id_th_cat INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    id_cat INTEGER NOT NULL,
-    id_th INT NOT NULL,
-
-    FOREIGN KEY(id_cat) REFERENCES Category(id_cat)
-);
-
-
-CREATE TABLE IF NOT EXISTS Category(
-    id_cat INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    cat_name TEXT NOT NULL
-
 );

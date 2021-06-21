@@ -79,21 +79,64 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 		content := r.FormValue("créa_thread")
 		sub := r.FormValue("submitthread")
 		inputBar := r.FormValue("searchWord")
+		inputCatThread := r.FormValue("drone")
+		inputCatCham := r.FormValue("CHAMEAU")
+		inputCatDrom := r.FormValue("DROMADAIRE")
+		inputCatLama := r.FormValue("LAMA")
+		inputCatChoisie := ""
+		run := false
+		fmt.Println(inputCatThread)
+		// catCham := ""
 		session, _ := store.Get(r, "auth")
 		if (sub == "Enregistrer") && (session.Values["authenticated"] == true) {
-			addThread(session, title, content, database)
+			addThread(session, title, content, inputCatThread, database)
 		} else if (sub == "Enregistrer") && (session.Values["authenticated"] != true) {
 			fmt.Println("Veuillez vous connecter pour poster un thread !")
 		}
 		connexion(w, r, database)
 		inscription(r, database)
 
-		if inputBar != "" {
+		if inputCatCham != "" {
+			inputCatChoisie = inputCatCham
+			run = true
+		} else if inputCatDrom != "" {
+			inputCatChoisie = inputCatDrom
+			run = true
+		} else if inputCatLama != "" {
+			inputCatChoisie = inputCatLama
+			run = true
+		}
+		fmt.Println(inputCatChoisie)
+		if run {
+			reqC := `SELECT 
+			id_user,
+			title,
+			content,
+			created_at,
+			category
+			FROM 
+			Thread
+			WHERE category = ?
+			ORDER BY created_at DESC`
+			rows, _ := database.Query(reqC, inputCatChoisie)
+			for rows.Next() {
+				item := databaseTools.ThreadData{}
+				err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
+				if err2 != nil {
+					panic(err2)
+				}
+				fmt.Println("jsuis rentré dedans")
+				dataToSend = append(dataToSend, item)
+			}
+			fmt.Println("good")
+			variable.Execute(w, dataToSend)
+		} else if inputBar != "" {
 			reqS := `SELECT 
 			id_user,
 			title,
 			content,
-			created_at
+			created_at,
+			category
 			FROM 
 			Thread
 			WHERE title = ?
@@ -101,7 +144,7 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 			rows, _ := database.Query(reqS, inputBar)
 			for rows.Next() {
 				item := databaseTools.ThreadData{}
-				err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at)
+				err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
 				if err2 != nil {
 					panic(err2)
 				}
@@ -113,14 +156,15 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 			id_user,
 			title,
 			content,
-			created_at
+			created_at,
+			category
 			FROM 
 			Thread
 			ORDER BY created_at DESC`
 			rows, _ := database.Query(req)
 			for rows.Next() {
 				item := databaseTools.ThreadData{}
-				err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at)
+				err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
 				if err2 != nil {
 					panic(err2)
 				}
@@ -132,12 +176,12 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 }
 
 // requete ajoute un tread
-func addThread(session *sessions.Session, title string, content string, database *sql.DB) {
+func addThread(session *sessions.Session, title string, content string, category string, database *sql.DB) {
 	littlecookie := session.Values["user"]
 	convertissor := fmt.Sprintf("%v", littlecookie)
 	check := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", convertissor)
 	id_user, _ := strconv.Atoi(check)
-	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, time(), false, 0, 0, 0)`, id_user, title, content)
+	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content,  category, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, time(), false, 0, 0, 0)`, id_user, title, content, category)
 	if err != nil {
 		log.Fatal(err)
 	}
