@@ -29,11 +29,13 @@ type Thread struct {
 }
 
 type ThreadData struct {
-	Id_th      int
-	Id_user    int
-	Title      string
-	Content    string
-	Created_at string
+	Id_th         int
+	Id_user       int
+	Title         string
+	Content       string
+	Created_at    string
+	Like_count    int
+	Dislike_count int
 }
 
 type ThreadMessage struct {

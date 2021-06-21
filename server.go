@@ -78,6 +78,7 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 		title := r.FormValue("threadTitle")
 		content := r.FormValue("créa_thread")
 		sub := r.FormValue("submitthread")
+		likes := r.FormValue("green")
 		session, _ := store.Get(r, "auth")
 		if (sub == "Enregistrer") && (session.Values["authenticated"] == true) {
 			addThread(session, title, content, database)
@@ -86,7 +87,31 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 		}
 		connexion(w, r, database)
 		inscription(r, database)
-		req := `SELECT 
+		if likes == "" {
+			fmt.Println("ez")
+			countLikes := 1
+			database.Exec(`INSERT INTO Thread (like_count) VALUES (?)`, countLikes)
+			reqL := `SELECT 
+			id_user,
+			title,
+			content,
+			created_at,
+			like_count
+			FROM 
+			Thread
+			ORDER BY created_at DESC`
+			rows, _ := database.Query(reqL)
+			for rows.Next() {
+				item := databaseTools.ThreadData{}
+				err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Like_count)
+				if err2 != nil {
+					panic(err2)
+				}
+				dataToSend = append(dataToSend, item)
+				// fmt.Println("rentré dans le scan like")
+			}
+		} else {
+			req := `SELECT 
 			id_user,
 			title,
 			content,
@@ -94,14 +119,15 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 			FROM 
 			Thread
 			ORDER BY created_at DESC`
-		rows, _ := database.Query(req)
-		for rows.Next() {
-			item := databaseTools.ThreadData{}
-			err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at)
-			if err2 != nil {
-				panic(err2)
+			rows, _ := database.Query(req)
+			for rows.Next() {
+				item := databaseTools.ThreadData{}
+				err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at)
+				if err2 != nil {
+					panic(err2)
+				}
+				dataToSend = append(dataToSend, item)
 			}
-			dataToSend = append(dataToSend, item)
 		}
 		variable.Execute(w, dataToSend)
 	})

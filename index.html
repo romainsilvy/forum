@@ -35,6 +35,7 @@
                 <p>Catégories</p>   
             </div>
         </div>
+        <form action="" method="POST" id="FormLikes">
         <div class="global-item" id="global-center">
             <div class="inside-center" id="add-thread">
                 <button id="button-input-add-thread" type="button">+</button>
@@ -45,13 +46,13 @@
                 <h3>{{.Title}}</h3>
                 <p class="zeub">
                     {{.Content}}
-                <button class="btn-like" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span class="like__number">99</span></button>
-                <button class="btn-dislike" id="red"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span class="like__number">100</span></button>
+                    <button type="submit" class="btn-like" id="green">+1</button>
+                    <button class="btn-dislike" id="red"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span class="like__number">100</span></button>
                 </p>
             </div>
             {{end}}
-                
         </div>
+        </form>
         <div class="global-item" id="global-right">
         </div>
     </div>
