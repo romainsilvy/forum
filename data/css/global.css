@@ -12,10 +12,8 @@
 }
 
 body {
-    /* background-image: linear-gradient(to right, #fde8f7 0%, #d5e3fb 100%); */
     overflow: hidden;
     font-family: 'Open Sans', sans-serif;
-    height: calc(100vh);
     width: 100%;
     background-image: linear-gradient(to top, #fc7cd7 0%, #a6c1ee 100%);
 }
@@ -102,7 +100,7 @@ header #profile-picture {
     display: grid;
     grid-template-columns: 25% 50% 25%;
     grid-template-rows: 100%;
-    height: calc(100vh - 125px);
+    height: calc(100vh);
     }
 
 #global #global-left {
