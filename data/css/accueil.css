@@ -16,6 +16,12 @@
     width: 50%;
 }
 
+#BouttonModSup{
+    border: none;
+    background-image: linear-gradient( #fde8f7 0%, #d5e3fb 100%);
+    float: right;
+}
+
 #add-thread #input-add-thread:focus {
     outline:  none;
 }

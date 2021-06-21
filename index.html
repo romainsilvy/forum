@@ -48,7 +48,11 @@
                 <input id="input-add-thread" type="text" placeholder="Ajoutez le nom d'un thread...." value="">
             </div>
             {{range .}}
-            <div id="testHour" class="inside-center a-thread">
+            <div id="testHour" class="inside-center a-thread"> 
+            <form action ="" method="POST" > 
+                <button id="BouttonModSup">Sup</button> 
+                <button id ="BouttonModSup">Mod</button> 
+            </form>
                 <h3>{{.Title}}</h3>
                 <p class="zeub">
                     {{.Content}}
