@@ -70,26 +70,6 @@ func connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 	}
 }
 
-//searchbar is the function to manage the search bar
-func searchBar(input, w http.ResponseWriter, r *http.Request) {
-	// bar := input
-	// req := `SELECT
-	// 		Title,
-	// 		FROM
-	// 		Thread
-	// 		WHERE Title = bar`
-	// row, _ := database.Query(req)
-	// for rows.Next() {
-	// 	item := databaseTools.ThreadData{}
-	// 	err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at)
-	// 	if err2 != nil {
-	// 		panic(err2)
-	// 	}
-	// 	dataToSend = append(dataToSend, item)
-	// }
-	// variable.Execute(w, dataToSend)
-}
-
 //handleAccueil is the handlefunc for the main page
 func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -98,6 +78,7 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 		title := r.FormValue("threadTitle")
 		content := r.FormValue("créa_thread")
 		sub := r.FormValue("submitthread")
+		inputBar := r.FormValue("searchWord")
 		session, _ := store.Get(r, "auth")
 		if (sub == "Enregistrer") && (session.Values["authenticated"] == true) {
 			addThread(session, title, content, database)
@@ -106,15 +87,37 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 		}
 		connexion(w, r, database)
 		inscription(r, database)
-		inputBar := r.FormValue("searchButton")
-		if inputBar == "" {
-			fmt.Println(inputBar)
+
+		if inputBar != "" {
 			reqS := `SELECT 
-			Title,
-			FROM
+			id_user,
+			title,
+			content,
+			created_at
+			FROM 
 			Thread
-			WHERE Title = bar`
-			rows, _ := database.Query(reqS)
+			WHERE title = ?
+			ORDER BY created_at DESC`
+			rows, _ := database.Query(reqS, inputBar)
+			for rows.Next() {
+				item := databaseTools.ThreadData{}
+				err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at)
+				if err2 != nil {
+					panic(err2)
+				}
+				dataToSend = append(dataToSend, item)
+			}
+			variable.Execute(w, dataToSend)
+		} else {
+			req := `SELECT 
+			id_user,
+			title,
+			content,
+			created_at
+			FROM 
+			Thread
+			ORDER BY created_at DESC`
+			rows, _ := database.Query(req)
 			for rows.Next() {
 				item := databaseTools.ThreadData{}
 				err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at)
@@ -125,24 +128,6 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 			}
 			variable.Execute(w, dataToSend)
 		}
-		req := `SELECT 
-			id_user,
-			title,
-			content,
-			created_at
-			FROM 
-			Thread
-			ORDER BY created_at DESC`
-		rows, _ := database.Query(req)
-		for rows.Next() {
-			item := databaseTools.ThreadData{}
-			err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at)
-			if err2 != nil {
-				panic(err2)
-			}
-			dataToSend = append(dataToSend, item)
-		}
-		variable.Execute(w, dataToSend)
 	})
 }
 

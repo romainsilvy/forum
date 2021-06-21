@@ -12,15 +12,15 @@
 <body>
     <header>
         <img id="logo" src="/static/images/logo.png">
-        <form method="POST" action="">
-        <div id="wrap">
-            <div id="search">
-                <input list="list" id="searchTerm" placeholder="Que recherchez-vous ?" value="" autocomplete="off">
-                <button type="submit" id="searchButton">
-                    <i class="fas fa-search"></i>
-                </button>
+        <form method="POST" action="" id="testt">
+            <div id="wrap">
+                <div id="search">
+                    <input name="searchWord" list="list" id="searchTerm" placeholder="Que recherchez-vous ?" value="" autocomplete="off">
+                    <button type="submit" id="searchButton"></button>
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
             </div>
-        </div>
         </form>
         <img id="profile-picture" src="/static/images/profile-picture.png"> 
     </header>
@@ -136,27 +136,27 @@
                 i=0;
             }
         }
-        var btn1 = document.querySelector('#green');
-        var btn2 = document.querySelector('#red');
+        // var btn1 = document.querySelector('#green');
+        // var btn2 = document.querySelector('#red');
         
 
-        btn1.addEventListener('click', function() {
+        // btn1.addEventListener('click', function() {
         
-            if (btn2.classList.contains('red')) {
-            btn2.classList.remove('red');
-            } 
-        this.classList.toggle('green');
+        //     if (btn2.classList.contains('red')) {
+        //     btn2.classList.remove('red');
+        //     } 
+        // this.classList.toggle('green');
         
-        });
+        // });
 
-        btn2.addEventListener('click', function() {
+        // btn2.addEventListener('click', function() {
         
-            if (btn1.classList.contains('green')) {
-            btn1.classList.remove('green');
-            } 
-        this.classList.toggle('red');
+        //     if (btn1.classList.contains('green')) {
+        //     btn1.classList.remove('green');
+        //     } 
+        // this.classList.toggle('red');
         
-        });
+        // });
 
         document.querySelector('#profile-picture').addEventListener('click', ()=>{
 
