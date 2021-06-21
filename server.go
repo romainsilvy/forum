@@ -70,45 +70,8 @@ func connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 	}
 }
 
-//handleAccueil is the handlefunc for the main page
-func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		var dataToSend []databaseTools.ThreadData
-		variable, _ := template.ParseFiles("index.html")
-		title := r.FormValue("threadTitle")
-		content := r.FormValue("créa_thread")
-		sub := r.FormValue("submitthread")
-		inputBar := r.FormValue("searchWord")
-		inputCatThread := r.FormValue("drone")
-		inputCatCham := r.FormValue("CHAMEAU")
-		inputCatDrom := r.FormValue("DROMADAIRE")
-		inputCatLama := r.FormValue("LAMA")
-		inputCatChoisie := ""
-		run := false
-		fmt.Println(inputCatThread)
-		// catCham := ""
-		session, _ := store.Get(r, "auth")
-		if (sub == "Enregistrer") && (session.Values["authenticated"] == true) {
-			addThread(session, title, content, inputCatThread, database)
-		} else if (sub == "Enregistrer") && (session.Values["authenticated"] != true) {
-			fmt.Println("Veuillez vous connecter pour poster un thread !")
-		}
-		connexion(w, r, database)
-		inscription(r, database)
-
-		if inputCatCham != "" {
-			inputCatChoisie = inputCatCham
-			run = true
-		} else if inputCatDrom != "" {
-			inputCatChoisie = inputCatDrom
-			run = true
-		} else if inputCatLama != "" {
-			inputCatChoisie = inputCatLama
-			run = true
-		}
-		fmt.Println(inputCatChoisie)
-		if run {
-			reqC := `SELECT 
+func displayCategory(inputCatChoisie string, dataToSend []databaseTools.ThreadData, variable *template.Template, w http.ResponseWriter, db *sql.DB) {
+	reqC := `SELECT 
 			id_user,
 			title,
 			content,
@@ -118,20 +81,22 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 			Thread
 			WHERE category = ?
 			ORDER BY created_at DESC`
-			rows, _ := database.Query(reqC, inputCatChoisie)
-			for rows.Next() {
-				item := databaseTools.ThreadData{}
-				err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
-				if err2 != nil {
-					panic(err2)
-				}
-				fmt.Println("jsuis rentré dedans")
-				dataToSend = append(dataToSend, item)
-			}
-			fmt.Println("good")
-			variable.Execute(w, dataToSend)
-		} else if inputBar != "" {
-			reqS := `SELECT 
+	rows, _ := db.Query(reqC, inputCatChoisie)
+	for rows.Next() {
+		item := databaseTools.ThreadData{}
+		err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
+		if err2 != nil {
+			panic(err2)
+		}
+		fmt.Println("jsuis rentré dedans")
+		dataToSend = append(dataToSend, item)
+	}
+	fmt.Println("good")
+	variable.Execute(w, dataToSend)
+}
+
+func displaySearchResult(inputSearchBar string, dataToSend []databaseTools.ThreadData, variable *template.Template, w http.ResponseWriter, db *sql.DB) {
+	reqS := `SELECT 
 			id_user,
 			title,
 			content,
@@ -141,18 +106,20 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 			Thread
 			WHERE title = ?
 			ORDER BY created_at DESC`
-			rows, _ := database.Query(reqS, inputBar)
-			for rows.Next() {
-				item := databaseTools.ThreadData{}
-				err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
-				if err2 != nil {
-					panic(err2)
-				}
-				dataToSend = append(dataToSend, item)
-			}
-			variable.Execute(w, dataToSend)
-		} else {
-			req := `SELECT 
+	rows, _ := db.Query(reqS, inputSearchBar)
+	for rows.Next() {
+		item := databaseTools.ThreadData{}
+		err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
+		if err2 != nil {
+			panic(err2)
+		}
+		dataToSend = append(dataToSend, item)
+	}
+	variable.Execute(w, dataToSend)
+}
+
+func displayAccueil(dataToSend []databaseTools.ThreadData, variable *template.Template, w http.ResponseWriter, db *sql.DB) {
+	req := `SELECT 
 			id_user,
 			title,
 			content,
@@ -161,16 +128,59 @@ func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, dat
 			FROM 
 			Thread
 			ORDER BY created_at DESC`
-			rows, _ := database.Query(req)
-			for rows.Next() {
-				item := databaseTools.ThreadData{}
-				err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
-				if err2 != nil {
-					panic(err2)
-				}
-				dataToSend = append(dataToSend, item)
-			}
-			variable.Execute(w, dataToSend)
+	rows, _ := database.Query(req)
+	for rows.Next() {
+		item := databaseTools.ThreadData{}
+		err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
+		if err2 != nil {
+			panic(err2)
+		}
+		dataToSend = append(dataToSend, item)
+	}
+	variable.Execute(w, dataToSend)
+}
+
+//handleAccueil is the handlefunc for the main page
+func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		var dataToSend []databaseTools.ThreadData
+		variable, _ := template.ParseFiles("index.html")
+
+		//add thread variables
+		title := r.FormValue("threadTitle")
+		content := r.FormValue("créa_thread")
+		submitButton := r.FormValue("submitthread")
+
+		//categories variables
+		inputCatCham := r.FormValue("CHAMEAU")
+		inputCatDrom := r.FormValue("DROMADAIRE")
+		inputCatLama := r.FormValue("LAMA")
+
+		//session cookie
+		sessionCookieAuth, _ := store.Get(r, "auth")
+
+		inputSearchBar := r.FormValue("searchWord")
+		inputCatThread := r.FormValue("drone")
+
+		if (submitButton == "Enregistrer") && (sessionCookieAuth.Values["authenticated"] == true) {
+			addThread(sessionCookieAuth, title, content, inputCatThread, database)
+		} else if (submitButton == "Enregistrer") && (sessionCookieAuth.Values["authenticated"] != true) {
+			fmt.Println("Veuillez vous connecter pour poster un thread !")
+		}
+
+		connexion(w, r, database)
+		inscription(r, database)
+
+		if inputCatCham != "" {
+			displayCategory(inputCatCham, dataToSend, variable, w, database)
+		} else if inputCatDrom != "" {
+			displayCategory(inputCatDrom, dataToSend, variable, w, database)
+		} else if inputCatLama != "" {
+			displayCategory(inputCatLama, dataToSend, variable, w, database)
+		} else if inputSearchBar != "" {
+			displaySearchResult(inputSearchBar, dataToSend, variable, w, database)
+		} else {
+			displayAccueil(dataToSend, variable, w, database)
 		}
 	})
 }

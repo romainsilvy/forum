@@ -114,6 +114,7 @@ header #profile-picture {
     border-left: solid 1px grey;
     border-right: solid 1px grey;
     overflow-y: scroll;
+    padding-bottom: 75px;
 }
 
 #global #global-right {
