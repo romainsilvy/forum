@@ -17,16 +17,12 @@ type User struct {
 }
 
 type Thread struct {
-	Id_th         int
-	Id_user       int
-	Title         string
-	Content       string
-	Created_at    string
-	Notif         bool
-	Like_count    int
-	Dislike_count int
-	Comment_count int
-	Category      string
+	Id_th      int
+	Id_user    int
+	Title      string
+	Content    string
+	Created_at string
+	Category   string
 }
 
 type ThreadData struct {
@@ -36,7 +32,6 @@ type ThreadData struct {
 	Content    string
 	Created_at string
 	Category   string
-	Like_count int
 }
 
 type ThreadMessage struct {
@@ -91,12 +86,12 @@ func InsertIntoUsers(user_name string, email string, password string, db *sql.DB
 	}
 }
 
-func InsertIntoThreads(id_user int, title string, content string, created_at string, db *sql.DB) {
-	_, err := db.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, false, 0, 0, 0)`, id_user, title, content, created_at)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
+// func InsertIntoThreads(id_user int, title string, content string, created_at string, db *sql.DB) {
+// 	_, err := db.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, false, 0, 0, 0)`, id_user, title, content, created_at)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// }
 
 //singleRowQuerry retrieve a value in the db with a where comparator
 func SingleRowQuerry(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 string) string {

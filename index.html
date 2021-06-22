@@ -52,7 +52,7 @@
                 <h3>{{.Title}}</h3>
                 <p class="zeub">
                     {{.Content}}
-                    <button value="likeAdd" name="like" class="btn-like" onclick="like()" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span class="like__number">14</span></button>
+                    <button value="likeAdd" name="like" class="btn-like" onclick="like('{{.Id_th}}')" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span id="btnLike{{.Id_th}}" class="like__number">14</span></button>
                     <button class="btn-dislike" id="red"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span class="like__number">100</span></button>
                 </p>
             </div>
@@ -140,29 +140,31 @@
     })
     
     function like(id_th) {
-
-    const body_content  = document.querySelectorAll("body")
-    console.log(body_content)
-    fetch("/like", {
-    method : "POST",
-    headers : {
-        "content-type" : "application/json"
-    },
-    body : JSON.stringify({// envoyer dans le go
-        id_th
-    })
-    })
-    .then((response)=>{
-    return response.text()
-    })
-    .then((result)=>{
-        // faire update compteur de like 
-        console.log(result)
-    })
-    .catch((err) =>{
-     throw err
-    })
-    
+        console.log(id_th)
+        const body_content  = document.querySelectorAll("body")
+        console.log(body_content)
+        fetch("/like", {
+        method : "POST",
+        headers : {
+            "content-type" : "application/json"
+        },
+        body : JSON.stringify({// envoyer dans le go
+            id_th
+        })
+        })
+        .then((response)=>{
+        return response.text()
+        })
+        .then((result)=>{
+            // faire update compteur de like
+            const btnName = `#btnLike${id_th.toString()}`
+            console.log(btnName)
+            document.querySelector(btnName).innerHTML = result
+            console.log(result)
+        })
+        .catch((err) =>{
+        throw err
+        })
     }
    
 
