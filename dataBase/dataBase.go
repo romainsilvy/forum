@@ -48,17 +48,10 @@ type ThreadMessage struct {
 }
 
 type Like struct {
-	Id_like int
-	Id_user int
-	Like    bool
-	Dislike bool
-	Id_th   int
-}
-
-type Following struct {
-	Id_following int
-	Id_user      int
-	Id_th        int
+	Id_user     int
+	Nbr_like    int
+	Nbr_dislike int
+	Id_th       int
 }
 
 type ThreadCategory struct {

@@ -52,11 +52,7 @@
                 <h3>{{.Title}}</h3>
                 <p class="zeub">
                     {{.Content}}
-                    <a href="#" class="like-counter">
-                        <button value="likeAdd" name="like" class="btn-like" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span class="like__number">14</span></button>
-                    </a>
-                    <span class="click-text">
-                    <a id="clicks"></span>
+                    <button value="likeAdd" name="like" class="btn-like" onclick="like()" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span class="like__number">14</span></button>
                     <button class="btn-dislike" id="red"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span class="like__number">100</span></button>
                 </p>
             </div>
@@ -130,7 +126,7 @@
 <script>
     
     document.querySelector('#button-input-add-thread').addEventListener('click', ()=>{
-        var x = document.getElementById("input-add-thread").value
+        const x = document.getElementById("input-add-thread").value
         if ( x !== "") {
             document.querySelector("#namethread").value = x
             document.querySelector('#thread-background').classList.add("threadGrid")
@@ -142,9 +138,37 @@
             })
         }
     })
+    
+    function like(id_th) {
 
-        var i=0;
+    const body_content  = document.querySelectorAll("body")
+    console.log(body_content)
+    fetch("/like", {
+    method : "POST",
+    headers : {
+        "content-type" : "application/json"
+    },
+    body : JSON.stringify({// envoyer dans le go
+        id_th
+    })
+    })
+    .then((response)=>{
+    return response.text()
+    })
+    .then((result)=>{
+        // faire update compteur de like 
+        console.log(result)
+    })
+    .catch((err) =>{
+     throw err
+    })
+    
+    }
+   
+
+
         function read(){
+            let i=0;
             if (!i){
                 document.getElementById("more").style.display ="inline";
                 document.getElementById("first-text").style.display ="none";
@@ -158,19 +182,9 @@
             }
         }
 
-        var clicks = 14;
-
-            document.getElementById("likeAdd").innerHTML = clicks;
-
-            $('.like-counter').click(function() {
-                clicks += 1;
-                document.getElementById("likeAdd").innerHTML = clicks;
-                $('.like-counter').addClass("liked");
-            });
-
         if (document.querySelector("#testHour")) {
-            var btn1 = document.querySelector('#green');
-            var btn2 = document.querySelector('#red');
+            let btn1 = document.querySelector('#green');
+            let btn2 = document.querySelector('#red');
 
             btn1.addEventListener('click', function() {
         
