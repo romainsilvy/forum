@@ -243,15 +243,15 @@ func handleAll(db *sql.DB) {
 	handleAccueil(db)
 	handleProfil(databaseTools.User{}, db)
 	FetchLike(db)
-
+	FetchDislike(db)
 }
 
 func manageLike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int, value_int int) {
 	if sessionCookieAuth.Values["authenticated"] == true {
-		fmt.Println(databaseTools.CheckIfExistLike(db, "id_user", id_user_int)) // quand jamais like : true		quand DEJA like : true
-		fmt.Println(databaseTools.CheckIfExistLike(db, "id_th", id_th_int))     // quand jamais like : false	quand DEJA like : true
-		fmt.Println(databaseTools.CheckIfExistLike(db, "value", value_int))     // quand jamais like : true		quand DEJA like : true
-		if databaseTools.CheckIfExistLike(db, "id_user", id_user_int) && databaseTools.CheckIfExistLike(db, "id_th", id_th_int) && databaseTools.CheckIfExistLike(db, "value", value_int) {
+		// fmt.Println(databaseTools.CheckIfExistLike(db, "id_user", id_user_int)) // quand jamais like : true		quand DEJA like : true
+		// fmt.Println(databaseTools.CheckIfExistLike(db, "id_th", id_th_int))     // quand jamais like : false		quand DEJA like : true
+		// fmt.Println(databaseTools.CheckIfExistLike(db, "value", value_int))     // quand jamais like : true		quand DEJA like : true
+		if databaseTools.CheckIfExistLike(db, "id_user", id_user_int) && databaseTools.CheckIfExistLike(db, "id_th", id_th_int) {
 			fmt.Println("deja like avant")
 			db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
 		} else {
@@ -262,16 +262,6 @@ func manageLike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int
 		fmt.Println("Veuillez vous connecter pour poster un thread !")
 	}
 }
-
-// fmt.Println(databaseTools.SingleRowQuerryDeux(db, "value", "Like", "id_user", value_int))
-// if databaseTools.SingleRowQuerryDeux(db, "value", "Like", "id_user", value_int) == 0 {
-// 	databaseTools.InsertIntoLike(id_user_int, id_th_int, value_int, db)
-// 	fmt.Println("n existe pas donc je crée")
-// }
-
-// databaseTools.InsertIntoLike(id_user_int, id_th_int, value_int, db)
-// db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
-// db.Exec(`UPDATE Like SET value = ? WHERE id_user = ? and id_th = ?`, value_int*(-1), id_user_int, id_th_int)
 
 func FetchLike(db *sql.DB) {
 	http.HandleFunc("/like", func(w http.ResponseWriter, r *http.Request) {
@@ -291,12 +281,32 @@ func FetchLike(db *sql.DB) {
 		id_th_int, _ := strconv.Atoi(myParam.Id_th)
 		value_int, _ := strconv.Atoi(myParam.Value)
 
-		switch value_int {
-		case 1:
-			manageLike(sessionCookieAuth, db, id_user_int, id_th_int, value_int)
-		case -1:
-			manageLike(sessionCookieAuth, db, id_user_int, id_th_int, value_int)
-		}
+		manageLike(sessionCookieAuth, db, id_user_int, id_th_int, value_int)
+
+		databaseTools.SendNumberOfLike(db, myParam.Id_th, w, value_int)
+	})
+	// recup la donner envoyer en js pour le mettre dans la base de données
+}
+
+func FetchDislike(db *sql.DB) {
+	http.HandleFunc("/dislike", func(w http.ResponseWriter, r *http.Request) {
+		//insere un like en fonction du post id
+
+		var myParam MyBody
+
+		body, _ := ioutil.ReadAll(r.Body)
+
+		json.Unmarshal(body, &myParam)
+
+		sessionCookieAuth, _ := store.Get(r, "auth")
+		littlecookie := sessionCookieAuth.Values["user"]
+		user_name := fmt.Sprintf("%v", littlecookie)
+		id_user := databaseTools.SingleRowQuerry(db, "id_user", "User", "user_name", user_name)
+		id_user_int, _ := strconv.Atoi(id_user)
+		id_th_int, _ := strconv.Atoi(myParam.Id_th)
+		value_int, _ := strconv.Atoi(myParam.Value)
+
+		manageLike(sessionCookieAuth, db, id_user_int, id_th_int, value_int)
 
 		databaseTools.SendNumberOfLike(db, myParam.Id_th, w, value_int)
 	})
@@ -339,3 +349,13 @@ func main() {
 	handleAll(db)
 	runServer()
 }
+
+// fmt.Println(databaseTools.SingleRowQuerryDeux(db, "value", "Like", "id_user", value_int))
+// if databaseTools.SingleRowQuerryDeux(db, "value", "Like", "id_user", value_int) == 0 {
+// 	databaseTools.InsertIntoLike(id_user_int, id_th_int, value_int, db)
+// 	fmt.Println("n existe pas donc je crée")
+// }
+
+// databaseTools.InsertIntoLike(id_user_int, id_th_int, value_int, db)
+// db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
+// db.Exec(`UPDATE Like SET value = ? WHERE id_user = ? and id_th = ?`, value_int*(-1), id_user_int, id_th_int)
