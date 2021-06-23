@@ -243,7 +243,6 @@ func handleAll(db *sql.DB) {
 	handleAccueil(db)
 	handleProfil(databaseTools.User{}, db)
 	FetchLike(db)
-	FetchDislike(db)
 }
 
 func manageLike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int, value_int int) {
@@ -283,32 +282,10 @@ func FetchLike(db *sql.DB) {
 
 		manageLike(sessionCookieAuth, db, id_user_int, id_th_int, value_int)
 
-		databaseTools.SendNumberOfLike(db, myParam.Id_th, w, value_int)
-	})
-	// recup la donner envoyer en js pour le mettre dans la base de données
-}
+		dislike := databaseTools.CountOfLike(db, myParam.Id_th, -1)
+		like := databaseTools.CountOfLike(db, myParam.Id_th, 1)
 
-func FetchDislike(db *sql.DB) {
-	http.HandleFunc("/dislike", func(w http.ResponseWriter, r *http.Request) {
-		//insere un like en fonction du post id
-
-		var myParam MyBody
-
-		body, _ := ioutil.ReadAll(r.Body)
-
-		json.Unmarshal(body, &myParam)
-
-		sessionCookieAuth, _ := store.Get(r, "auth")
-		littlecookie := sessionCookieAuth.Values["user"]
-		user_name := fmt.Sprintf("%v", littlecookie)
-		id_user := databaseTools.SingleRowQuerry(db, "id_user", "User", "user_name", user_name)
-		id_user_int, _ := strconv.Atoi(id_user)
-		id_th_int, _ := strconv.Atoi(myParam.Id_th)
-		value_int, _ := strconv.Atoi(myParam.Value)
-
-		manageLike(sessionCookieAuth, db, id_user_int, id_th_int, value_int)
-
-		databaseTools.SendNumberOfLike(db, myParam.Id_th, w, value_int)
+		w.Write([]byte(like + ":" + dislike))
 	})
 	// recup la donner envoyer en js pour le mettre dans la base de données
 }

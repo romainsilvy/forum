@@ -207,6 +207,7 @@
         return response.text()
         })
         .then((result)=>{
+            console.log(result)
             if (result.includes("dislike : ")) {
                 const bDislike = `#btnDislike${id_th.toString()}`
                 document.querySelector(bDislike).innerHTML = result.substring(10, result.length + 1)

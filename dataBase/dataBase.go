@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"io/ioutil"
 	"log"
-	"net/http"
 	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -239,7 +238,7 @@ func CheckIfExistLike(db *sql.DB, comparator1 string, comparator2 int) bool {
 	return true
 }
 
-func SendNumberOfLike(db *sql.DB, id_th string, w http.ResponseWriter, value int) {
+func CountOfLike(db *sql.DB, id_th string, value int) string {
 	req := `SELECT
 			COUNT(*)
 			FROM
@@ -254,7 +253,6 @@ func SendNumberOfLike(db *sql.DB, id_th string, w http.ResponseWriter, value int
 		panic(err)
 	}
 
-	w.Write([]byte("dislike : " + strconv.Itoa(count)))
-	w.Write([]byte("like : " + strconv.Itoa(count)))
+	return strconv.Itoa(count)
 
 }
