@@ -2,8 +2,10 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -14,15 +16,22 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+//global vars
 var (
 	key   = []byte("ismatheplatypus@w*")
 	store = sessions.NewCookieStore(key)
 )
 
+//this structure is used to unmarshall the value of id_th
+type MyBody struct {
+	Id_th string `json:id_th`
+	Value string `json:value`
+}
+
 //inscription manage the inscription form
 func inscription(r *http.Request, database *sql.DB) {
-	goodCreation := false
 	inscriptionPseudo := r.FormValue("inscriptionPseudo")
+
 	if inscriptionPseudo != "" {
 		inscriptionEmail := r.FormValue("inscriptionEmail")
 		inscriptionEmailConfirm := r.FormValue("inscriptionEmailConfirm")
@@ -32,10 +41,7 @@ func inscription(r *http.Request, database *sql.DB) {
 		if inscriptionEmail == inscriptionEmailConfirm && inscriptionPassword == inscriptionPasswordConfirm {
 			hashed := hashAndSalt(inscriptionPassword)
 			databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, hashed, database)
-			goodCreation = true
-		}
-
-		if !goodCreation {
+		} else {
 			fmt.Println("Le compte n'a pas pu être créé")
 		}
 	}
@@ -71,17 +77,8 @@ func connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 }
 
 func displayCategory(inputCatChoisie string, dataToSend []databaseTools.ThreadData, variable *template.Template, w http.ResponseWriter, db *sql.DB) {
-	reqC := `SELECT 
-			id_user,
-			title,
-			content,
-			created_at,
-			category
-			FROM 
-			Thread
-			WHERE category = ?
-			ORDER BY created_at DESC`
-	rows, _ := db.Query(reqC, inputCatChoisie)
+	rows := databaseTools.RetrieveCategoryRows(db, inputCatChoisie)
+
 	for rows.Next() {
 		item := databaseTools.ThreadData{}
 		err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
@@ -94,17 +91,7 @@ func displayCategory(inputCatChoisie string, dataToSend []databaseTools.ThreadDa
 }
 
 func displaySearchResult(inputSearchBar string, dataToSend []databaseTools.ThreadData, variable *template.Template, w http.ResponseWriter, db *sql.DB) {
-	reqS := `SELECT 
-			id_user,
-			title,
-			content,
-			created_at,
-			category
-			FROM 
-			Thread
-			WHERE title = ?
-			ORDER BY created_at DESC`
-	rows, _ := db.Query(reqS, inputSearchBar)
+	rows := databaseTools.RetrieveSearchRows(db, inputSearchBar)
 	for rows.Next() {
 		item := databaseTools.ThreadData{}
 		err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
@@ -117,17 +104,7 @@ func displaySearchResult(inputSearchBar string, dataToSend []databaseTools.Threa
 }
 
 func displayAccueil(dataToSend []databaseTools.ThreadData, variable *template.Template, w http.ResponseWriter, db *sql.DB) {
-	req := `SELECT 
-			id_th,
-			id_user,
-			title,
-			content,
-			created_at,
-			category
-			FROM 
-			Thread
-			ORDER BY id_th DESC`
-	rows, _ := db.Query(req)
+	rows := databaseTools.RetrieveAccueilRows(db)
 	for rows.Next() {
 		item := databaseTools.ThreadData{}
 		err2 := rows.Scan(&item.Id_th, &item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
@@ -291,26 +268,85 @@ func handleAll(db *sql.DB) {
 	handleAccueil(db)
 	handleProfil(databaseTools.User{}, db)
 	FetchLike(db)
+}
 
+func manageLike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int) {
+	if sessionCookieAuth.Values["authenticated"] == true {
+
+		//manage like
+		//si la ligne existe sans tenir compte de la value
+		//on verifie la value et on vois avec la value que on a
+		// en fonction soit delete soit modify
+
+		if databaseTools.CheckIfExistLike(db, id_th_int, id_user_int) {
+			if databaseTools.SingleRowQuerryLike(db, "id_th", id_th_int, "id_user", id_user_int) == "1" {
+				db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
+				fmt.Println("remove")
+			} else {
+				db.Exec(`UPDATE Like SET value = ? WHERE id_user = ? and id_th = ?`, 1, id_user_int, id_th_int)
+				fmt.Println("modif")
+			}
+		} else {
+			databaseTools.InsertIntoLike(id_user_int, id_th_int, 1, db)
+			fmt.Println("like cree")
+		}
+	}
+}
+
+func manageDislike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int) {
+	if sessionCookieAuth.Values["authenticated"] == true {
+		if databaseTools.CheckIfExistLike(db, id_th_int, id_user_int) {
+			if databaseTools.SingleRowQuerryLike(db, "id_th", id_th_int, "id_user", id_user_int) == "-1" {
+				db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
+			} else {
+				db.Exec(`UPDATE Like SET value = ? WHERE id_user = ? and id_th = ?`, -1, id_user_int, id_th_int)
+			}
+		} else {
+			databaseTools.InsertIntoLike(id_user_int, id_th_int, -1, db)
+		}
+	}
 }
 
 func FetchLike(db *sql.DB) {
 	http.HandleFunc("/like", func(w http.ResponseWriter, r *http.Request) {
 		//insere un like en fonction du post id
-		req := `SELECT
-			COUNT(*)
-			FROM
-			Like
-			Where id_th = ?
-			AND 
-			value = 1`
-		rows := db.QueryRow(req, 1)
-		var count int
-		err := rows.Scan(&count)
-		if err != nil {
-			panic(err)
+
+		var myParam MyBody
+		body, _ := ioutil.ReadAll(r.Body)
+		json.Unmarshal(body, &myParam)
+
+		sessionCookieAuth, _ := store.Get(r, "auth")
+		littlecookie := sessionCookieAuth.Values["user"]
+		user_name := fmt.Sprintf("%v", littlecookie)
+		id_user := databaseTools.SingleRowQuerry(db, "id_user", "User", "user_name", user_name)
+		id_user_int, _ := strconv.Atoi(id_user)
+		id_th_int, _ := strconv.Atoi(myParam.Id_th)
+		value_int, _ := strconv.Atoi(myParam.Value)
+
+		switch value_int {
+		case 1:
+			manageLike(sessionCookieAuth, db, id_user_int, id_th_int)
+		case -1:
+			manageDislike(sessionCookieAuth, db, id_user_int, id_th_int)
 		}
-		w.Write([]byte(strconv.Itoa(count)))
+
+		//si value = -1 --> clic sur dislike
+		//si value = 1 --> clic sur like
+
+		//si value = 1 --> appel a manage LIKE
+		// si value = -1 appel a manage dislike
+
+		//manage like
+		//si la ligne existe sans tenir compte de la value
+		//on verifie la value et on vois avec la value que on a
+		// en fonction soit delete soit modify
+
+		// manageLike(sessionCookieAuth, db, id_user_int, id_th_int, value_int)
+
+		dislike := databaseTools.CountOfLike(db, myParam.Id_th, -1)
+		like := databaseTools.CountOfLike(db, myParam.Id_th, 1)
+
+		w.Write([]byte(like + ":" + dislike))
 	})
 	// recup la donner envoyer en js pour le mettre dans la base de données
 }
@@ -351,3 +387,13 @@ func main() {
 	handleAll(db)
 	runServer()
 }
+
+// fmt.Println(databaseTools.SingleRowQuerryDeux(db, "value", "Like", "id_user", value_int))
+// if databaseTools.SingleRowQuerryDeux(db, "value", "Like", "id_user", value_int) == 0 {
+// 	databaseTools.InsertIntoLike(id_user_int, id_th_int, value_int, db)
+// 	fmt.Println("n existe pas donc je crée")
+// }
+
+// databaseTools.InsertIntoLike(id_user_int, id_th_int, value_int, db)
+// db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
+// db.Exec(`UPDATE Like SET value = ? WHERE id_user = ? and id_th = ?`, value_int*(-1), id_user_int, id_th_int)

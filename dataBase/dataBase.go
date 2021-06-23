@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"io/ioutil"
 	"log"
+	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -86,6 +87,13 @@ func InsertIntoUsers(user_name string, email string, password string, db *sql.DB
 	}
 }
 
+func InsertIntoLike(id_user int, id_th int, value int, db *sql.DB) {
+	_, err := db.Exec(`INSERT INTO Like (id_user, id_th, value) VALUES (?, ?, ?)`, id_user, id_th, value)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 // func InsertIntoThreads(id_user int, title string, content string, created_at string, db *sql.DB) {
 // 	_, err := db.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, false, 0, 0, 0)`, id_user, title, content, created_at)
 // 	if err != nil {
@@ -103,6 +111,20 @@ func SingleRowQuerry(db *sql.DB, rowName string, tableName string, comparator1 s
 	}
 	var toReturn string
 	err = stmt.QueryRow(comparator2).Scan(&toReturn)
+	if err != nil {
+		return "notExist"
+	}
+	return toReturn
+}
+
+func SingleRowQuerryLike(db *sql.DB, comparator1 string, comparator2 int, comparator3 string, comparator4 int) string {
+
+	stmt, err := db.Prepare("select value from Like where " + comparator1 + " = ? and " + comparator3 + " = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var toReturn string
+	err = stmt.QueryRow(comparator2, comparator4).Scan(&toReturn)
 	if err != nil {
 		return "notExist"
 	}
@@ -127,10 +149,112 @@ func CheckIfExist(db *sql.DB, rowName string, tableName string, comparator1 stri
 	return true
 }
 
+func CheckIfExistDeux(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 int) bool {
+	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var toReturn string
+	err = stmt.QueryRow(comparator2).Scan(&toReturn)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			log.Fatal(err)
+		} else {
+			return false
+		}
+	}
+	return true
+}
+
 //UpdateValue change the value of a case
 func UpdateValue(db *sql.DB, tableName string, collumnName string, newValue string, comparator1 string, comparator2 string) {
 	_, err := db.Exec("update " + tableName + " set " + collumnName + " = " + "\"" + newValue + "\"" + " where " + comparator1 + " = " + "\"" + comparator2 + "\"")
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func RetrieveCategoryRows(db *sql.DB, inputCatChoisie string) *sql.Rows {
+	reqC := `SELECT 
+			id_user,
+			title,
+			content,
+			created_at,
+			category
+			FROM 
+			Thread
+			WHERE category = ?
+			ORDER BY created_at DESC`
+	rows, _ := db.Query(reqC, inputCatChoisie)
+	return rows
+}
+
+func RetrieveSearchRows(db *sql.DB, inputSearchBar string) *sql.Rows {
+	reqS := `SELECT 
+			id_user,
+			title,
+			content,
+			created_at,
+			category
+			FROM 
+			Thread
+			WHERE title = ?
+			ORDER BY created_at DESC`
+	rows, _ := db.Query(reqS, inputSearchBar)
+	return rows
+}
+
+func RetrieveAccueilRows(db *sql.DB) *sql.Rows {
+	req := `SELECT 
+			id_th,
+			id_user,
+			title,
+			content,
+			created_at,
+			category
+			FROM 
+			Thread
+			ORDER BY id_th DESC`
+	rows, _ := db.Query(req)
+	return rows
+}
+
+func CountOfLike(db *sql.DB, id_th string, value int) string {
+	req := `SELECT
+			COUNT(*)
+			FROM
+			Like
+			Where id_th = ?
+			AND 
+			value = ?`
+	rows := db.QueryRow(req, id_th, value)
+	var count int
+	err := rows.Scan(&count)
+	if err != nil {
+		panic(err)
+	}
+
+	return strconv.Itoa(count)
+
+}
+
+func CheckIfExistLike(db *sql.DB, id_th int, id_user int) bool {
+	req := `SELECT
+			COUNT(*)
+			FROM
+			Like
+			Where id_th = ?
+			AND
+			id_user = ?`
+	rows := db.QueryRow(req, id_th, id_user)
+	var count int
+	err := rows.Scan(&count)
+	if err != nil {
+		panic(err)
+	}
+	if count == 0 {
+		return false
+	}
+	return true
+
 }
