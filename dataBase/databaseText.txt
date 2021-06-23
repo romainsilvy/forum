@@ -13,10 +13,6 @@ CREATE TABLE IF NOT EXISTS Thread(
     title TEXT NOT NULL,
     content TEXT NOT NULL,
     created_at TEXT NOT NULL,
-    notif BOOL NOT NULL DEFAULT 0,
-    like_count INT NOT NULL,
-    dislike_count INT NOT NULL,
-    comment_count INT NOT NULL,
     category TEXT NOT NULL,
 
 FOREIGN KEY(id_user) REFERENCES User(id_user)
@@ -25,11 +21,10 @@ FOREIGN KEY(id_user) REFERENCES User(id_user)
 
 
 CREATE TABLE IF NOT EXISTS Like(
-    id_like INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+
     id_user INTEGER NOT NULL,
-    like BOOL NOT NULL DEFAULT 0,
-    dislike BOOL NOT NULL DEFAULT 0,
     id_th INT NOT NULL,
+    value INT NOT NULL,
 
     FOREIGN KEY(id_th) REFERENCES Thread(id_th)
 );
