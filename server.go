@@ -118,6 +118,7 @@ func displaySearchResult(inputSearchBar string, dataToSend []databaseTools.Threa
 
 func displayAccueil(dataToSend []databaseTools.ThreadData, variable *template.Template, w http.ResponseWriter, db *sql.DB) {
 	req := `SELECT 
+			id_th,
 			id_user,
 			title,
 			content,
@@ -129,7 +130,7 @@ func displayAccueil(dataToSend []databaseTools.ThreadData, variable *template.Te
 	rows, _ := db.Query(req)
 	for rows.Next() {
 		item := databaseTools.ThreadData{}
-		err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
+		err2 := rows.Scan(&item.Id_th, &item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
 		if err2 != nil {
 			panic(err2)
 		}
@@ -291,7 +292,7 @@ func comparePasswords(hashedPwd string, plainPwd string) bool {
 //runServer sets the listenandserve port to 8080
 func runServer() {
 	fmt.Println("server is runing")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(":8090", nil); err != nil {
 		log.Fatal(err)
 	}
 }

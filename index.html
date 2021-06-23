@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/static/css/global.css">
     <link rel="stylesheet" type="text/css" href="/static/css/accueil.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 
 <body>
@@ -16,15 +17,14 @@
             <div id="wrap">
                 <div id="search">
                     <input name="searchWord" list="list" id="searchTerm" placeholder="Que recherchez-vous ?" value="" autocomplete="off">
-                    <button type="submit" id="searchButton"></button>
-                        <i class="fas fa-search"></i>
+                    <button type="submit" id="searchButton"><i class="fas fa-search"></i></button>
+                    
                     </button>
                 </div>
             </div>
         </form>
         <img id="profile-picture" src="/static/images/profile-picture.png"> 
     </header>
-
     <div id="global">
         <div class="global-item" id="global-left">
             <div class="item-left item">
@@ -48,7 +48,11 @@
                 <input id="input-add-thread" type="text" placeholder="Ajoutez le nom d'un thread...." value="">
             </div>
             {{range .}}
-            <div id="testHour" class="inside-center a-thread">
+            <div id="testHour" class="inside-center a-thread"> 
+            <form action ="" method="POST" > 
+                <button id="buttonDelete" type="button" onclick="javascript:onclickdelete({{.Id_th}})">Supprimer</button> 
+                <button id ="buttonEdit" type="button" onclick="javascript:onclickedit({{.Id_th}})">Modifier</button> 
+            </form>
                 <h3>{{.Title}}</h3>
                 <p class="zeub">
                     {{.Content}}
@@ -107,20 +111,66 @@
         <div id ="ajouter-thread">
             <input value="" type="text" id="namethread" name="threadTitle"></input>
         </div>
-        <textarea name="créa_thread" id="créa_thread" cols="70" rows="30" placeholder="écrivez votre thread ici"></textarea>
-        <div>
+        <textarea name="créa_thread" id="créa_thread" cols="70" rows="30" placeholder="Ecrivez votre thread ici"></textarea>
+        <ul id="ButtonCategory">
+            <li>
             <input type="radio" name="drone" value="CHAMEAU"checked>
             <label for="CHAMEAU">CHAMEAU</label>
-        </div>
-        <div>
+            </li>
+            <li>
             <input type="radio" name="drone" value="DROMADAIRE">
             <label for="DROMADAIRE">DROMADAIRE</label>
-        </div>
-        <div>
-            <input type="radio" name="drone" value="LAMA">
+            </li>
+            <li>
+            <input  type="radio" name="drone" value="LAMA">
             <label for="LAMA">LAMA</label>
-        </div>
+            </li>
+        </ul>
         <input type="submit" value="Enregistrer" name="submitthread" id="submitthread" class="sub-thread">
+    </form>
+
+    <form id="thread-edit" class="boxthread" action="" method="POST">
+        <div id ="ajouter-thread">
+            <input value="" type="text" id="namethreadedit" name="threadTitle"></input>
+        </div>
+        <textarea name="créa_thread" id="créa_thread" cols="70" rows="30" placeholder="Ecrivez votre thread ici"></textarea>
+        <ul id="ButtonCategory">
+            <li>
+            <input type="radio" name="drone" value="CHAMEAU"checked>
+            <label for="CHAMEAU">CHAMEAU</label>
+            </li>
+            <li>
+            <input type="radio" name="drone" value="DROMADAIRE">
+            <label for="DROMADAIRE">DROMADAIRE</label>
+            </li>
+            <li>
+            <input  type="radio" name="drone" value="LAMA">
+            <label for="LAMA">LAMA</label>
+            </li>
+        </ul>
+        <input type="submit" value="Modifier" name="submitthread" id="submitthread" class="sub-thread">
+    </form>
+
+    <form id="thread-delete" class="boxthread" action="" method="POST">
+        <div id ="ajouter-thread">
+            <input value="" type="text" id="namethreadedit" name="threadTitle"></input>
+        </div>
+        <textarea name="créa_thread" id="créa_thread" cols="70" rows="30" placeholder="Ecrivez votre thread ici"></textarea>
+        <ul id="ButtonCategory">
+            <li>
+            <input type="radio" name="drone" value="CHAMEAU"checked>
+            <label for="CHAMEAU">CHAMEAU</label>
+            </li>
+            <li>
+            <input type="radio" name="drone" value="DROMADAIRE">
+            <label for="DROMADAIRE">DROMADAIRE</label>
+            </li>
+            <li>
+            <input  type="radio" name="drone" value="LAMA">
+            <label for="LAMA">LAMA</label>
+            </li>
+        </ul>
+        <input type="submit" value="Supprimer" name="submitthread" id="submitthread" class="sub-thread">
     </form>
 </body>
 <script>
@@ -139,6 +189,28 @@
         }
     })
 
+    function onclickedit (postID) {
+            console.log(postID)
+            document.querySelector('#thread-edit').classList.add("threadGrid")
+            document.querySelector('#pop-up').classList.add("connexion-background")
+
+            document.querySelector('#pop-up').addEventListener('click', ()=>{
+            document.querySelector('#thread-edit').classList.remove("threadGrid")
+            document.querySelector('#pop-up').classList.remove("connexion-background")
+            })
+    }
+
+    function onclickdelete (postID) {
+            console.log(postID)
+        
+        document.querySelector('#thread-delete').classList.add("threadGrid")
+        document.querySelector('#pop-up').classList.add("connexion-background")
+
+        document.querySelector('#pop-up').addEventListener('click', ()=>{
+        document.querySelector('#thread-delete').classList.remove("threadGrid")
+        document.querySelector('#pop-up').classList.remove("connexion-background")
+        })
+    }
         var i=0;
         function read(){
             if (!i){
@@ -196,5 +268,7 @@
                 })
             }
         }) 
+
+
 </script>
 </html>
