@@ -10,6 +10,14 @@
     margin: 50px;
 }
 
+#add-thread {
+    display: none;
+}
+
+.add-thread-auth {
+    display: block !important;
+}
+
 #add-thread #input-add-thread {
     border-width: 0 0 2px;
     background: white;
