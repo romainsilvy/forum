@@ -6,17 +6,20 @@
     <title>Cham Nation</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="/static/css/global.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
     <header>
         <img id="logo" src="/static/images/logo.png">
-        <div id="wrap">
-            <div id="search">
-                <input type="text" id="searchTerm" placeholder="What are you looking for?" value="">
-                <button type="submit" id="searchButton"><i id="fa fa-search"></i></button>
+        <form method="POST" action="" id="testt">
+            <div id="wrap">
+                <div id="search">
+                    <input name="searchWord" list="list" id="searchTerm" placeholder="Que recherchez-vous ?" value="" autocomplete="off">
+                    <button type="submit" id="searchButton"><i class="fas fa-search"></i></button>
+                </div>
             </div>
-        </div>
+        </form>
         <img id="profile-picture" src="/static/images/profile-picture.png"> 
     </header>
 
