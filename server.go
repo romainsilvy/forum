@@ -292,7 +292,7 @@ func comparePasswords(hashedPwd string, plainPwd string) bool {
 //runServer sets the listenandserve port to 8080
 func runServer() {
 	fmt.Println("server is runing")
-	if err := http.ListenAndServe(":8090", nil); err != nil {
+	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
 	}
 }
