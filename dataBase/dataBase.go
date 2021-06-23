@@ -171,3 +171,40 @@ func RetrieveSearchRows(db *sql.DB, inputSearchBar string) *sql.Rows {
 	rows, _ := db.Query(reqS, inputSearchBar)
 	return rows
 }
+
+func RetrieveAccueilRows(db *sql.DB) *sql.Rows {
+	req := `SELECT 
+			id_th,
+			id_user,
+			title,
+			content,
+			created_at,
+			category
+			FROM 
+			Thread
+			ORDER BY id_th DESC`
+	rows, _ := db.Query(req)
+	return rows
+}
+
+//checkIfExist return true or false depending if the comparator 1 passed as parameter exist in the db
+func CheckIfExistLike(db *sql.DB, comparator1 string, comparator2 int) bool {
+	stmt, err := db.Prepare("select " + "value" + " from " + "Like" + " where " + comparator1 + " = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var toReturn string
+	err = stmt.QueryRow(comparator2).Scan(&toReturn)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			log.Fatal(err)
+		} else {
+			return false
+		}
+	}
+	return true
+}
+
+func GetNumberOfLike() {
+
+}

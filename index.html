@@ -56,8 +56,8 @@
                 <h3>{{.Title}}</h3>
                 <p class="zeub">
                     {{.Content}}
-                    <button value="likeAdd" name="like" class="btn-like" onclick="like('{{.Id_th}}')" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span id="btnLike{{.Id_th}}" class="like__number">14</span></button>
-                    <button class="btn-dislike" id="red"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span class="like__number">100</span></button>
+                    <button value="likeAdd" class="btn-like" onclick="like('{{.Id_th}}', 1)" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span id="btnLike{{.Id_th}}" class="like__number">14</span></button>
+                    <button class="btn-dislike" id="red" onclick="like('{{.Id_th}}', -1)"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span id="btnDisike{{.Id_th}}" class="like__number">100</span></button>
                 </p>
             </div>
             {{end}}
@@ -189,7 +189,7 @@
         }
     })
     
-    function like(id_th) {
+    function like(id_th, value) {
         console.log("id thread :   " + id_th)
         const body_content  = document.querySelectorAll("body")
         console.log(body_content)
@@ -200,6 +200,7 @@
         },
         body : JSON.stringify({// envoyer dans le go
             id_th : id_th.toString(),
+            value : value.toString(),
         })
         })
         .then((response)=>{

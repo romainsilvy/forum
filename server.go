@@ -25,6 +25,7 @@ var (
 //this structure is used to unmarshall the value of id_th
 type MyBody struct {
 	Id_th string `json:id_th`
+	Value string `json:value`
 }
 
 //inscription manage the inscription form
@@ -103,17 +104,7 @@ func displaySearchResult(inputSearchBar string, dataToSend []databaseTools.Threa
 }
 
 func displayAccueil(dataToSend []databaseTools.ThreadData, variable *template.Template, w http.ResponseWriter, db *sql.DB) {
-	req := `SELECT 
-			id_th,
-			id_user,
-			title,
-			content,
-			created_at,
-			category
-			FROM 
-			Thread
-			ORDER BY id_th DESC`
-	rows, _ := db.Query(req)
+	rows := databaseTools.RetrieveAccueilRows(db)
 	for rows.Next() {
 		item := databaseTools.ThreadData{}
 		err2 := rows.Scan(&item.Id_th, &item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
@@ -271,9 +262,21 @@ func FetchLike(db *sql.DB) {
 		id_user := databaseTools.SingleRowQuerry(db, "id_user", "User", "user_name", user_name)
 		id_user_int, _ := strconv.Atoi(id_user)
 		id_th_int, _ := strconv.Atoi(myParam.Id_th)
+		myParam_int, _ := strconv.Atoi(myParam.Value)
+
+		switch myParam_int {
+		case 1:
+			fmt.Println("like")
+		case -1:
+			fmt.Println("dislike")
+		}
 
 		if sessionCookieAuth.Values["authenticated"] == true {
-			databaseTools.InsertIntoLike(id_user_int, id_th_int, 1, db)
+			if databaseTools.CheckIfExistLike(db, "id_user", id_user_int) && databaseTools.CheckIfExistLike(db, "id_th", id_th_int) {
+				db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
+			} else {
+				databaseTools.InsertIntoLike(id_user_int, id_th_int, myParam_int, db)
+			}
 		} else if sessionCookieAuth.Values["authenticated"] != true {
 			fmt.Println("Veuillez vous connecter pour poster un thread !")
 		}
