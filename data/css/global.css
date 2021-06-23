@@ -154,7 +154,15 @@ header #profile-picture {
     justify-content:space-evenly;
 }
 
-
+#category input {
+    border: none;
+    float: right;
+    background-image: linear-gradient( #fde8f7 0%, #d5e3fb 100%);
+    margin: 5px;
+    padding: 5px;
+    border-radius: 20px;
+    cursor: pointer;
+}
 /* ------- Partie droite ------- */
 
 

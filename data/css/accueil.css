@@ -10,6 +10,14 @@
     margin: 50px;
 }
 
+#add-thread {
+    display: none;
+}
+
+.add-thread-auth {
+    display: block !important;
+}
+
 #add-thread #input-add-thread {
     border-width: 0 0 2px;
     background: white;
@@ -26,15 +34,6 @@
     cursor: pointer;
 }
 #buttonDelete {
-    border: none;
-    float: right;
-    background-image: linear-gradient( #fde8f7 0%, #d5e3fb 100%);
-    margin: 5px;
-    padding: 5px;
-    border-radius: 20px;
-    cursor: pointer;
-}
-#category input {
     border: none;
     float: right;
     background-image: linear-gradient( #fde8f7 0%, #d5e3fb 100%);

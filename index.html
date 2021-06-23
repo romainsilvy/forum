@@ -281,7 +281,11 @@
                     document.querySelector('#inscription').classList.remove("popUp")
                 })
             }
-        }) 
+        })
+
+        if (document.cookie.includes("auth")) {
+            document.querySelector("#add-thread").classList.add("add-thread-auth")
+        }
 
 
 </script>
