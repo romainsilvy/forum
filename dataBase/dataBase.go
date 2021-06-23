@@ -118,8 +118,40 @@ func SingleRowQuerry(db *sql.DB, rowName string, tableName string, comparator1 s
 	return toReturn
 }
 
+func SingleRowQuerryDeux(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 int) int {
+	// SELECT password FROM User WHERE User_name = " ?"
+	//recup le mdp
+	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var toReturn int
+	err = stmt.QueryRow(comparator2).Scan(&toReturn)
+	if err != nil {
+		return 0
+	}
+	return toReturn
+}
+
 //checkIfExist return true or false depending if the comparator 1 passed as parameter exist in the db
 func CheckIfExist(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 string) bool {
+	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var toReturn string
+	err = stmt.QueryRow(comparator2).Scan(&toReturn)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			log.Fatal(err)
+		} else {
+			return false
+		}
+	}
+	return true
+}
+
+func CheckIfExistDeux(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 int) bool {
 	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
 	if err != nil {
 		log.Fatal(err)

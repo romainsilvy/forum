@@ -248,20 +248,30 @@ func handleAll(db *sql.DB) {
 
 func manageLike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int, value_int int) {
 	if sessionCookieAuth.Values["authenticated"] == true {
+		fmt.Println(databaseTools.CheckIfExistLike(db, "id_user", id_user_int)) // quand jamais like : true		quand DEJA like : true
+		fmt.Println(databaseTools.CheckIfExistLike(db, "id_th", id_th_int))     // quand jamais like : false	quand DEJA like : true
+		fmt.Println(databaseTools.CheckIfExistLike(db, "value", value_int))     // quand jamais like : true		quand DEJA like : true
 		if databaseTools.CheckIfExistLike(db, "id_user", id_user_int) && databaseTools.CheckIfExistLike(db, "id_th", id_th_int) && databaseTools.CheckIfExistLike(db, "value", value_int) {
+			fmt.Println("deja like avant")
 			db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
 		} else {
+			fmt.Println("premiere fois liké")
 			databaseTools.InsertIntoLike(id_user_int, id_th_int, value_int, db)
 		}
-	} else if sessionCookieAuth.Values["authenticated"] != true {
+	} else {
 		fmt.Println("Veuillez vous connecter pour poster un thread !")
 	}
-	// if databaseTools.CheckIfExistLike(db, "id_user", id_user_int) && databaseTools.CheckIfExistLike(db, "id_th", id_th_int) && !databaseTools.CheckIfExistLike(db, "value", value_int) {
-	// 	fmt.Println("zezzeez")
-	// 	db.Exec(`UPDATE Like SET value = ? WHERE id_user = ? and id_th = ?`, value_int*(-1), id_user_int, id_th_int)
-	// }
-
 }
+
+// fmt.Println(databaseTools.SingleRowQuerryDeux(db, "value", "Like", "id_user", value_int))
+// if databaseTools.SingleRowQuerryDeux(db, "value", "Like", "id_user", value_int) == 0 {
+// 	databaseTools.InsertIntoLike(id_user_int, id_th_int, value_int, db)
+// 	fmt.Println("n existe pas donc je crée")
+// }
+
+// databaseTools.InsertIntoLike(id_user_int, id_th_int, value_int, db)
+// db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
+// db.Exec(`UPDATE Like SET value = ? WHERE id_user = ? and id_th = ?`, value_int*(-1), id_user_int, id_th_int)
 
 func FetchLike(db *sql.DB) {
 	http.HandleFunc("/like", func(w http.ResponseWriter, r *http.Request) {
