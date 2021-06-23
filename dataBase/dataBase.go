@@ -17,16 +17,12 @@ type User struct {
 }
 
 type Thread struct {
-	Id_th         int
-	Id_user       int
-	Title         string
-	Content       string
-	Created_at    string
-	Notif         bool
-	Like_count    int
-	Dislike_count int
-	Comment_count int
-	Category      string
+	Id_th      int
+	Id_user    int
+	Title      string
+	Content    string
+	Created_at string
+	Category   string
 }
 
 type ThreadData struct {
@@ -47,17 +43,10 @@ type ThreadMessage struct {
 }
 
 type Like struct {
-	Id_like int
-	Id_user int
-	Like    bool
-	Dislike bool
-	Id_th   int
-}
-
-type Following struct {
-	Id_following int
-	Id_user      int
-	Id_th        int
+	Id_user     int
+	Nbr_like    int
+	Nbr_dislike int
+	Id_th       int
 }
 
 type ThreadCategory struct {
@@ -97,12 +86,12 @@ func InsertIntoUsers(user_name string, email string, password string, db *sql.DB
 	}
 }
 
-func InsertIntoThreads(id_user int, title string, content string, created_at string, db *sql.DB) {
-	_, err := db.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, false, 0, 0, 0)`, id_user, title, content, created_at)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
+// func InsertIntoThreads(id_user int, title string, content string, created_at string, db *sql.DB) {
+// 	_, err := db.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, false, 0, 0, 0)`, id_user, title, content, created_at)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// }
 
 //singleRowQuerry retrieve a value in the db with a where comparator
 func SingleRowQuerry(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 string) string {

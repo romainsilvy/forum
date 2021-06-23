@@ -365,3 +365,13 @@ ul{
 .red{
     color: red;
 }
+
+.like-counter {
+    color: #000;
+    text-decoration: none;
+    margin-right: 5px;
+}
+
+.liked {
+    font-weight: bold;
+}

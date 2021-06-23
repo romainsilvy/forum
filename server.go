@@ -126,7 +126,7 @@ func displayAccueil(dataToSend []databaseTools.ThreadData, variable *template.Te
 			category
 			FROM 
 			Thread
-			ORDER BY created_at DESC`
+			ORDER BY id_th DESC`
 	rows, _ := db.Query(req)
 	for rows.Next() {
 		item := databaseTools.ThreadData{}
@@ -140,7 +140,7 @@ func displayAccueil(dataToSend []databaseTools.ThreadData, variable *template.Te
 }
 
 //handleAccueil is the handlefunc for the main page
-func handleAccueil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
+func handleAccueil(database *sql.DB) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		var dataToSend []databaseTools.ThreadData
 		variable, _ := template.ParseFiles("index.html")
@@ -190,7 +190,7 @@ func addThread(session *sessions.Session, title string, content string, category
 	convertissor := fmt.Sprintf("%v", littlecookie)
 	check := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", convertissor)
 	id_user, _ := strconv.Atoi(check)
-	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content,  category, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, time(), false, 0, 0, 0)`, id_user, title, content, category)
+	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content,  category, created_at) VALUES (?, ?, ?, ?, time())`, id_user, title, content, category)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -240,7 +240,7 @@ func changeEmail(r *http.Request, userPassword string, userName string, db *sql.
 }
 
 //handleProfil is the handlefunc for the profil page
-func handleProfil(oneUser databaseTools.User, tabUser []databaseTools.User, database *sql.DB) {
+func handleProfil(oneUser databaseTools.User, database *sql.DB) {
 	http.HandleFunc("/profil/", func(w http.ResponseWriter, r *http.Request) {
 		variable, _ := template.ParseFiles("profil.html")
 
@@ -263,8 +263,31 @@ func handleProfil(oneUser databaseTools.User, tabUser []databaseTools.User, data
 func handleAll(db *sql.DB) {
 	fileServer := http.FileServer(http.Dir("./data"))
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
-	handleAccueil(databaseTools.User{}, []databaseTools.User{}, db)
-	handleProfil(databaseTools.User{}, []databaseTools.User{}, db)
+	handleAccueil(db)
+	handleProfil(databaseTools.User{}, db)
+	FetchLike(db)
+
+}
+
+func FetchLike(db *sql.DB) {
+	http.HandleFunc("/like", func(w http.ResponseWriter, r *http.Request) {
+		//insere un like en fonction du post id
+		req := `SELECT
+			COUNT(*)
+			FROM
+			Like
+			Where id_th = ?
+			AND 
+			value = 1`
+		rows := db.QueryRow(req, 1)
+		var count int
+		err := rows.Scan(&count)
+		if err != nil {
+			panic(err)
+		}
+		w.Write([]byte(strconv.Itoa(count)))
+	})
+	// recup la donner envoyer en js pour le mettre dans la base de données
 }
 
 func hashAndSalt(pwd string) string {

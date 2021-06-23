@@ -50,14 +50,14 @@
             {{range .}}
             <div id="testHour" class="inside-center a-thread"> 
             <form action ="" method="POST" > 
-                <button id="buttonDelete" type="button" onclick="javascript:onclickdelete({{.Id_th}})">Supprimer</button> 
-                <button id ="buttonEdit" type="button" onclick="javascript:onclickedit({{.Id_th}})">Modifier</button> 
+                <button id="buttonDelete" type="button" onclick="javascript:onclickdelete(`{{.Id_th}}`)">Supprimer</button> 
+                <button id ="buttonEdit" type="button" onclick="javascript:onclickedit(`{{.Id_th}}`)">Modifier</button> 
             </form>
                 <h3>{{.Title}}</h3>
                 <p class="zeub">
                     {{.Content}}
-                <button class="btn-like" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span class="like__number">99</span></button>
-                <button class="btn-dislike" id="red"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span class="like__number">100</span></button>
+                    <button value="likeAdd" name="like" class="btn-like" onclick="like('{{.Id_th}}')" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span id="btnLike{{.Id_th}}" class="like__number">14</span></button>
+                    <button class="btn-dislike" id="red"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span class="like__number">100</span></button>
                 </p>
             </div>
             {{end}}
@@ -176,7 +176,7 @@
 <script>
     
     document.querySelector('#button-input-add-thread').addEventListener('click', ()=>{
-        var x = document.getElementById("input-add-thread").value
+        const x = document.getElementById("input-add-thread").value
         if ( x !== "") {
             document.querySelector("#namethread").value = x
             document.querySelector('#thread-background').classList.add("threadGrid")
@@ -188,6 +188,35 @@
             })
         }
     })
+    
+    function like(id_th) {
+        console.log(id_th)
+        const body_content  = document.querySelectorAll("body")
+        console.log(body_content)
+        fetch("/like", {
+        method : "POST",
+        headers : {
+            "content-type" : "application/json"
+        },
+        body : JSON.stringify({// envoyer dans le go
+            id_th
+        })
+        })
+        .then((response)=>{
+        return response.text()
+        })
+        .then((result)=>{
+            // faire update compteur de like
+            const btnName = `#btnLike${id_th.toString()}`
+            console.log(btnName)
+            document.querySelector(btnName).innerHTML = result
+            console.log(result)
+        })
+        .catch((err) =>{
+        throw err
+        })
+    }
+
 
     function onclickedit (postID) {
             console.log(postID)
@@ -213,6 +242,7 @@
     }
         var i=0;
         function read(){
+            let i=0;
             if (!i){
                 document.getElementById("more").style.display ="inline";
                 document.getElementById("first-text").style.display ="none";
@@ -225,27 +255,27 @@
                 i=0;
             }
         }
-        // var btn1 = document.querySelector('#green');
-        // var btn2 = document.querySelector('#red');
-        
 
-        // btn1.addEventListener('click', function() {
-        
-        //     if (btn2.classList.contains('red')) {
-        //     btn2.classList.remove('red');
-        //     } 
-        // this.classList.toggle('green');
-        
-        // });
+        if (document.querySelector("#testHour")) {
+            let btn1 = document.querySelector('#green');
+            let btn2 = document.querySelector('#red');
 
-        // btn2.addEventListener('click', function() {
+            btn1.addEventListener('click', function() {
         
-        //     if (btn1.classList.contains('green')) {
-        //     btn1.classList.remove('green');
-        //     } 
-        // this.classList.toggle('red');
+            if (btn2.classList.contains('red')) {
+                btn2.classList.remove('red');
+            } 
+            this.classList.toggle('green');
+            });
+
+            btn2.addEventListener('click', function() {
         
-        // });
+            if (btn1.classList.contains('green')) {
+                btn1.classList.remove('green');
+            } 
+            this.classList.toggle('red');
+            });
+        }
 
         document.querySelector('#profile-picture').addEventListener('click', ()=>{
 
