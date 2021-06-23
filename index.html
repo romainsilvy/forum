@@ -190,7 +190,7 @@
     })
     
     function like(id_th) {
-        console.log(id_th)
+        console.log("id thread :   " + id_th)
         const body_content  = document.querySelectorAll("body")
         console.log(body_content)
         fetch("/like", {
@@ -199,14 +199,13 @@
             "content-type" : "application/json"
         },
         body : JSON.stringify({// envoyer dans le go
-            id_th
+            id_th : id_th.toString(),
         })
         })
         .then((response)=>{
         return response.text()
         })
         .then((result)=>{
-            // faire update compteur de like
             const btnName = `#btnLike${id_th.toString()}`
             console.log(btnName)
             document.querySelector(btnName).innerHTML = result

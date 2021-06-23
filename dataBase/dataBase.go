@@ -86,6 +86,13 @@ func InsertIntoUsers(user_name string, email string, password string, db *sql.DB
 	}
 }
 
+func InsertIntoLike(id_user int, id_th int, value int, db *sql.DB) {
+	_, err := db.Exec(`INSERT INTO Like (id_user, id_th, value) VALUES (?, ?, ?)`, id_user, id_th, value)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 // func InsertIntoThreads(id_user int, title string, content string, created_at string, db *sql.DB) {
 // 	_, err := db.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, false, 0, 0, 0)`, id_user, title, content, created_at)
 // 	if err != nil {
@@ -133,4 +140,34 @@ func UpdateValue(db *sql.DB, tableName string, collumnName string, newValue stri
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func RetrieveCategoryRows(db *sql.DB, inputCatChoisie string) *sql.Rows {
+	reqC := `SELECT 
+			id_user,
+			title,
+			content,
+			created_at,
+			category
+			FROM 
+			Thread
+			WHERE category = ?
+			ORDER BY created_at DESC`
+	rows, _ := db.Query(reqC, inputCatChoisie)
+	return rows
+}
+
+func RetrieveSearchRows(db *sql.DB, inputSearchBar string) *sql.Rows {
+	reqS := `SELECT 
+			id_user,
+			title,
+			content,
+			created_at,
+			category
+			FROM 
+			Thread
+			WHERE title = ?
+			ORDER BY created_at DESC`
+	rows, _ := db.Query(reqS, inputSearchBar)
+	return rows
 }

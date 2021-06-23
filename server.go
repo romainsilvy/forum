@@ -2,8 +2,10 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -14,15 +16,21 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+//global vars
 var (
 	key   = []byte("ismatheplatypus@w*")
 	store = sessions.NewCookieStore(key)
 )
 
+//this structure is used to unmarshall the value of id_th
+type MyBody struct {
+	Id_th string `json:id_th`
+}
+
 //inscription manage the inscription form
 func inscription(r *http.Request, database *sql.DB) {
-	goodCreation := false
 	inscriptionPseudo := r.FormValue("inscriptionPseudo")
+
 	if inscriptionPseudo != "" {
 		inscriptionEmail := r.FormValue("inscriptionEmail")
 		inscriptionEmailConfirm := r.FormValue("inscriptionEmailConfirm")
@@ -32,10 +40,7 @@ func inscription(r *http.Request, database *sql.DB) {
 		if inscriptionEmail == inscriptionEmailConfirm && inscriptionPassword == inscriptionPasswordConfirm {
 			hashed := hashAndSalt(inscriptionPassword)
 			databaseTools.InsertIntoUsers(inscriptionPseudo, inscriptionEmail, hashed, database)
-			goodCreation = true
-		}
-
-		if !goodCreation {
+		} else {
 			fmt.Println("Le compte n'a pas pu être créé")
 		}
 	}
@@ -71,17 +76,8 @@ func connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 }
 
 func displayCategory(inputCatChoisie string, dataToSend []databaseTools.ThreadData, variable *template.Template, w http.ResponseWriter, db *sql.DB) {
-	reqC := `SELECT 
-			id_user,
-			title,
-			content,
-			created_at,
-			category
-			FROM 
-			Thread
-			WHERE category = ?
-			ORDER BY created_at DESC`
-	rows, _ := db.Query(reqC, inputCatChoisie)
+	rows := databaseTools.RetrieveCategoryRows(db, inputCatChoisie)
+
 	for rows.Next() {
 		item := databaseTools.ThreadData{}
 		err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
@@ -94,17 +90,7 @@ func displayCategory(inputCatChoisie string, dataToSend []databaseTools.ThreadDa
 }
 
 func displaySearchResult(inputSearchBar string, dataToSend []databaseTools.ThreadData, variable *template.Template, w http.ResponseWriter, db *sql.DB) {
-	reqS := `SELECT 
-			id_user,
-			title,
-			content,
-			created_at,
-			category
-			FROM 
-			Thread
-			WHERE title = ?
-			ORDER BY created_at DESC`
-	rows, _ := db.Query(reqS, inputSearchBar)
+	rows := databaseTools.RetrieveSearchRows(db, inputSearchBar)
 	for rows.Next() {
 		item := databaseTools.ThreadData{}
 		err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
@@ -272,6 +258,26 @@ func handleAll(db *sql.DB) {
 func FetchLike(db *sql.DB) {
 	http.HandleFunc("/like", func(w http.ResponseWriter, r *http.Request) {
 		//insere un like en fonction du post id
+
+		var myParam MyBody
+
+		body, _ := ioutil.ReadAll(r.Body)
+
+		json.Unmarshal(body, &myParam)
+
+		sessionCookieAuth, _ := store.Get(r, "auth")
+		littlecookie := sessionCookieAuth.Values["user"]
+		user_name := fmt.Sprintf("%v", littlecookie)
+		id_user := databaseTools.SingleRowQuerry(db, "id_user", "User", "user_name", user_name)
+		id_user_int, _ := strconv.Atoi(id_user)
+		id_th_int, _ := strconv.Atoi(myParam.Id_th)
+
+		if sessionCookieAuth.Values["authenticated"] == true {
+			databaseTools.InsertIntoLike(id_user_int, id_th_int, 1, db)
+		} else if sessionCookieAuth.Values["authenticated"] != true {
+			fmt.Println("Veuillez vous connecter pour poster un thread !")
+		}
+
 		req := `SELECT
 			COUNT(*)
 			FROM
@@ -279,7 +285,7 @@ func FetchLike(db *sql.DB) {
 			Where id_th = ?
 			AND 
 			value = 1`
-		rows := db.QueryRow(req, 1)
+		rows := db.QueryRow(req, myParam.Id_th)
 		var count int
 		err := rows.Scan(&count)
 		if err != nil {
