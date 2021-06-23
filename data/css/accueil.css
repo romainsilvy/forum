@@ -125,7 +125,7 @@
     border-color: rgb(138, 197, 224)
 }
 
-.box input[type = "submit"]{
+.box input[type = "submit"],.box input[type = "reset"]{
     background: none;
     margin: 20px auto;
     text-align: center;
@@ -138,10 +138,12 @@
     font-size: large;
 }
 
-.box input[type = "submit"]:hover {
+.box input[type = "submit"]:hover, .box input[type = "reset"]:hover {
     background: rgb(138, 197, 224)
 }
-
+.popup-supp h1 {
+    
+}
 
 /* ------- CSS CONNEXION POP UP ------- */
 
@@ -237,20 +239,6 @@ ul{
     border-radius: 20px;
     box-shadow: 0px 8px 24px #7090B0B3;
 }
-#thread-delete {
-    display: none;
-    width: 80%;
-    height: 80%;
-    padding: 40px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    background-image: linear-gradient( #fde8f7 0%, #d5e3fb 100%);
-    text-align: center;
-    border-radius: 20px;
-    box-shadow: 0px 8px 24px #7090B0B3;
-}
 
 #namethread {
     display: grid;
@@ -327,7 +315,7 @@ ul{
     align-self: flex-end;
 }
 
-.boxthread input[type = "submit"]{
+.boxthread input[type = "submit"], .boxthread input[type = "reset"]{
     width: 300px;
     height: 100px;
     background: none;
@@ -342,9 +330,20 @@ ul{
     font-size: large;
 }
 
-.boxthread input[type = "submit"]:hover {
+.boxthread input[type = "submit"]:hover, .boxthread input[type = "reset"]:hover {
     background: rgb(255, 215, 170)
 }
+
+/*--------- */
+
+.threadGridDelete {
+    display: grid !important;
+    grid-template-columns: 33% 33% 33%;
+    grid-template-rows: 33% 33% 33%;
+    position: absolute;
+}
+
+
 
 
 /* ------- CSS INSCRIPTION POP UP ------- */

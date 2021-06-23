@@ -18,8 +18,6 @@
                 <div id="search">
                     <input name="searchWord" list="list" id="searchTerm" placeholder="Que recherchez-vous ?" value="" autocomplete="off">
                     <button type="submit" id="searchButton"><i class="fas fa-search"></i></button>
-                    
-                    </button>
                 </div>
             </div>
         </form>
@@ -151,27 +149,13 @@
         <input type="submit" value="Modifier" name="submitthread" id="submitthread" class="sub-thread">
     </form>
 
-    <form id="thread-delete" class="boxthread" action="" method="POST">
-        <div id ="ajouter-thread">
-            <input value="" type="text" id="namethreadedit" name="threadTitle"></input>
-        </div>
-        <textarea name="créa_thread" id="créa_thread" cols="70" rows="30" placeholder="Ecrivez votre thread ici"></textarea>
-        <ul id="ButtonCategory">
-            <li>
-            <input type="radio" name="drone" value="CHAMEAU"checked>
-            <label for="CHAMEAU">CHAMEAU</label>
-            </li>
-            <li>
-            <input type="radio" name="drone" value="DROMADAIRE">
-            <label for="DROMADAIRE">DROMADAIRE</label>
-            </li>
-            <li>
-            <input  type="radio" name="drone" value="LAMA">
-            <label for="LAMA">LAMA</label>
-            </li>
-        </ul>
-        <input type="submit" value="Supprimer" name="submitthread" id="submitthread" class="sub-thread">
+    <div id="pop-up"></div>
+    <form id="thread-delete" class="box" action="" method="POST">
+            <h1>Voulez-vous vraiment supprimer ?</h1>
+            <input type="submit" value="Oui" name="deleteButton"> 
+            <input type="submit" value="Annuler" name="submit">
     </form>
+    
 </body>
 <script>
     
@@ -228,18 +212,18 @@
             document.querySelector('#pop-up').classList.remove("connexion-background")
             })
     }
-
-    function onclickdelete (postID) {
-            console.log(postID)
-        
-        document.querySelector('#thread-delete').classList.add("threadGrid")
-        document.querySelector('#pop-up').classList.add("connexion-background")
-
-        document.querySelector('#pop-up').addEventListener('click', ()=>{
-        document.querySelector('#thread-delete').classList.remove("threadGrid")
-        document.querySelector('#pop-up').classList.remove("connexion-background")
-        })
+    function onclickdelete(postID) {
+        console.log(postID)
+            document.querySelector('#pop-up').classList.add("connexion-background")
+            document.querySelector('#thread-delete').classList.add("popUp")
+    
+    document.querySelector('#pop-up').addEventListener('click', ()=>{
+            document.querySelector('#thread-delete').classList.remove("threadGridDelete")
+            document.querySelector('#pop-up').classList.remove("connexion-background")
+            document.querySelector('#thread-delete').classList.remove("popUp")
+         })
     }
+    
         var i=0;
         function read(){
             let i=0;

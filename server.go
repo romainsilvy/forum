@@ -155,6 +155,9 @@ func handleAccueil(database *sql.DB) {
 		inputCatDrom := r.FormValue("DROMADAIRE")
 		inputCatLama := r.FormValue("LAMA")
 
+		//supp variable
+		deleteButton := r.FormValue("deleteButton")
+
 		//session cookie
 		sessionCookieAuth, _ := store.Get(r, "auth")
 
@@ -165,6 +168,10 @@ func handleAccueil(database *sql.DB) {
 			addThread(sessionCookieAuth, title, content, inputCatThread, database)
 		} else if (submitButton == "Enregistrer") && (sessionCookieAuth.Values["authenticated"] != true) {
 			fmt.Println("Veuillez vous connecter pour poster un thread !")
+		}
+
+		if (deleteButton != "") && (sessionCookieAuth.Values["authenticated"] == true) {
+			fmt.Println("test ok")
 		}
 
 		connexion(w, r, database)
@@ -184,13 +191,25 @@ func handleAccueil(database *sql.DB) {
 	})
 }
 
-// requete ajoute un tread
+// requete ajoute un thread
 func addThread(session *sessions.Session, title string, content string, category string, database *sql.DB) {
 	littlecookie := session.Values["user"]
 	convertissor := fmt.Sprintf("%v", littlecookie)
 	check := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", convertissor)
 	id_user, _ := strconv.Atoi(check)
 	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content,  category, created_at) VALUES (?, ?, ?, ?, time())`, id_user, title, content, category)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// requete supprimer un thread
+func suppThread(session *sessions.Session, title string, content string, category string, database *sql.DB) {
+	littlecookie := session.Values["user"]
+	convertissor := fmt.Sprintf("%v", littlecookie)
+	check := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", convertissor)
+	id_user, _ := strconv.Atoi(check)
+	_, err := database.Exec(`DELETE FROM Thread WHERE id_user = ?`, id_user)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -315,7 +334,7 @@ func comparePasswords(hashedPwd string, plainPwd string) bool {
 //runServer sets the listenandserve port to 8080
 func runServer() {
 	fmt.Println("server is runing")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(":8090", nil); err != nil {
 		log.Fatal(err)
 	}
 }
