@@ -207,22 +207,20 @@
         return response.text()
         })
         .then((result)=>{
-            const bLike = `#btnLike${id_th.toString()}`
-            console.log(bLike)
-            document.querySelector(bLike).innerHTML = result
-            console.log(result)
-
-            const bDislike = `#btnDislike${id_th.toString()}`
-            console.log(bDislike)
-            document.querySelector(bDislike).innerHTML = result
-            console.log(result)
+            if (result.includes("dislike : ")) {
+                const bDislike = `#btnDislike${id_th.toString()}`
+                document.querySelector(bDislike).innerHTML = result.substring(10, result.length + 1)
+            } else if (result.includes("like : ")) {
+                const bLike = `#btnLike${id_th.toString()}`
+                document.querySelector(bLike).innerHTML = result.substring(7, result.length + 1)
+            }
         })
         .catch((err) =>{
         throw err
         })
     }
 
-    
+
 
 
     function onclickedit (postID) {

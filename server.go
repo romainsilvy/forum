@@ -256,18 +256,11 @@ func manageLike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int
 	} else if sessionCookieAuth.Values["authenticated"] != true {
 		fmt.Println("Veuillez vous connecter pour poster un thread !")
 	}
-}
+	// if databaseTools.CheckIfExistLike(db, "id_user", id_user_int) && databaseTools.CheckIfExistLike(db, "id_th", id_th_int) && !databaseTools.CheckIfExistLike(db, "value", value_int) {
+	// 	fmt.Println("zezzeez")
+	// 	db.Exec(`UPDATE Like SET value = ? WHERE id_user = ? and id_th = ?`, value_int*(-1), id_user_int, id_th_int)
+	// }
 
-func manageDisike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int, value_int int) {
-	if sessionCookieAuth.Values["authenticated"] == true {
-		if databaseTools.CheckIfExistLike(db, "id_user", id_user_int) && databaseTools.CheckIfExistLike(db, "id_th", id_th_int) && databaseTools.CheckIfExistLike(db, "value", value_int) {
-			db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
-		} else {
-			databaseTools.InsertIntoLike(id_user_int, id_th_int, value_int, db)
-		}
-	} else if sessionCookieAuth.Values["authenticated"] != true {
-		fmt.Println("Veuillez vous connecter pour poster un thread !")
-	}
 }
 
 func FetchLike(db *sql.DB) {
@@ -292,7 +285,7 @@ func FetchLike(db *sql.DB) {
 		case 1:
 			manageLike(sessionCookieAuth, db, id_user_int, id_th_int, value_int)
 		case -1:
-			manageDisike(sessionCookieAuth, db, id_user_int, id_th_int, value_int)
+			manageLike(sessionCookieAuth, db, id_user_int, id_th_int, value_int)
 		}
 
 		databaseTools.SendNumberOfLike(db, myParam.Id_th, w, value_int)

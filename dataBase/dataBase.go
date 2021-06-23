@@ -222,6 +222,10 @@ func SendNumberOfLike(db *sql.DB, id_th string, w http.ResponseWriter, value int
 		panic(err)
 	}
 
-	w.Write([]byte(strconv.Itoa(count)))
+	if value == -1 {
+		w.Write([]byte("dislike : " + strconv.Itoa(count)))
+	} else if value == 1 {
+		w.Write([]byte("like : " + strconv.Itoa(count)))
+	}
 
 }
