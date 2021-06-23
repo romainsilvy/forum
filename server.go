@@ -246,6 +246,30 @@ func handleAll(db *sql.DB) {
 
 }
 
+func manageLike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int, value_int int) {
+	if sessionCookieAuth.Values["authenticated"] == true {
+		if databaseTools.CheckIfExistLike(db, "id_user", id_user_int) && databaseTools.CheckIfExistLike(db, "id_th", id_th_int) && databaseTools.CheckIfExistLike(db, "value", value_int) {
+			db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
+		} else {
+			databaseTools.InsertIntoLike(id_user_int, id_th_int, value_int, db)
+		}
+	} else if sessionCookieAuth.Values["authenticated"] != true {
+		fmt.Println("Veuillez vous connecter pour poster un thread !")
+	}
+}
+
+func manageDisike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int, value_int int) {
+	if sessionCookieAuth.Values["authenticated"] == true {
+		if databaseTools.CheckIfExistLike(db, "id_user", id_user_int) && databaseTools.CheckIfExistLike(db, "id_th", id_th_int) && databaseTools.CheckIfExistLike(db, "value", value_int) {
+			db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
+		} else {
+			databaseTools.InsertIntoLike(id_user_int, id_th_int, value_int, db)
+		}
+	} else if sessionCookieAuth.Values["authenticated"] != true {
+		fmt.Println("Veuillez vous connecter pour poster un thread !")
+	}
+}
+
 func FetchLike(db *sql.DB) {
 	http.HandleFunc("/like", func(w http.ResponseWriter, r *http.Request) {
 		//insere un like en fonction du post id
@@ -262,39 +286,16 @@ func FetchLike(db *sql.DB) {
 		id_user := databaseTools.SingleRowQuerry(db, "id_user", "User", "user_name", user_name)
 		id_user_int, _ := strconv.Atoi(id_user)
 		id_th_int, _ := strconv.Atoi(myParam.Id_th)
-		myParam_int, _ := strconv.Atoi(myParam.Value)
+		value_int, _ := strconv.Atoi(myParam.Value)
 
-		switch myParam_int {
+		switch value_int {
 		case 1:
-			fmt.Println("like")
+			manageLike(sessionCookieAuth, db, id_user_int, id_th_int, value_int)
 		case -1:
-			fmt.Println("dislike")
+			manageDisike(sessionCookieAuth, db, id_user_int, id_th_int, value_int)
 		}
 
-		if sessionCookieAuth.Values["authenticated"] == true {
-			if databaseTools.CheckIfExistLike(db, "id_user", id_user_int) && databaseTools.CheckIfExistLike(db, "id_th", id_th_int) {
-				db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
-			} else {
-				databaseTools.InsertIntoLike(id_user_int, id_th_int, myParam_int, db)
-			}
-		} else if sessionCookieAuth.Values["authenticated"] != true {
-			fmt.Println("Veuillez vous connecter pour poster un thread !")
-		}
-
-		req := `SELECT
-			COUNT(*)
-			FROM
-			Like
-			Where id_th = ?
-			AND 
-			value = 1`
-		rows := db.QueryRow(req, myParam.Id_th)
-		var count int
-		err := rows.Scan(&count)
-		if err != nil {
-			panic(err)
-		}
-		w.Write([]byte(strconv.Itoa(count)))
+		databaseTools.SendNumberOfLike(db, myParam.Id_th, w, value_int)
 	})
 	// recup la donner envoyer en js pour le mettre dans la base de données
 }
