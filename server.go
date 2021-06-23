@@ -156,7 +156,8 @@ func handleAccueil(database *sql.DB) {
 		inputCatLama := r.FormValue("LAMA")
 
 		//supp variable
-		deleteButton := r.FormValue("deleteButton")
+		deleteButton := r.FormValue("suppr")
+		fmt.Println(deleteButton)
 
 		//session cookie
 		sessionCookieAuth, _ := store.Get(r, "auth")
@@ -171,7 +172,7 @@ func handleAccueil(database *sql.DB) {
 		}
 
 		if (deleteButton != "") && (sessionCookieAuth.Values["authenticated"] == true) {
-			fmt.Println("test ok")
+			suppThread(sessionCookieAuth, database)
 		}
 
 		connexion(w, r, database)
@@ -204,12 +205,17 @@ func addThread(session *sessions.Session, title string, content string, category
 }
 
 // requete supprimer un thread
-func suppThread(session *sessions.Session, title string, content string, category string, database *sql.DB) {
+func suppThread(session *sessions.Session, database *sql.DB) {
 	littlecookie := session.Values["user"]
 	convertissor := fmt.Sprintf("%v", littlecookie)
-	check := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", convertissor)
-	id_user, _ := strconv.Atoi(check)
-	_, err := database.Exec(`DELETE FROM Thread WHERE id_user = ?`, id_user)
+	checkUser := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", convertissor)
+	id_user, _ := strconv.Atoi(checkUser)
+
+	checkThread := databaseTools.SingleRowQuerry(database, "id_th", "Thread", "id_user", checkUser)
+	id_thread, _ := strconv.Atoi(checkThread)
+	fmt.Println(id_user)
+	fmt.Println(id_thread)
+	_, err := database.Exec(`DELETE FROM Thread WHERE id_th = ? `, id_thread)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -334,7 +340,7 @@ func comparePasswords(hashedPwd string, plainPwd string) bool {
 //runServer sets the listenandserve port to 8080
 func runServer() {
 	fmt.Println("server is runing")
-	if err := http.ListenAndServe(":8090", nil); err != nil {
+	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatal(err)
 	}
 }
