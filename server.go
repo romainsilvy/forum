@@ -245,20 +245,40 @@ func handleAll(db *sql.DB) {
 	FetchLike(db)
 }
 
-func manageLike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int, value_int int) {
+func manageLike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int) {
 	if sessionCookieAuth.Values["authenticated"] == true {
-		// fmt.Println(databaseTools.CheckIfExistLike(db, "id_user", id_user_int)) // quand jamais like : true		quand DEJA like : true
-		// fmt.Println(databaseTools.CheckIfExistLike(db, "id_th", id_th_int))     // quand jamais like : false		quand DEJA like : true
-		// fmt.Println(databaseTools.CheckIfExistLike(db, "value", value_int))     // quand jamais like : true		quand DEJA like : true
-		if databaseTools.CheckIfExistLike(db, "id_user", id_user_int) && databaseTools.CheckIfExistLike(db, "id_th", id_th_int) {
-			fmt.Println("deja like avant")
-			db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
+
+		//manage like
+		//si la ligne existe sans tenir compte de la value
+		//on verifie la value et on vois avec la value que on a
+		// en fonction soit delete soit modify
+
+		if databaseTools.CheckIfExistLike(db, id_th_int, id_user_int) {
+			if databaseTools.SingleRowQuerryLike(db, "id_th", id_th_int, "id_user", id_user_int) == "1" {
+				db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
+				fmt.Println("remove")
+			} else {
+				db.Exec(`UPDATE Like SET value = ? WHERE id_user = ? and id_th = ?`, 1, id_user_int, id_th_int)
+				fmt.Println("modif")
+			}
 		} else {
-			fmt.Println("premiere fois liké")
-			databaseTools.InsertIntoLike(id_user_int, id_th_int, value_int, db)
+			databaseTools.InsertIntoLike(id_user_int, id_th_int, 1, db)
+			fmt.Println("like cree")
 		}
-	} else {
-		fmt.Println("Veuillez vous connecter pour poster un thread !")
+	}
+}
+
+func manageDislike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int) {
+	if sessionCookieAuth.Values["authenticated"] == true {
+		if databaseTools.CheckIfExistLike(db, id_th_int, id_user_int) {
+			if databaseTools.SingleRowQuerryLike(db, "id_th", id_th_int, "id_user", id_user_int) == "-1" {
+				db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
+			} else {
+				db.Exec(`UPDATE Like SET value = ? WHERE id_user = ? and id_th = ?`, -1, id_user_int, id_th_int)
+			}
+		} else {
+			databaseTools.InsertIntoLike(id_user_int, id_th_int, -1, db)
+		}
 	}
 }
 
@@ -267,9 +287,7 @@ func FetchLike(db *sql.DB) {
 		//insere un like en fonction du post id
 
 		var myParam MyBody
-
 		body, _ := ioutil.ReadAll(r.Body)
-
 		json.Unmarshal(body, &myParam)
 
 		sessionCookieAuth, _ := store.Get(r, "auth")
@@ -280,7 +298,25 @@ func FetchLike(db *sql.DB) {
 		id_th_int, _ := strconv.Atoi(myParam.Id_th)
 		value_int, _ := strconv.Atoi(myParam.Value)
 
-		manageLike(sessionCookieAuth, db, id_user_int, id_th_int, value_int)
+		switch value_int {
+		case 1:
+			manageLike(sessionCookieAuth, db, id_user_int, id_th_int)
+		case -1:
+			manageDislike(sessionCookieAuth, db, id_user_int, id_th_int)
+		}
+
+		//si value = -1 --> clic sur dislike
+		//si value = 1 --> clic sur like
+
+		//si value = 1 --> appel a manage LIKE
+		// si value = -1 appel a manage dislike
+
+		//manage like
+		//si la ligne existe sans tenir compte de la value
+		//on verifie la value et on vois avec la value que on a
+		// en fonction soit delete soit modify
+
+		// manageLike(sessionCookieAuth, db, id_user_int, id_th_int, value_int)
 
 		dislike := databaseTools.CountOfLike(db, myParam.Id_th, -1)
 		like := databaseTools.CountOfLike(db, myParam.Id_th, 1)

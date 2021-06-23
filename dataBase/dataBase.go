@@ -117,17 +117,16 @@ func SingleRowQuerry(db *sql.DB, rowName string, tableName string, comparator1 s
 	return toReturn
 }
 
-func SingleRowQuerryDeux(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 int) int {
-	// SELECT password FROM User WHERE User_name = " ?"
-	//recup le mdp
-	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
+func SingleRowQuerryLike(db *sql.DB, comparator1 string, comparator2 int, comparator3 string, comparator4 int) string {
+
+	stmt, err := db.Prepare("select value from Like where " + comparator1 + " = ? and " + comparator3 + " = ?")
 	if err != nil {
 		log.Fatal(err)
 	}
-	var toReturn int
-	err = stmt.QueryRow(comparator2).Scan(&toReturn)
+	var toReturn string
+	err = stmt.QueryRow(comparator2, comparator4).Scan(&toReturn)
 	if err != nil {
-		return 0
+		return "notExist"
 	}
 	return toReturn
 }
@@ -220,24 +219,6 @@ func RetrieveAccueilRows(db *sql.DB) *sql.Rows {
 	return rows
 }
 
-//checkIfExist return true or false depending if the comparator 1 passed as parameter exist in the db
-func CheckIfExistLike(db *sql.DB, comparator1 string, comparator2 int) bool {
-	stmt, err := db.Prepare("select " + "value" + " from " + "Like" + " where " + comparator1 + " = ?")
-	if err != nil {
-		log.Fatal(err)
-	}
-	var toReturn string
-	err = stmt.QueryRow(comparator2).Scan(&toReturn)
-	if err != nil {
-		if err != sql.ErrNoRows {
-			log.Fatal(err)
-		} else {
-			return false
-		}
-	}
-	return true
-}
-
 func CountOfLike(db *sql.DB, id_th string, value int) string {
 	req := `SELECT
 			COUNT(*)
@@ -254,5 +235,26 @@ func CountOfLike(db *sql.DB, id_th string, value int) string {
 	}
 
 	return strconv.Itoa(count)
+
+}
+
+func CheckIfExistLike(db *sql.DB, id_th int, id_user int) bool {
+	req := `SELECT
+			COUNT(*)
+			FROM
+			Like
+			Where id_th = ?
+			AND
+			id_user = ?`
+	rows := db.QueryRow(req, id_th, id_user)
+	var count int
+	err := rows.Scan(&count)
+	if err != nil {
+		panic(err)
+	}
+	if count == 0 {
+		return false
+	}
+	return true
 
 }
