@@ -55,7 +55,7 @@ func DisplayAccueil(dataToSend []databaseTools.ThreadData, w http.ResponseWriter
 	// , &item.Id_user, &item.Title, &item.Content, &item.Category
 
 	for rows.Next() {
-		fmt.Println("execution de la req c'est bon")
+
 		item := databaseTools.ThreadData{}
 		err2 := rows.Scan(&item.Id_th, &item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
 		if err2 != nil {
@@ -70,9 +70,10 @@ func DisplayAccueil(dataToSend []databaseTools.ThreadData, w http.ResponseWriter
 			//on le append
 			//si il existe pas
 			//on append like = 0
+			fmt.Println("execution de la req c'est bon")
 		}
 	}
-	// fmt.Println("la fonction return :", dataToSend)
+
 	return dataToSend
 }
 

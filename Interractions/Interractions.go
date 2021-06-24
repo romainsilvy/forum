@@ -109,7 +109,12 @@ func FetchLike(db *sql.DB) {
 		dislike := databaseTools.CountOfLike(db, myParam.Id_th, -1)
 		like := databaseTools.CountOfLike(db, myParam.Id_th, 1)
 
-		w.Write([]byte(like + ":" + dislike))
+		var item []int
+		item[0] = dislike
+		item[1] = like
+		bytes, _ := json.Marshal(item)
+
+		w.Write(bytes)
 	})
 }
 

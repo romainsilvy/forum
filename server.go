@@ -81,7 +81,7 @@ func handleAll(db *sql.DB) {
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
 	handleAccueil(db)
 	AccountManagement.HandleProfil(databaseTools.User{}, db)
-	interractionsTools.FetchLike(db)
+	// interractionsTools.FetchLike(db)
 	interractionsTools.FetchThread(db)
 }
 
