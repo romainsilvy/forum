@@ -2,9 +2,9 @@ package accountTools
 
 import (
 	"database/sql"
+	"html/template"
 	"log"
 	"net/http"
-	"text/template"
 
 	databaseTools "tools/dataBase"
 

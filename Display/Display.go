@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"strconv"
 	databaseTools "tools/dataBase"
 )
 
@@ -60,19 +61,18 @@ func DisplayAccueil(dataToSend []databaseTools.ThreadData, w http.ResponseWriter
 		if err2 != nil {
 			panic(err2)
 		}
-		dataToSend = append(dataToSend, item)
+		for _, content := range dataToSend {
+			fmt.Println(content)
+			databaseTools.CheckIfExistLike(db, item.Id_th, item.Id_user)
+			item.Like = databaseTools.CountOfLike(db, strconv.Itoa(item.Id_th), 1)
+			dataToSend = append(dataToSend, item)
+			//si le like existe
+			//on le append
+			//si il existe pas
+			//on append like = 0
+		}
 	}
 	// fmt.Println("la fonction return :", dataToSend)
-
-	for _, content := range dataToSend {
-		fmt.Println(content)
-		//checkifexistlike sur content
-		//si le like existe
-		//on le append
-		//si il existe pas
-		//on append like = 0
-	}
-
 	return dataToSend
 }
 
