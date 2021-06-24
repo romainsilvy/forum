@@ -225,19 +225,16 @@
         })
         })
         .then((response)=>{
-        return response.text()
+        return response.json()
         })
         .then((result)=>{
 
-            const tabLike = result.split(":")
-            console.log(tabLike[0])
-            console.log(tabLike[1])
 
             
             const bDislike = `#btnDislike${id_th.toString()}`
-            document.querySelector(bDislike).innerHTML = tabLike[1]
+            document.querySelector(bDislike).innerHTML = result[1]
             const bLike = `#btnLike${id_th.toString()}`
-            document.querySelector(bLike).innerHTML = tabLike[0]
+            document.querySelector(bLike).innerHTML = result[0]
         })
         .catch((err) =>{
         throw err

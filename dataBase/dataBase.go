@@ -98,10 +98,14 @@ func InsertIntoUsers(user_name string, email string, password string, db *sql.DB
 }
 
 func InsertIntoLike(id_user int, id_th int, value int, db *sql.DB) {
+	fmt.Println("rentre dans insertintolike")
 	_, err := db.Exec(`INSERT INTO Like (id_user, id_th, value) VALUES (?, ?, ?)`, id_user, id_th, value)
+	fmt.Println("apres le db exec")
 	if err != nil {
+		fmt.Println("err insertintolike")
 		log.Fatal(err)
 	}
+	fmt.Println("apres le err")
 }
 
 // func InsertIntoThreads(id_user int, title string, content string, created_at string, db *sql.DB) {

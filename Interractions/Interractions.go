@@ -55,15 +55,20 @@ func SuppThread(session *sessions.Session, database *sql.DB) {
 // Allow user to add / delete likes
 func ManageLike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int) {
 	if sessionCookieAuth.Values["authenticated"] == true {
-
+		fmt.Println("user connecté")
 		if databaseTools.CheckIfExistLike(db, id_th_int, id_user_int) {
+			fmt.Println("like existe")
 			if databaseTools.SingleRowQuerryLike(db, "id_th", id_th_int, "id_user", id_user_int) == "1" {
+				fmt.Println("c'est un like")
 				db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
 			} else {
+				fmt.Println("c'est un dislike ")
 				db.Exec(`UPDATE Like SET value = ? WHERE id_user = ? and id_th = ?`, 1, id_user_int, id_th_int)
 			}
 		} else {
+			fmt.Println("like existe pas ")
 			databaseTools.InsertIntoLike(id_user_int, id_th_int, 1, db)
+			fmt.Println("apres le insertintolike")
 		}
 	}
 }
@@ -102,16 +107,19 @@ func FetchLike(db *sql.DB) {
 		switch value_int {
 		case 1:
 			ManageLike(sessionCookieAuth, db, id_user_int, id_th_int)
+			fmt.Println("apres le managelike")
 		case -1:
 			ManageDislike(sessionCookieAuth, db, id_user_int, id_th_int)
 		}
 
 		dislike := databaseTools.CountOfLike(db, myParam.Id_th, -1)
+		fmt.Println("apres count dislike")
 		like := databaseTools.CountOfLike(db, myParam.Id_th, 1)
+		fmt.Println("apres count like")
 
-		var item []int
-		item[0] = dislike
-		item[1] = like
+		var item [2]int
+		item[0] = like
+		item[1] = dislike
 		bytes, _ := json.Marshal(item)
 
 		w.Write(bytes)
