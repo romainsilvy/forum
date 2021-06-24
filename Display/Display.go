@@ -16,6 +16,7 @@ func DisplayCategory(inputCatChoisie string, dataToSend []databaseTools.ThreadDa
 		item := databaseTools.ThreadData{}
 		err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
 		if err2 != nil {
+			fmt.Println("err displaycategory")
 			panic(err2)
 		}
 		dataToSend = append(dataToSend, item)
@@ -30,6 +31,7 @@ func DisplaySearchResult(inputSearchBar string, dataToSend []databaseTools.Threa
 		item := databaseTools.ThreadData{}
 		err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
 		if err2 != nil {
+			fmt.Println("err displaysearchresult")
 			panic(err2)
 		}
 		dataToSend = append(dataToSend, item)
@@ -37,43 +39,22 @@ func DisplaySearchResult(inputSearchBar string, dataToSend []databaseTools.Threa
 	return dataToSend
 }
 
-// Display all the threads on the home page and append the values in sql Thread Table
-func DisplayAccueil(dataToSend []databaseTools.ThreadData, w http.ResponseWriter, db *sql.DB) []databaseTools.ThreadData {
+// return a tab with all threads
+func RetrieveAccueil(dataToSend []databaseTools.ThreadData, w http.ResponseWriter, db *sql.DB) []databaseTools.ThreadData {
 	rows := databaseTools.RetrieveAccueilRows(db)
-	fmt.Println(rows)
-	fmt.Println("dans displayaccueil")
-
-	//checkifexist avec idth
-	//si existe alors on display normal
-	//si existe pas alors on display 0
-
-	//on recup tt les thread
-	//on teste si like existe
-	//si il existe pas alors on lui donne 0
-	//si il existe on recup le nombre avec getnuberof
-
-	// , &item.Id_user, &item.Title, &item.Content, &item.Category
-
 	for rows.Next() {
-
 		item := databaseTools.ThreadData{}
 		err2 := rows.Scan(&item.Id_th, &item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
 		if err2 != nil {
+			fmt.Println("err retrieveaccueil")
 			panic(err2)
 		}
-		for _, content := range dataToSend {
-			fmt.Println(content)
-			databaseTools.CheckIfExistLike(db, item.Id_th, item.Id_user)
-			item.Like = databaseTools.CountOfLike(db, strconv.Itoa(item.Id_th), 1)
-			dataToSend = append(dataToSend, item)
-			//si le like existe
-			//on le append
-			//si il existe pas
-			//on append like = 0
-			fmt.Println("execution de la req c'est bon")
-		}
+		dataToSend = append(dataToSend, item)
 	}
-
+	for _, content := range dataToSend {
+		databaseTools.CheckIfExistLike(db, content.Id_th, content.Id_user)
+		content.Like = databaseTools.CountOfLike(db, strconv.Itoa(content.Id_th), 1)
+	}
 	return dataToSend
 }
 

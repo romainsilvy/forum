@@ -2,6 +2,7 @@ package databaseTools
 
 import (
 	"database/sql"
+	"fmt"
 	"io/ioutil"
 	"log"
 
@@ -185,14 +186,15 @@ func UpdateValue(db *sql.DB, tableName string, collumnName string, newValue stri
 
 func RetrieveCategoryRows(db *sql.DB, inputCatChoisie string) *sql.Rows {
 	reqC := `SELECT 
-			t.*,
-			COUNT(l.id_th) "number_like"
-			FROM 
-			Thread t
-			INNER JOIN Like l ON l.id_th = t.id_th
-			GROUP BY t.id_th
-			WHERE category = ?
-			ORDER BY created_at DESC`
+		id_user,
+		title,
+		content,
+		created_at,
+		category
+		FROM 
+		Thread
+		WHERE category = ?
+		ORDER BY created_at DESC`
 	rows, _ := db.Query(reqC, inputCatChoisie)
 	return rows
 }
@@ -258,6 +260,7 @@ func CheckIfExistLike(db *sql.DB, id_th int, id_user int) bool {
 	var count int
 	err := rows.Scan(&count)
 	if err != nil {
+		fmt.Println("checkifexistlike err")
 		panic(err)
 	}
 	if count == 0 {

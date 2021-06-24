@@ -45,6 +45,7 @@
                 <button id="button-input-add-thread" type="button">+</button>
                 <input id="input-add-thread" type="text" placeholder="Ajoutez le nom d'un thread...." value="">
             </div>
+            
             {{range .}}
             <div id="testHour" class="inside-center a-thread"> 
             <form action ="" method="POST" > 
@@ -54,7 +55,7 @@
                 <h3>{{.Title}}</h3>
                 <p class="zeub">
                     {{.Content}}
-                    <button value="likeAdd" class="btn-like" onclick="like('{{.Id_th}}', 1)" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span id="btnLike{{.Id_th}}" class="like__number"></span></button>
+                    <button value="likeAdd" class="btn-like" onclick="like('{{.Id_th}}', 1)" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span id="btnLike{{.Id_th}}" class="like__number">{{.Like}}</span></button>
                     <button class="btn-dislike" id="red" onclick="like('{{.Id_th}}', -1)"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span id="btnDislike{{.Id_th}}" class="like__number"></span></button>
                 </p>
             </div>

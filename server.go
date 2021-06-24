@@ -69,7 +69,7 @@ func handleAccueil(database *sql.DB) {
 		// 	displayTools.DisplaySearchResult(inputSearchBar, dataToSend, w, database)
 		// 	variable.Execute(w, dataToSend)
 		// } else {
-		displayTools.DisplayAccueil(dataToSend, w, database)
+		dataToSend = displayTools.RetrieveAccueil(dataToSend, w, database)
 		variable.Execute(w, dataToSend)
 		// }
 	})
@@ -81,7 +81,7 @@ func handleAll(db *sql.DB) {
 	http.Handle("/static/", http.StripPrefix("/static/", fileServer))
 	handleAccueil(db)
 	AccountManagement.HandleProfil(databaseTools.User{}, db)
-	// interractionsTools.FetchLike(db)
+	interractionsTools.FetchLike(db)
 	interractionsTools.FetchThread(db)
 }
 
