@@ -23,7 +23,7 @@ var (
 //handleAccueil is the handlefunc for the main page
 func handleAccueil(database *sql.DB) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		var dataToSend []databaseTools.ThreadToSend
+		var dataToSend []databaseTools.ThreadData
 		variable, _ := template.ParseFiles("index.html")
 
 		//add thread variables
