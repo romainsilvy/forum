@@ -51,9 +51,8 @@ func RetrieveAccueil(dataToSend []databaseTools.ThreadData, w http.ResponseWrite
 		}
 		dataToSend = append(dataToSend, item)
 	}
-	for _, content := range dataToSend {
-		databaseTools.CheckIfExistLike(db, content.Id_th, content.Id_user)
-		content.Like = databaseTools.CountOfLike(db, strconv.Itoa(content.Id_th), 1)
+	for i := 0; i < len(dataToSend); i++ {
+		dataToSend[i].Like = databaseTools.CountOfLike(db, strconv.Itoa(dataToSend[i].Id_th), 1)
 	}
 	return dataToSend
 }

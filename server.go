@@ -55,23 +55,12 @@ func handleAccueil(database *sql.DB) {
 
 		AccountManagement.Connexion(w, r, database)
 		AccountManagement.Inscription(r, database)
-
-		// if inputCatCham != "" {
-		// 	displayTools.DisplayCategory(inputCatCham, dataToSend, w, database)
-		// 	variable.Execute(w, dataToSend)
-		// } else if inputCatDrom != "" {
-		// 	displayTools.DisplayCategory(inputCatDrom, dataToSend, w, database)
-		// 	variable.Execute(w, dataToSend)
-		// } else if inputCatLama != "" {
-		// 	displayTools.DisplayCategory(inputCatLama, dataToSend, w, database)
-		// 	variable.Execute(w, dataToSend)
-		// } else if inputSearchBar != "" {
-		// 	displayTools.DisplaySearchResult(inputSearchBar, dataToSend, w, database)
-		// 	variable.Execute(w, dataToSend)
-		// } else {
 		dataToSend = displayTools.RetrieveAccueil(dataToSend, w, database)
-		variable.Execute(w, dataToSend)
+		// for _, content := range dataToSend {
+		// 	fmt.Println(content.Like)
 		// }
+
+		variable.Execute(w, dataToSend)
 	})
 }
 

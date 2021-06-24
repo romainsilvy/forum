@@ -122,6 +122,8 @@ func FetchLike(db *sql.DB) {
 		item[1] = dislike
 		bytes, _ := json.Marshal(item)
 
+		fmt.Println(bytes)
+
 		w.Write(bytes)
 	})
 }
