@@ -268,6 +268,7 @@ func changeEmail(r *http.Request, userPassword string, userName string, db *sql.
 func handleProfil(oneUser databaseTools.User, database *sql.DB) {
 	http.HandleFunc("/profil/", func(w http.ResponseWriter, r *http.Request) {
 		variable, _ := template.ParseFiles("profil.html")
+		var dataToSend []databaseTools.ThreadData
 
 		session, _ := store.Get(r, "auth")
 		username := session.Values["user"].(string)
@@ -282,6 +283,25 @@ func handleProfil(oneUser databaseTools.User, database *sql.DB) {
 			return
 		}
 		variable.Execute(w, oneUser)
+
+		inputSearchBar := r.FormValue("searchWord")
+
+		//categories variables
+		inputCatCham := r.FormValue("CHAMEAU")
+		inputCatDrom := r.FormValue("DROMADAIRE")
+		inputCatLama := r.FormValue("LAMA")
+
+		if inputCatCham != "" {
+			displayCategory(inputCatCham, dataToSend, variable, w, database)
+		} else if inputCatDrom != "" {
+			displayCategory(inputCatDrom, dataToSend, variable, w, database)
+		} else if inputCatLama != "" {
+			displayCategory(inputCatLama, dataToSend, variable, w, database)
+		} else if inputSearchBar != "" {
+			displaySearchResult(inputSearchBar, dataToSend, variable, w, database)
+		} else {
+			displayAccueil(dataToSend, variable, w, database)
+		}
 	})
 }
 
