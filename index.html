@@ -31,14 +31,14 @@
                     <p>Accueil</p>
                 </a>
             </div>
-            <form action="" method="POST">
+            <div>
                 <div id="category">
                     <p>Catégories</p>
                     <input type="submit" name="CHAMEAU" value="CHAMEAU">
                     <input type="submit" name="DROMADAIRE" value="DROMADAIRE">
                     <input type="submit" name="LAMA" value="LAMA">
                 </div>
-            </form>
+            </div>
         </div>
         <div class="global-item" id="global-center">
             <div class="inside-center" id="add-thread">
@@ -59,7 +59,6 @@
                 </p>
             </div>
             {{end}}
-                
         </div>
         <div class="global-item" id="global-right">
         </div>
@@ -105,7 +104,7 @@
             </div>
     </form>
     
-    <form id="thread-background" class="boxthread" action="" method="POST">
+    <div id="thread-background" class="boxthread">
         <div id ="ajouter-thread">
             <input value="" type="text" id="namethread" name="threadTitle"></input>
         </div>
@@ -125,7 +124,7 @@
             </li>
         </ul>
         <input type="submit" value="Enregistrer" name="submitthread" id="submitthread" class="sub-thread">
-    </form>
+    </div>
 
     <form id="thread-edit" class="boxthread" action="" method="POST">
         <div id ="ajouter-thread">
@@ -159,6 +158,45 @@
 </body>
 <script>
     
+
+    document.querySelector("#submitthread").addEventListener('click', ()=> {
+        let title = document.getElementById("input-add-thread").value
+        let content = document.getElementById("créa_thread").value
+        var radios = document.getElementsByName('drone');
+        for (var i = 0, length = radios.length; i < length; i++) {
+            if (radios[i].checked) {
+                category = radios[i].value
+            break
+        }
+    }
+    addThread(title, content, category)
+    })
+
+    function addThread (title, content, category) {
+        console.log(title, content, category)
+        const body_content  = document.querySelectorAll("body")
+        fetch("/thread", {
+        method : "POST",
+        headers : {
+            "content-type" : "application/json"
+        },
+        body : JSON.stringify({// envoyer dans le go
+            title : title,
+            content : content,
+            category : category,
+        })
+        })
+        .then((response)=>{
+        return response.json()
+        })
+        .then((result)=>{
+        console.log(result)
+        })
+        .catch((err) =>{
+        throw err
+        })
+    }
+
     document.querySelector('#button-input-add-thread').addEventListener('click', ()=>{
         const x = document.getElementById("input-add-thread").value
         if ( x !== "") {
@@ -174,9 +212,7 @@
     })
     
     function like(id_th, value) {
-        console.log("id thread :   " + id_th)
         const body_content  = document.querySelectorAll("body")
-        console.log(body_content)
         fetch("/like", {
         method : "POST",
         headers : {
@@ -208,8 +244,6 @@
     }
 
 
-
-
     function onclickedit (postID) {
             console.log(postID)
             document.querySelector('#thread-edit').classList.add("threadGrid")
@@ -220,6 +254,7 @@
             document.querySelector('#pop-up').classList.remove("connexion-background")
             })
     }
+
     function onclickdelete(postID) {
         console.log(postID)
             document.querySelector('#pop-up').classList.add("connexion-background")
@@ -231,22 +266,6 @@
             document.querySelector('#thread-delete').classList.remove("popUp")
         })
     }
-    
-        var i=0;
-        function read(){
-            let i=0;
-            if (!i){
-                document.getElementById("more").style.display ="inline";
-                document.getElementById("first-text").style.display ="none";
-                document.getElementById("read").innerHTML ="Voir moins";
-                i=1;
-            } else {
-                document.getElementById("more").style.display ="none";
-                document.getElementById("first-text").style.display ="inline";
-                document.getElementById("read").innerHTML ="Voir plus";
-                i=0;
-            }
-        }
 
         if (document.querySelector("#testHour")) {
             let btn1 = document.querySelector('#green');

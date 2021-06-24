@@ -206,15 +206,13 @@ func RetrieveSearchRows(db *sql.DB, inputSearchBar string) *sql.Rows {
 
 func RetrieveAccueilRows(db *sql.DB) *sql.Rows {
 	req := `SELECT 
-			id_th,
-			id_user,
-			title,
-			content,
-			created_at,
-			category
+			t.*,
+			COUNT(l.id_th) "number_like"
 			FROM 
-			Thread
-			ORDER BY id_th DESC`
+			Thread t
+			INNER JOIN Like l ON l.id_th = t.id_th
+			GROUP BY t.id_th
+			ORDER BY t.id_th DESC`
 	rows, _ := db.Query(req)
 	return rows
 }

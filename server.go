@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	AccountManagement "tools/AccountManagement"
+	displayTools "tools/Display"
 	interractionsTools "tools/Interractions"
 	databaseTools "tools/dataBase"
 
@@ -18,49 +19,6 @@ var (
 	key   = []byte("ismatheplatypus@w*")
 	store = sessions.NewCookieStore(key)
 )
-
-// Display the category and append values from sql Thread table
-func displayCategory(inputCatChoisie string, dataToSend []databaseTools.ThreadData, variable *template.Template, w http.ResponseWriter, db *sql.DB) {
-	rows := databaseTools.RetrieveCategoryRows(db, inputCatChoisie)
-
-	for rows.Next() {
-		item := databaseTools.ThreadData{}
-		err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
-		if err2 != nil {
-			panic(err2)
-		}
-		dataToSend = append(dataToSend, item)
-	}
-	variable.Execute(w, dataToSend)
-}
-
-// Display the research from the searchBar and append values from sql Thread table
-func displaySearchResult(inputSearchBar string, dataToSend []databaseTools.ThreadData, variable *template.Template, w http.ResponseWriter, db *sql.DB) {
-	rows := databaseTools.RetrieveSearchRows(db, inputSearchBar)
-	for rows.Next() {
-		item := databaseTools.ThreadData{}
-		err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
-		if err2 != nil {
-			panic(err2)
-		}
-		dataToSend = append(dataToSend, item)
-	}
-	variable.Execute(w, dataToSend)
-}
-
-// Display all the threads on the home page and append the values in sql Thread Table
-func displayAccueil(dataToSend []databaseTools.ThreadData, variable *template.Template, w http.ResponseWriter, db *sql.DB) {
-	rows := databaseTools.RetrieveAccueilRows(db)
-	for rows.Next() {
-		item := databaseTools.ThreadData{}
-		err2 := rows.Scan(&item.Id_th, &item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
-		if err2 != nil {
-			panic(err2)
-		}
-		dataToSend = append(dataToSend, item)
-	}
-	variable.Execute(w, dataToSend)
-}
 
 //handleAccueil is the handlefunc for the main page
 func handleAccueil(database *sql.DB) {
@@ -99,15 +57,20 @@ func handleAccueil(database *sql.DB) {
 		AccountManagement.Inscription(r, database)
 
 		if inputCatCham != "" {
-			displayCategory(inputCatCham, dataToSend, variable, w, database)
+			displayTools.DisplayCategory(inputCatCham, dataToSend, w, database)
+			variable.Execute(w, dataToSend)
 		} else if inputCatDrom != "" {
-			displayCategory(inputCatDrom, dataToSend, variable, w, database)
+			displayTools.DisplayCategory(inputCatDrom, dataToSend, w, database)
+			variable.Execute(w, dataToSend)
 		} else if inputCatLama != "" {
-			displayCategory(inputCatLama, dataToSend, variable, w, database)
+			displayTools.DisplayCategory(inputCatLama, dataToSend, w, database)
+			variable.Execute(w, dataToSend)
 		} else if inputSearchBar != "" {
-			displaySearchResult(inputSearchBar, dataToSend, variable, w, database)
+			displayTools.DisplaySearchResult(inputSearchBar, dataToSend, w, database)
+			variable.Execute(w, dataToSend)
 		} else {
-			displayAccueil(dataToSend, variable, w, database)
+			displayTools.DisplayAccueil(dataToSend, w, database)
+			variable.Execute(w, dataToSend)
 		}
 	})
 }
@@ -119,6 +82,7 @@ func handleAll(db *sql.DB) {
 	handleAccueil(db)
 	AccountManagement.HandleProfil(databaseTools.User{}, db)
 	interractionsTools.FetchLike(db)
+	interractionsTools.FetchThread(db)
 }
 
 //runServer sets the listenandserve port to 8080

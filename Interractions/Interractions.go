@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	displayTools "tools/Display"
 	databaseTools "tools/dataBase"
 
 	"github.com/gorilla/sessions"
@@ -25,15 +26,16 @@ type MyBody struct {
 }
 
 // requete ajoute un thread
-func AddThread(session *sessions.Session, title string, content string, category string, database *sql.DB) {
+func AddThread(session *sessions.Session, title string, content string, category string, database *sql.DB) (int64, error) {
 	littlecookie := session.Values["user"]
 	convertissor := fmt.Sprintf("%v", littlecookie)
 	check := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", convertissor)
 	id_user, _ := strconv.Atoi(check)
-	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content,  category, created_at) VALUES (?, ?, ?, ?, time())`, id_user, title, content, category)
+	res, err := database.Exec(`INSERT INTO Thread (id_user, title, content,  category, created_at) VALUES (?, ?, ?, ?, time())`, id_user, title, content, category)
 	if err != nil {
 		log.Fatal(err)
 	}
+	return res.LastInsertId()
 }
 
 // requete supprimer un thread
@@ -110,3 +112,38 @@ func FetchLike(db *sql.DB) {
 		w.Write([]byte(like + ":" + dislike))
 	})
 }
+
+type contentThread struct {
+	Title    string `json:title`
+	Content  string `json:content`
+	Category string `json:category`
+}
+
+func FetchThread(db *sql.DB) {
+	fmt.Println("dans le FetchThread")
+	http.HandleFunc("/thread", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("dans le HundleFunc")
+		var threadBody contentThread
+		body, _ := ioutil.ReadAll(r.Body)
+		json.Unmarshal(body, &threadBody)
+		sessionCookieAuth, _ := store.Get(r, "auth")
+		// user_name := fmt.Sprintf("%v", littlecookie)
+
+		// id_user := databaseTools.SingleRowQuerry(db, "id_user", "User", "user_name", user_name)
+		title := threadBody.Title
+		content := threadBody.Content
+		category := threadBody.Category
+
+		id_th, _ := AddThread(sessionCookieAuth, title, content, category, db)
+		item := displayTools.DisplayThread(db, id_th)
+		bytes, _ := json.Marshal(item)
+		w.Write(bytes)
+	})
+}
+
+// au début charge les thread avec le template								DONE
+// pour ajouter thread on fait un last insert id en sql
+// on balance les data dans la route /thread
+// on fetch en js
+// dans le response on add en appenchild dans la partie div des threads
+// puis on affiche sur la page
