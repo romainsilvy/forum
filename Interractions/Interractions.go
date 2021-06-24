@@ -134,7 +134,7 @@ func FetchThread(db *sql.DB) {
 		content := threadBody.Content
 		category := threadBody.Category
 
-		id_th, _ := AddThread(sessionCookieAuth, title, content, category, db)
+		id_th, _ := AddThread(sessionCookieAuth, title, content, category, db) /* ---FONCTIONNEL */
 		item := displayTools.DisplayThread(db, id_th)
 		bytes, _ := json.Marshal(item)
 		w.Write(bytes)

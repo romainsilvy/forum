@@ -35,6 +35,15 @@ type ThreadData struct {
 	Category   string
 }
 
+type ThreadToSend struct {
+	Id_th    int
+	Id_user  int
+	Title    string
+	Content  string
+	Category string
+	Nbr_like int
+}
+
 type ThreadMessage struct {
 	Id_th_msg   int
 	Id_th       int
@@ -176,13 +185,12 @@ func UpdateValue(db *sql.DB, tableName string, collumnName string, newValue stri
 
 func RetrieveCategoryRows(db *sql.DB, inputCatChoisie string) *sql.Rows {
 	reqC := `SELECT 
-			id_user,
-			title,
-			content,
-			created_at,
-			category
+			t.*,
+			COUNT(l.id_th) "number_like"
 			FROM 
-			Thread
+			Thread t
+			INNER JOIN Like l ON l.id_th = t.id_th
+			GROUP BY t.id_th
 			WHERE category = ?
 			ORDER BY created_at DESC`
 	rows, _ := db.Query(reqC, inputCatChoisie)
@@ -206,13 +214,17 @@ func RetrieveSearchRows(db *sql.DB, inputSearchBar string) *sql.Rows {
 
 func RetrieveAccueilRows(db *sql.DB) *sql.Rows {
 	req := `SELECT 
-			t.*,
+			t.id_th,
+			t.id_user,
+			t.tile,
+			t.content,
+			t.category,
 			COUNT(l.id_th) "number_like"
 			FROM 
 			Thread t
 			INNER JOIN Like l ON l.id_th = t.id_th
 			GROUP BY t.id_th
-			ORDER BY t.id_th DESC`
+			ORDER BY created_at DESC`
 	rows, _ := db.Query(req)
 	return rows
 }

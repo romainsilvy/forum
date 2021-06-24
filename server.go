@@ -23,7 +23,7 @@ var (
 //handleAccueil is the handlefunc for the main page
 func handleAccueil(database *sql.DB) {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		var dataToSend []databaseTools.ThreadData
+		var dataToSend []databaseTools.ThreadToSend
 		variable, _ := template.ParseFiles("index.html")
 
 		//add thread variables
@@ -32,9 +32,9 @@ func handleAccueil(database *sql.DB) {
 		submitButton := r.FormValue("submitthread")
 
 		//categories variables
-		inputCatCham := r.FormValue("CHAMEAU")
-		inputCatDrom := r.FormValue("DROMADAIRE")
-		inputCatLama := r.FormValue("LAMA")
+		// inputCatCham := r.FormValue("CHAMEAU")
+		// inputCatDrom := r.FormValue("DROMADAIRE")
+		// inputCatLama := r.FormValue("LAMA")
 
 		//supp variable
 		deleteButton := r.FormValue("suppr")
@@ -42,7 +42,7 @@ func handleAccueil(database *sql.DB) {
 		//session cookie
 		sessionCookieAuth, _ := store.Get(r, "auth")
 
-		inputSearchBar := r.FormValue("searchWord")
+		// inputSearchBar := r.FormValue("searchWord")
 		inputCatThread := r.FormValue("drone")
 
 		if (submitButton == "Enregistrer") && (sessionCookieAuth.Values["authenticated"] == true) {
@@ -56,22 +56,22 @@ func handleAccueil(database *sql.DB) {
 		AccountManagement.Connexion(w, r, database)
 		AccountManagement.Inscription(r, database)
 
-		if inputCatCham != "" {
-			displayTools.DisplayCategory(inputCatCham, dataToSend, w, database)
-			variable.Execute(w, dataToSend)
-		} else if inputCatDrom != "" {
-			displayTools.DisplayCategory(inputCatDrom, dataToSend, w, database)
-			variable.Execute(w, dataToSend)
-		} else if inputCatLama != "" {
-			displayTools.DisplayCategory(inputCatLama, dataToSend, w, database)
-			variable.Execute(w, dataToSend)
-		} else if inputSearchBar != "" {
-			displayTools.DisplaySearchResult(inputSearchBar, dataToSend, w, database)
-			variable.Execute(w, dataToSend)
-		} else {
-			displayTools.DisplayAccueil(dataToSend, w, database)
-			variable.Execute(w, dataToSend)
-		}
+		// if inputCatCham != "" {
+		// 	displayTools.DisplayCategory(inputCatCham, dataToSend, w, database)
+		// 	variable.Execute(w, dataToSend)
+		// } else if inputCatDrom != "" {
+		// 	displayTools.DisplayCategory(inputCatDrom, dataToSend, w, database)
+		// 	variable.Execute(w, dataToSend)
+		// } else if inputCatLama != "" {
+		// 	displayTools.DisplayCategory(inputCatLama, dataToSend, w, database)
+		// 	variable.Execute(w, dataToSend)
+		// } else if inputSearchBar != "" {
+		// 	displayTools.DisplaySearchResult(inputSearchBar, dataToSend, w, database)
+		// 	variable.Execute(w, dataToSend)
+		// } else {
+		displayTools.DisplayAccueil(dataToSend, w, database)
+		variable.Execute(w, dataToSend)
+		// }
 	})
 }
 

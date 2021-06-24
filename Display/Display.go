@@ -2,6 +2,7 @@ package displayTools
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	databaseTools "tools/dataBase"
 )
@@ -36,16 +37,19 @@ func DisplaySearchResult(inputSearchBar string, dataToSend []databaseTools.Threa
 }
 
 // Display all the threads on the home page and append the values in sql Thread Table
-func DisplayAccueil(dataToSend []databaseTools.ThreadData, w http.ResponseWriter, db *sql.DB) []databaseTools.ThreadData {
+func DisplayAccueil(dataToSend []databaseTools.ThreadToSend, w http.ResponseWriter, db *sql.DB) []databaseTools.ThreadToSend {
 	rows := databaseTools.RetrieveAccueilRows(db)
+	fmt.Println("creation de la req c'est bon")
 	for rows.Next() {
-		item := databaseTools.ThreadData{}
-		err2 := rows.Scan(&item.Id_th, &item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
+		fmt.Println("execution de la req c'est bon")
+		item := databaseTools.ThreadToSend{}
+		err2 := rows.Scan(&item.Id_th, &item.Id_user, &item.Title, &item.Content, &item.Category, &item.Nbr_like)
 		if err2 != nil {
 			panic(err2)
 		}
 		dataToSend = append(dataToSend, item)
 	}
+	fmt.Println("la fonction return :", dataToSend)
 	return dataToSend
 }
 
