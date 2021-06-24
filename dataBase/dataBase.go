@@ -34,6 +34,7 @@ type ThreadData struct {
 	Created_at string
 	Category   string
 	Like       int
+	Dislike    int
 }
 
 type ThreadToSend struct {

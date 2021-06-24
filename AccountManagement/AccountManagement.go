@@ -23,7 +23,6 @@ var (
 func HandleProfil(oneUser databaseTools.User, database *sql.DB) {
 	http.HandleFunc("/profil/", func(w http.ResponseWriter, r *http.Request) {
 		variable, _ := template.ParseFiles("profil.html")
-
 		session, _ := store.Get(r, "auth")
 		username := session.Values["user"].(string)
 		oneUser.User_name = username
@@ -32,6 +31,7 @@ func HandleProfil(oneUser databaseTools.User, database *sql.DB) {
 
 		ChangePassword(r, oneUser.Password, oneUser.User_name, database)
 		ChangeEmail(r, oneUser.Password, oneUser.User_name, database)
+
 		if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
 			http.Error(w, "Forbidden", http.StatusForbidden)
 			return
@@ -62,7 +62,6 @@ func Connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 	if r.FormValue("connect") != "" {
 		connexionUser := r.FormValue("connexionUser")
 		connexionPassword := r.FormValue("connexionPassword")
-
 		passwordHashed := databaseTools.SingleRowQuerry(database, "password", "User", "user_name", connexionUser)
 		checkIfExist := databaseTools.CheckIfExist(database, "password", "User", "user_name", connexionUser)
 

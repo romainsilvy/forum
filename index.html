@@ -47,7 +47,7 @@
             </div>
             
             {{range .}}
-            <div id="testHour" class="inside-center a-thread"> 
+            <div class="inside-center a-thread"> 
             <form action ="" method="POST" > 
                 <button id="buttonDelete" type="button" onclick="javascript:onclickdelete(`{{.Id_th}}`)">Supprimer</button> 
                 <button id ="buttonEdit" type="button" onclick="javascript:onclickedit(`{{.Id_th}}`)">Modifier</button> 
@@ -56,7 +56,7 @@
                 <p class="zeub">
                     {{.Content}}
                     <button value="likeAdd" class="btn-like" onclick="like('{{.Id_th}}', 1)" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span id="btnLike{{.Id_th}}" class="like__number">{{.Like}}</span></button>
-                    <button class="btn-dislike" id="red" onclick="like('{{.Id_th}}', -1)"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span id="btnDislike{{.Id_th}}" class="like__number"></span></button>
+                    <button class="btn-dislike" id="red" onclick="like('{{.Id_th}}', -1)"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span id="btnDislike{{.Id_th}}" class="like__number">{{.Dislike}}</span></button>
                 </p>
             </div>
             {{end}}
@@ -191,7 +191,30 @@
         return response.json()
         })
         .then((result)=>{
-        console.log(result)
+            console.log("dans result")
+            const newDivInsideCenter = document.createElement("div")
+            newDivInsideCenter.classList.add("inside-center a-thread")
+            console.log(newDivInsideCenter)
+
+            const newDivEditButtons = document.createElement("div")
+
+            const newButtonDelete = document.createElement("button")
+            newButtonDelete.setAttribute("id", "buttonDelete")
+            newButtonDelete.setAttribute("type", "button")
+            newButtonDelete.setAttribute("onclick", "javascript:onclickdelete(" + result.id_th + ")")
+            console.log(newButtonDelete)
+
+            const newButtonEdit = document.createElement("button")
+            newButtonEdit.setAttribute("id", "buttonEdit")
+            newButtonEdit.setAttribute("type", "button")
+            newButtonEdit.setAttribute("onclick", "javascript:onclickedit(" + result.id_th + ")")
+
+            newDivEditButtons.appendChild(newButtonDelete)
+            newDivEditButtons.appendChild(newButtonEdit)
+            newDivInsideCenter.appendChild(newDivEditButtons)
+
+            console.log(newDivInsideCenter)
+
         })
         .catch((err) =>{
         throw err

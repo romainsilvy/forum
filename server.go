@@ -11,13 +11,7 @@ import (
 	interractionsTools "tools/Interractions"
 	databaseTools "tools/dataBase"
 
-	"github.com/gorilla/sessions"
 	_ "github.com/mattn/go-sqlite3"
-)
-
-var (
-	key   = []byte("ismatheplatypus@w*")
-	store = sessions.NewCookieStore(key)
 )
 
 //handleAccueil is the handlefunc for the main page
@@ -26,39 +20,9 @@ func handleAccueil(database *sql.DB) {
 		var dataToSend []databaseTools.ThreadData
 		variable, _ := template.ParseFiles("index.html")
 
-		//add thread variables
-		title := r.FormValue("threadTitle")
-		content := r.FormValue("créa_thread")
-		submitButton := r.FormValue("submitthread")
-
-		//categories variables
-		// inputCatCham := r.FormValue("CHAMEAU")
-		// inputCatDrom := r.FormValue("DROMADAIRE")
-		// inputCatLama := r.FormValue("LAMA")
-
-		//supp variable
-		deleteButton := r.FormValue("suppr")
-
-		//session cookie
-		sessionCookieAuth, _ := store.Get(r, "auth")
-
-		// inputSearchBar := r.FormValue("searchWord")
-		inputCatThread := r.FormValue("drone")
-
-		if (submitButton == "Enregistrer") && (sessionCookieAuth.Values["authenticated"] == true) {
-			interractionsTools.AddThread(sessionCookieAuth, title, content, inputCatThread, database)
-		}
-
-		if (deleteButton != "") && (sessionCookieAuth.Values["authenticated"] == true) {
-			interractionsTools.SuppThread(sessionCookieAuth, database)
-		}
-
 		AccountManagement.Connexion(w, r, database)
 		AccountManagement.Inscription(r, database)
 		dataToSend = displayTools.RetrieveAccueil(dataToSend, w, database)
-		// for _, content := range dataToSend {
-		// 	fmt.Println(content.Like)
-		// }
 
 		variable.Execute(w, dataToSend)
 	})
