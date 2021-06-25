@@ -34,8 +34,8 @@
                 <div >
                     <div  id="category">
                         <p>Navigation</p>
-                        <input type="submit" name="mes-info" id="mes-info" value="mes info">
-                        <input type="submit" name="mes-thread" id="mes-thread" value="mes thread">
+                        <input type="submit" name="mes-info" id="mes-info" value="mes infos">
+                        <input type="submit" name="mes-thread" id="mes-thread" value="mes threads">
                     </div>
                 </div>
         </div>
@@ -102,7 +102,7 @@
             document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString()
         }
         deleteCookie("auth")
-        window.location.replace('http://localhost:8080')
+        window.location.replace('/')
     })
 
     document.querySelector('#mes-info').addEventListener('click', () => {
@@ -118,18 +118,21 @@
             document.querySelector('#mdp').classList.remove("hideForProfil")
         }
 
-        const allThread = document.querySelectorAll('.a-thread')
+        if (document.querySelector('.a-thread') != null) {
 
-        for (let index = 0; index < allThread.length; index++) {
-            if (!allThread[index].classList.contains("hideForProfil")){
-                allThread[index].classList.add("hideForProfil")
-            }
-        } 
-
-
-        if (!document.querySelector('.a-thread').classList.contains("hideForProfil")){
-            document.querySelector('.a-thread').classList.add("hideForProfil")
-        } 
+            const allThread = document.querySelectorAll('.a-thread')
+            
+            if (!document.querySelector('.a-thread').classList.contains("hideForProfil")){
+                document.querySelector('.a-thread').classList.add("hideForProfil")
+            } 
+            
+            for (let index = 0; index < allThread.length; index++) {
+                if (!allThread[index].classList.contains("hideForProfil")){
+                    allThread[index].classList.add("hideForProfil")
+                }
+            } 
+            
+        }       
     })
 
     //si clic sur voir mes thread
@@ -152,15 +155,15 @@
             document.querySelector('#mdp').classList.add("hideForProfil")
         } 
 
-        const allThread = document.querySelectorAll('.a-thread')
+        if (document.querySelector('.a-thread') != null) {
+            const allThread = document.querySelectorAll('.a-thread')
 
-        for (let index = 0; index < allThread.length; index++) {
-            if (allThread[index].classList.contains("hideForProfil")){
-                allThread[index].classList.remove("hideForProfil")
-            }
-        } 
-            
-        
+            for (let index = 0; index < allThread.length; index++) {
+                if (allThread[index].classList.contains("hideForProfil")){
+                    allThread[index].classList.remove("hideForProfil")
+                }
+            } 
+        }
     })
 
         //on passe l'affichage du mdp en display hidden 

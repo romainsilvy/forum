@@ -167,7 +167,7 @@ const changeColorRed = (id_th) => {
 document.querySelector('#profile-picture').addEventListener('click', () => {
 
     if (document.cookie.includes("auth")) {
-        window.location.replace('http://localhost:8080/profil')
+        window.location.replace('/profil')
     } else {
         document.querySelector('#pop-up').classList.add("connexion-background")
         document.querySelector('#connexion').classList.add("popUp")
