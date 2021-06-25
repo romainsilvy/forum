@@ -48,8 +48,8 @@
             {{range .}}
             <div id="testHour" class="inside-center a-thread"> 
             <form action ="" method="POST" > 
-                <button id="buttonDelete" type="button" onclick="javascript:onclickdelete(`{{.Id_th}}`)">Supprimer</button> 
-                <button id ="buttonEdit" type="button" onclick="javascript:onclickedit(`{{.Id_th}}`)">Modifier</button> 
+                <button id="buttonDelete" type="button" onclick="javascript:onclickdelete('{{.Id_th}}')">Supprimer</button> 
+                <button id ="buttonEdit" type="button" onclick="javascript:onclickedit('{{.Id_th}}')">Modifier</button> 
             </form>
                 <h3>{{.Title}}</h3>
                 <p class="zeub">
@@ -152,7 +152,7 @@
     <div id="pop-up"></div>
     <form id="thread-delete" class="box" action="" method="POST">
             <h1>Voulez-vous vraiment supprimer ?</h1>
-            <input type="submit" value="Oui" name="suppr">
+            <button  id="confirmDeleteBtn" type="submit" name="suppr">Oui</button>
             <input type="submit" value="Annuler" name="submit">
     </form>
     
@@ -216,7 +216,9 @@
             })
     }
     function onclickdelete(postID) {
-        console.log(postID)
+        
+        document.querySelector("#confirmDeleteBtn").setAttribute("value", postID)
+
             document.querySelector('#pop-up').classList.add("connexion-background")
             document.querySelector('#thread-delete').classList.add("popUp")
     

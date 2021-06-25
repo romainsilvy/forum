@@ -51,7 +51,8 @@ func HandleAccueil(database *sql.DB) {
 		}
 
 		if (deleteButton != "") && (sessionCookieAuth.Values["authenticated"] == true) {
-			interractionTools.SuppThread(sessionCookieAuth, database)
+			fmt.Println("l id du post est " + deleteButton)
+			interractionTools.SuppThread(sessionCookieAuth, deleteButton, database)
 		}
 
 		accountTools.Connexion(w, r, database)

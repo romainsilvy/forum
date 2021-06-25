@@ -39,19 +39,20 @@ func AddThread(session *sessions.Session, title string, content string, category
 }
 
 // requete supprimer un thread
-func SuppThread(session *sessions.Session, database *sql.DB) {
+func SuppThread(session *sessions.Session, id_th string, database *sql.DB) {
 	littlecookie := session.Values["user"]
 	convertissor := fmt.Sprintf("%v", littlecookie)
 	checkUser := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", convertissor)
-	id_user, _ := strconv.Atoi(checkUser)
+	checkUserIsInThread := databaseTools.SingleRowQuerry(database, "id_user", "Thread", "id_th", id_th)
+	conv_id_th, _ := strconv.Atoi(id_th)
 
-	checkThread := databaseTools.SingleRowQuerry(database, "id_th", "Thread", "id_user", checkUser)
-	id_thread, _ := strconv.Atoi(checkThread)
-	fmt.Println(id_user)
-	fmt.Println(id_thread)
-	_, err := database.Exec(`DELETE FROM Thread WHERE id_th = ? `, id_thread)
-	if err != nil {
-		log.Fatal(err)
+	if checkUser == checkUserIsInThread {
+		_, err := database.Exec(`DELETE FROM Thread WHERE id_th = ? `, conv_id_th)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		fmt.Println("Ce thread ne vous appartient pas")
 	}
 }
 
