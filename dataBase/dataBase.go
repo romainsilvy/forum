@@ -21,7 +21,7 @@ type User struct {
 type Thread struct {
 	Id_th   int
 	Title   string
-	Content string
+	Content template.HTML
 	Like    int
 	Dislike int
 }

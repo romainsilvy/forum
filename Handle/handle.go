@@ -95,7 +95,7 @@ func HandleProfil(oneUser databaseTools.User, database *sql.DB) {
 			http.Error(w, "Forbidden", http.StatusForbidden)
 			return
 		}
-		/* JE COMMENCE A MODIFIER ICI */
+
 		if databaseTools.CheckIfThread(database, oneUser.Id_user) {
 			oneUser.OneThread = displayTools.DisplayThreadCree(oneUser.OneThread, database, oneUser.Id_user)
 		}

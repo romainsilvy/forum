@@ -117,7 +117,16 @@
             document.querySelector('#mail').classList.remove("hideForProfil")
             document.querySelector('#mdp').classList.remove("hideForProfil")
         }
-        
+
+        const allThread = document.querySelectorAll('.a-thread')
+
+        for (let index = 0; index < allThread.length; index++) {
+            if (!allThread[index].classList.contains("hideForProfil")){
+                allThread[index].classList.add("hideForProfil")
+            }
+        } 
+
+
         if (!document.querySelector('.a-thread').classList.contains("hideForProfil")){
             document.querySelector('.a-thread').classList.add("hideForProfil")
         } 
@@ -143,10 +152,15 @@
             document.querySelector('#mdp').classList.add("hideForProfil")
         } 
 
+        const allThread = document.querySelectorAll('.a-thread')
 
-        if (document.querySelector('.a-thread').classList.contains("hideForProfil")){
-            document.querySelector('.a-thread').classList.remove("hideForProfil")
+        for (let index = 0; index < allThread.length; index++) {
+            if (allThread[index].classList.contains("hideForProfil")){
+                allThread[index].classList.remove("hideForProfil")
+            }
         } 
+            
+        
     })
 
         //on passe l'affichage du mdp en display hidden 
