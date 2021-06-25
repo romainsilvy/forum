@@ -103,8 +103,7 @@ func SingleRowQuerryId(db *sql.DB, rowName string, tableName string, comparator1
 	var toReturn int
 	err = stmt.QueryRow(comparator2).Scan(&toReturn)
 	if err != nil {
-		fmt.Println("err in SingleRowQuerryId")
-		panic(err)
+		fmt.Println("err in SingleRowQuerryId", err)
 	}
 
 	return toReturn
@@ -206,16 +205,19 @@ func RetrieveAccueilRows(db *sql.DB) *sql.Rows {
 	return rows
 }
 
-func RetrieveThreadcréeRow(db *sql.DB, id_user int) *sql.Rows {
+func RetrieveThreadcreeRow(db *sql.DB, id_user int) *sql.Rows {
 	req := `SELECT 
 	id_th,
 	title,
-	content,
-			FROM 
-			Thread
-			Where id_user = ?
-			ORDER BY id_th DESC`
-	rows, _ := db.Query(req, id_user)
+	content
+	FROM 
+	Thread
+	Where id_user = ?
+	ORDER BY id_th DESC`
+	rows, err := db.Query(req, id_user)
+	if err != nil {
+		fmt.Println("err in retrievethreadcreerow")
+	}
 	return rows
 }
 
@@ -232,6 +234,7 @@ func CountOfLike(db *sql.DB, id_th string, value int) int {
 	var count int
 	err := rows.Scan(&count)
 	if err != nil {
+		fmt.Println("pas de like")
 		return 0
 	}
 	return count
@@ -250,7 +253,7 @@ func CheckIfExistLike(db *sql.DB, id_th int, id_user int) bool {
 	var count int
 	err := rows.Scan(&count)
 	if err != nil {
-		panic(err)
+		fmt.Println("err in CheckIfExistLike : ", err)
 	}
 	if count == 0 {
 		return false
@@ -260,7 +263,7 @@ func CheckIfExistLike(db *sql.DB, id_th int, id_user int) bool {
 
 //CheckIfThread is the function which returns true or false depending of the number of like (0 is false and > 0 is true)
 func CheckIfThread(db *sql.DB, id_user int) bool {
-	fmt.Println("CheckIfThread")
+
 	req := `SELECT
 			id_th 
 			FROM
@@ -269,6 +272,7 @@ func CheckIfThread(db *sql.DB, id_user int) bool {
 	rows, _ := db.Query(req)
 
 	if rows != nil {
+		fmt.Println("Pas de thread")
 		return false
 	}
 	return true

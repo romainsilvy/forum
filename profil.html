@@ -73,7 +73,12 @@
                 </div>
                 
             </form>
-            <p> ICI THREAD CREER </p>
+                {{range .OneThread}}
+            <div>
+                    <p> {{.Title}} </p>
+                    <p> {{.Content}} </p>
+            </div>
+                {{end}}
         </div>
         <div class="global-item" id="global-right">
             <img id="profilePicture" src="/static/images/profile-picture.png">

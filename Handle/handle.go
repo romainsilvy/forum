@@ -92,9 +92,8 @@ func HandleProfil(oneUser databaseTools.User, database *sql.DB) {
 			return
 		}
 		/* JE COMMENCE A MODIFIER ICI */
-		if databaseTools.CheckIfThread(database, oneUser.Id_user) { /* le check marche */
-			oneUser.OneThread = displayTools.DisplayThreadCrée(oneUser.OneThread, database, oneUser.Id_user) /* ici ne marche pas */
-			fmt.Println(oneUser.OneThread)
+		if databaseTools.CheckIfThread(database, oneUser.Id_user) {
+			oneUser.OneThread = displayTools.DisplayThreadCree(oneUser.OneThread, database, oneUser.Id_user)
 		}
 
 		variable.Execute(w, oneUser)
