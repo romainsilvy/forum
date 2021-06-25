@@ -26,25 +26,28 @@ type MyBody struct {
 	Value string `json:value`
 }
 
-// requete ajoute un thread
+//AddThread is the function which adds a thread into the database
 func AddThread(session *sessions.Session, title string, content string, category string, database *sql.DB) {
 	littlecookie := session.Values["user"]
 	convertissor := fmt.Sprintf("%v", littlecookie)
 	check := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", convertissor)
 	id_user, _ := strconv.Atoi(check)
+
 	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content,  category, created_at) VALUES (?, ?, ?, ?, time())`, id_user, title, content, category)
+
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-// requete supprimer un thread
+//SuppThread is the function which suppresses a thread from the database
 func SuppThread(session *sessions.Session, id_th string, database *sql.DB) {
 	littlecookie := session.Values["user"]
 	convertissor := fmt.Sprintf("%v", littlecookie)
 	checkUser := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", convertissor)
-	checkUserIsInThread := databaseTools.SingleRowQuerry(database, "id_user", "Thread", "id_th", id_th)
 	conv_id_th, _ := strconv.Atoi(id_th)
+
+	checkUserIsInThread := databaseTools.SingleRowQuerry(database, "id_user", "Thread", "id_th", id_th)
 
 	if checkUser == checkUserIsInThread {
 		_, err := database.Exec(`DELETE FROM Thread WHERE id_th = ? `, conv_id_th)
@@ -56,49 +59,46 @@ func SuppThread(session *sessions.Session, id_th string, database *sql.DB) {
 	}
 }
 
-func ManageLike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int) {
-	if sessionCookieAuth.Values["authenticated"] == true {
-
-		if databaseTools.CheckIfExistLike(db, id_th_int, id_user_int) {
-			if databaseTools.SingleRowQuerryLike(db, "id_th", id_th_int, "id_user", id_user_int) == "1" {
-				db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
-				fmt.Println("remove")
-			} else {
-				db.Exec(`UPDATE Like SET value = ? WHERE id_user = ? and id_th = ?`, 1, id_user_int, id_th_int)
-				fmt.Println("modif")
-			}
+//ManageLike is the function which manages likes into the database
+func ManageLike(db *sql.DB, id_user_int int, id_th_int int) {
+	if databaseTools.CheckIfExistLike(db, id_th_int, id_user_int) {
+		if databaseTools.SingleRowQuerryLike(db, "id_th", id_th_int, "id_user", id_user_int) == "1" {
+			db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
 		} else {
-			databaseTools.InsertIntoLike(id_user_int, id_th_int, 1, db)
-			fmt.Println("like cree")
+			db.Exec(`UPDATE Like SET value = ? WHERE id_user = ? and id_th = ?`, 1, id_user_int, id_th_int)
 		}
+	} else {
+		databaseTools.InsertIntoLike(id_user_int, id_th_int, 1, db)
 	}
 }
 
-func ManageDislike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int) {
-	if sessionCookieAuth.Values["authenticated"] == true {
-		if databaseTools.CheckIfExistLike(db, id_th_int, id_user_int) {
-			if databaseTools.SingleRowQuerryLike(db, "id_th", id_th_int, "id_user", id_user_int) == "-1" {
-				db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
-			} else {
-				db.Exec(`UPDATE Like SET value = ? WHERE id_user = ? and id_th = ?`, -1, id_user_int, id_th_int)
-			}
+//ManageDislike is the function which manages dislikes into the database
+func ManageDislike(db *sql.DB, id_user_int int, id_th_int int) {
+	if databaseTools.CheckIfExistLike(db, id_th_int, id_user_int) {
+		if databaseTools.SingleRowQuerryLike(db, "id_th", id_th_int, "id_user", id_user_int) == "-1" {
+			db.Exec(`DELETE FROM Like WHERE id_user = ? AND id_th = ?`, id_user_int, id_th_int)
 		} else {
-			databaseTools.InsertIntoLike(id_user_int, id_th_int, -1, db)
+			db.Exec(`UPDATE Like SET value = ? WHERE id_user = ? and id_th = ?`, -1, id_user_int, id_th_int)
 		}
+	} else {
+		databaseTools.InsertIntoLike(id_user_int, id_th_int, -1, db)
 	}
 }
 
-// Fetch data from the js script on index.html
+//FetchLike is the function which manages likes
 func FetchLike(db *sql.DB) {
 	http.HandleFunc("/like", func(w http.ResponseWriter, r *http.Request) {
 		var myParam MyBody
 		var item [2]int
+
 		body, _ := ioutil.ReadAll(r.Body)
 		json.Unmarshal(body, &myParam)
+
 		sessionCookieAuth, _ := store.Get(r, "auth")
 		littlecookie := sessionCookieAuth.Values["user"]
 		user_name := fmt.Sprintf("%v", littlecookie)
 		id_user := databaseTools.SingleRowQuerry(db, "id_user", "User", "user_name", user_name)
+
 		id_user_int, _ := strconv.Atoi(id_user)
 		id_th_int, _ := strconv.Atoi(myParam.Id_th)
 		value_int, _ := strconv.Atoi(myParam.Value)
@@ -106,10 +106,9 @@ func FetchLike(db *sql.DB) {
 		if sessionCookieAuth.Values["authenticated"] == true {
 			switch value_int {
 			case 1:
-				ManageLike(sessionCookieAuth, db, id_user_int, id_th_int)
-				fmt.Println("apres le managelike")
+				ManageLike(db, id_user_int, id_th_int)
 			case -1:
-				ManageDislike(sessionCookieAuth, db, id_user_int, id_th_int)
+				ManageDislike(db, id_user_int, id_th_int)
 			}
 		}
 
