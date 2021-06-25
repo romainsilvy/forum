@@ -42,7 +42,7 @@
                     </div>
                 </form>
         </div>
-        <div class="global-item" id="center-profil-data">
+        <div class="global-item add-scrollbar" id="center-profil-data">
             <form id="mdp" class="box" action="" method="POST">    
                 <h2>Mot de passe</h2> 
                 <input type="text" placeholder="Ancien mot de passe :" name="oldPassword" required
@@ -74,10 +74,8 @@
             </form>
                 {{range .OneThread}}
                     <div id="mesThreads" class="inside-center a-thread">
-                        <p> {{.Title}} </p>
-                        <p> {{.Content}} </p>
-                        <p> {{.Like}} </p>
-                        <p> {{.Dislike}} </p>
+                        <h3> {{.Title}} </h3>
+                        <p>{{.Content}}</p>
                     </div>
                 {{end}}
         </div>

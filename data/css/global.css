@@ -107,13 +107,14 @@ header #profile-picture {
     grid-row: 1;
 }
 
-#global #global-center {
+#global .add-scrollbar {
     grid-column: 2;
     grid-row: 1;
     border-left: solid 1px grey;
     border-right: solid 1px grey;
     overflow-y: scroll;
     padding-bottom: 75px;
+    padding-top: 300px;
 }
 
 #global #global-right {
