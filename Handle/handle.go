@@ -54,7 +54,6 @@ func HandleAccueil(database *sql.DB) {
 			interractionTools.SuppThread(sessionCookieAuth, deleteButton, database)
 		}
 		if (modifButton != "") && (sessionCookieAuth.Values["authenticated"] == true) {
-			fmt.Println("modifbutton" + modifButton)
 			interractionTools.EditThread(sessionCookieAuth, modifButton, titleEdit, contentEdit, database)
 		}
 

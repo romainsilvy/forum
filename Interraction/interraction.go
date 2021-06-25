@@ -69,19 +69,20 @@ func EditThread(session *sessions.Session, id_th string, title string, content s
 
 	checkUserIsInThread := databaseTools.SingleRowQuerry(database, "id_user", "Thread", "id_th", id_th)
 
-	fmt.Println(checkUser)
-	fmt.Println(checkUserIsInThread)
-
 	if checkUser == checkUserIsInThread {
-		fmt.Println("dans edit")
-		_, err := database.Exec(`UPDATE Thread SET title = ? AND content = ? WHERE id_th = ?`, title, content, conv_id_th)
+		_, err := database.Exec(`UPDATE Thread SET title = ? WHERE id_th = ?`, title, conv_id_th)
+		_, err2 := database.Exec(`UPDATE Thread SET content = ? WHERE id_th = ?`, content, conv_id_th)
 		if err != nil {
 			log.Fatal(err)
+		}
+		if err2 != nil {
+			log.Fatal(err2)
 		}
 	} else {
 		fmt.Println("wlh marche")
 		fmt.Println("Ce thread ne vous appartient pas")
 	}
+
 }
 
 //ManageLike is the function which manages likes into the database
