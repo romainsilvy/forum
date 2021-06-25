@@ -51,12 +51,12 @@
                 <button id="buttonDelete" type="button" onclick="javascript:onclickdelete('{{.Id_th}}')">Supprimer</button> 
                 <button id ="buttonEdit" type="button" onclick="javascript:onclickedit('{{.Id_th}}')">Modifier</button> 
             </form>
-                <h3>{{.Title}}</h3>
-                <p class="zeub">
+                <h3 id="title{{.Id_th}}">{{.Title}}</h3>
+                <p id="content{{.Id_th}}">
                     {{.Content}}
-                    <button value="likeAdd" class="btn-like" onclick="like('{{.Id_th}}', 1)" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span id="btnLike{{.Id_th}}" class="like__number">{{.Like}}</span></button>
-                    <button class="btn-dislike" id="red" onclick="like('{{.Id_th}}', -1)"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span id="btnDislike{{.Id_th}}" class="like__number">{{.Dislike}}</span></button>
                 </p>
+                <button value="likeAdd" class="btn-like" onclick="like('{{.Id_th}}', 1)" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span id="btnLike{{.Id_th}}" class="like__number">{{.Like}}</span></button>
+                <button class="btn-dislike" id="red" onclick="like('{{.Id_th}}', -1)"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span id="btnDislike{{.Id_th}}" class="like__number">{{.Dislike}}</span></button>
             </div>
             {{end}}
                 
@@ -131,7 +131,7 @@
         <div id ="ajouter-thread">
             <input value="" type="text" id="namethreadedit" name="threadTitle"></input>
         </div>
-        <textarea name="créa_thread" id="créa_thread" cols="70" rows="30" placeholder="Ecrivez votre thread ici"></textarea>
+        <textarea name="créa_thread" id="créa_thread" cols="70" rows="30"></textarea>
         <ul id="ButtonCategory">
             <li>
             <input type="radio" name="drone" value="CHAMEAU"checked>
@@ -206,7 +206,17 @@
 
 
     function onclickedit (postID) {
-            console.log(postID)
+
+        title = document.querySelector(`#title${postID}`).innerHTML
+        document.querySelector("#namethreadedit").setAttribute("value", title)
+
+        content = document.querySelector(`#content${postID}`).innerHTML
+        var Alltext = "";
+        function addText() {
+            Alltext += "ez"
+        }
+        document.getElementById("créa_thread").value = Alltext
+
             document.querySelector('#thread-edit').classList.add("threadGrid")
             document.querySelector('#pop-up').classList.add("connexion-background")
 
