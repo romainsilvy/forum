@@ -2,6 +2,7 @@ package databaseTools
 
 import (
 	"database/sql"
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -14,7 +15,15 @@ type User struct {
 	User_name string
 	Password  string
 	Email     string
-	Image     string
+	OneThread []Thread
+}
+
+type Thread struct {
+	Id_th   int
+	Title   string
+	Content string
+	Like    int
+	Dislike int
 }
 
 type ThreadData struct {
@@ -81,6 +90,23 @@ func SingleRowQuerry(db *sql.DB, rowName string, tableName string, comparator1 s
 	err = stmt.QueryRow(comparator2).Scan(&toReturn)
 	if err != nil {
 		return "notExist"
+	}
+
+	return toReturn
+}
+
+func SingleRowQuerryId(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 string) int {
+	//prepare the queryRow request
+	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//execute the queryRow request
+	var toReturn int
+	err = stmt.QueryRow(comparator2).Scan(&toReturn)
+	if err != nil {
+		fmt.Println("err in SingleRowQuerryId", err)
 	}
 
 	return toReturn
@@ -182,6 +208,22 @@ func RetrieveAccueilRows(db *sql.DB) *sql.Rows {
 	return rows
 }
 
+func RetrieveThreadcreeRow(db *sql.DB, id_user int) *sql.Rows {
+	req := `SELECT 
+	id_th,
+	title,
+	content
+	FROM 
+	Thread
+	Where id_user = ?
+	ORDER BY id_th DESC`
+	rows, err := db.Query(req, id_user)
+	if err != nil {
+		fmt.Println("err in retrievethreadcreerow")
+	}
+	return rows
+}
+
 //CountOfLike is the function which returns the number of likes of a thread
 func CountOfLike(db *sql.DB, id_th string, value int) int {
 	req := `SELECT
@@ -195,6 +237,7 @@ func CountOfLike(db *sql.DB, id_th string, value int) int {
 	var count int
 	err := rows.Scan(&count)
 	if err != nil {
+		fmt.Println("pas de like")
 		return 0
 	}
 	return count
@@ -213,9 +256,26 @@ func CheckIfExistLike(db *sql.DB, id_th int, id_user int) bool {
 	var count int
 	err := rows.Scan(&count)
 	if err != nil {
-		panic(err)
+		fmt.Println("err in CheckIfExistLike : ", err)
 	}
 	if count == 0 {
+		return false
+	}
+	return true
+}
+
+//CheckIfThread is the function which returns true or false depending of the number of like (0 is false and > 0 is true)
+func CheckIfThread(db *sql.DB, id_user int) bool {
+
+	req := `SELECT
+			id_th 
+			FROM
+			Thread
+			Where id_user = ?`
+	rows, _ := db.Query(req)
+
+	if rows != nil {
+		fmt.Println("Pas de thread")
 		return false
 	}
 	return true

@@ -48,14 +48,14 @@
             </div>
             {{range .}}
             <div id="testHour" class="inside-center a-thread"> 
-            <form action ="" method="POST" > 
-                <button id="buttonDelete" type="button" onclick="javascript:onclickdelete('{{.Id_th}}')">Supprimer</button> 
-                <button id ="buttonEdit" type="button" onclick="javascript:onclickedit('{{.Id_th}}')">Modifier</button> 
+            <form action ="" method="POST">
+                <button id="buttonDelete" type="button" onclick="onclickdelete('{{.Id_th}}')">Supprimer</button> 
+                <button id ="buttonEdit" type="button" onclick="onclickedit('{{.Id_th}}')">Modifier</button> 
             </form>
                 <h3 id="title{{.Id_th}}">{{.Title}}</h3>
                 <p id="content{{.Id_th}}">{{.Content}}</p>
-                <button value="likeAdd" class="btn-like" onclick="like('{{.Id_th}}', 1)" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span id="btnLike{{.Id_th}}" class="like__number">{{.Like}}</span></button>
-                <button class="btn-dislike" id="red" onclick="like('{{.Id_th}}', -1)"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span id="btnDislike{{.Id_th}}" class="like__number">{{.Dislike}}</span></button>
+                <button class="btn-like green{{.Id_th}}" value="likeAdd" onclick="like('{{.Id_th}}', 1)"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span id="btnLike{{.Id_th}}" class="like__number">{{.Like}}</span></button>
+                <button class="btn-dislike red{{.Id_th}}" onclick="like('{{.Id_th}}', -1)"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span id="btnDislike{{.Id_th}}" class="like__number">{{.Dislike}}</span></button>
             </div>
             {{end}}
                 

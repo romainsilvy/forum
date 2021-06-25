@@ -72,6 +72,14 @@
                     </div>
                 </div>
             </form>
+                {{range .OneThread}}
+                    <div id="mesThreads" class="inside-center a-thread">
+                        <p> {{.Title}} </p>
+                        <p> {{.Content}} </p>
+                        <p> {{.Like}} </p>
+                        <p> {{.Dislike}} </p>
+                    </div>
+                {{end}}
         </div>
         <div class="global-item" id="global-right">
             <img id="profilePicture" src="/static/images/profile-picture.png">
@@ -84,7 +92,7 @@
                 10000
                 5
             </div>
-            <div class="frame">
+            <div class="frame"> 
                 <button class="custom-btn btn-6"><span>Logout</span></button>
             </div>
         </div>
