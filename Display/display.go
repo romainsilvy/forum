@@ -51,10 +51,10 @@ func DisplayThreadCree(Threadcree []databaseTools.Thread, db *sql.DB, id_user in
 		}
 		Threadcree = append(Threadcree, item)
 	}
-	// for i := 0; i < len(Threadcree); i++ {
-	// 	Threadcree[i].Like = databaseTools.CountOfLike(db, strconv.Itoa(Threadcree[i].Id_th), 1)
-	// 	Threadcree[i].Dislike = databaseTools.CountOfLike(db, strconv.Itoa(Threadcree[i].Id_th), -1)
-	// }
+	for i := 0; i < len(Threadcree); i++ {
+		Threadcree[i].Like = databaseTools.CountOfLike(db, strconv.Itoa(Threadcree[i].Id_th), 1)
+		Threadcree[i].Dislike = databaseTools.CountOfLike(db, strconv.Itoa(Threadcree[i].Id_th), -1)
+	}
 	return Threadcree
 }
 

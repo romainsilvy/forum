@@ -21,6 +21,8 @@ type Thread struct {
 	Id_th   int
 	Title   string
 	Content string
+	Like    int
+	Dislike int
 }
 
 type ThreadData struct {
