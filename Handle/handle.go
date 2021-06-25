@@ -97,5 +97,6 @@ func HandleProfil(oneUser databaseTools.User, database *sql.DB) {
 		}
 
 		variable.Execute(w, oneUser)
+		oneUser.OneThread = nil
 	})
 }

@@ -71,15 +71,14 @@
                         <input type="submit" value="Valider" name="changeEmailButton">
                     </div>
                 </div>
-                
             </form>
                 {{range .OneThread}}
-            <div id="mesThreads" class="inside-center a-thread">
-                    <p> {{.Title}} </p>
-                    <p> {{.Content}} </p>
-                    <p> {{.Like}} </p>
-                    <p> {{.Dislike}} </p>
-            </div>
+                    <div id="mesThreads" class="inside-center a-thread">
+                        <p> {{.Title}} </p>
+                        <p> {{.Content}} </p>
+                        <p> {{.Like}} </p>
+                        <p> {{.Dislike}} </p>
+                    </div>
                 {{end}}
         </div>
         <div class="global-item" id="global-right">
