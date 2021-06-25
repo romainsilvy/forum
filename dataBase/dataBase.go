@@ -2,6 +2,7 @@ package databaseTools
 
 import (
 	"database/sql"
+	"html/template"
 	"io/ioutil"
 	"log"
 
@@ -20,7 +21,7 @@ type ThreadData struct {
 	Id_th      int
 	Id_user    int
 	Title      string
-	Content    string
+	Content    template.HTML
 	Created_at string
 	Category   string
 	Like       int

@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	databaseTools "tools/dataBase"
 
@@ -32,6 +33,8 @@ func AddThread(session *sessions.Session, title string, content string, category
 	convertissor := fmt.Sprintf("%v", littlecookie)
 	check := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", convertissor)
 	id_user, _ := strconv.Atoi(check)
+
+	content = strings.Replace(content, "\r\n", "<br/>", -1)
 
 	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content,  category, created_at) VALUES (?, ?, ?, ?, time())`, id_user, title, content, category)
 
