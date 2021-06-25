@@ -94,14 +94,27 @@ div #like{
 #global #center-profil-data {
     grid-column: 2;
     grid-row: 1;
+    border-left: solid 1px grey;
+    border-right: solid 1px grey;
+    align-content: center;
+    padding-bottom: 75px;
+    
+}
+
+#global .center-profil-data-mdp {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
     grid-gap: 20px;
     padding: 20px;
-    border-left: solid 1px grey;
-    border-right: solid 1px grey;
-    align-content: center;
+}
+
+#global .center-profil-data-thread {
+    overflow: scroll;
+}
+
+.hideForProfil {
+    display: none !important;
 }
 
 

@@ -31,18 +31,15 @@
                     <p>Accueil</p>
                 </a>
             </div>
-                <form action="" method="POST">
+                <div >
                     <div  id="category">
-                        <p>Catégories</p>
-                    
-                        <input type="submit" name="CHAMEAU" value="CHAMEAU">
-                        <input type="submit" name="DROMADAIRE" value="DROMADAIRE">
-                        <input type="submit" name="LAMA" value="LAMA">
-                    
+                        <p>Navigation</p>
+                        <input type="submit" name="mes-info" id="mes-info" value="mes info">
+                        <input type="submit" name="mes-thread" id="mes-thread" value="mes thread">
                     </div>
-                </form>
+                </div>
         </div>
-        <div class="global-item" id="center-profil-data">
+        <div class="global-item center-profil-data-mdp" id="center-profil-data">
             <form id="mdp" class="box" action="" method="POST">    
                 <h2>Mot de passe</h2> 
                 <input type="text" placeholder="Ancien mot de passe :" name="oldPassword" required
@@ -73,13 +70,13 @@
                 </div>
             </form>
                 {{range .OneThread}}
-                    <div id="mesThreads" class="inside-center a-thread">
-                        <p> {{.Title}} </p>
-                        <p> {{.Content}} </p>
-                        <p> {{.Like}} </p>
-                        <p> {{.Dislike}} </p>
+                    <div class="inside-center a-thread hideForProfil">
+                        <h3 id="title{{.Id_th}}">{{.Title}}</h3>
+                        <p>{{.Content}}</p>
                     </div>
                 {{end}}
+
+
         </div>
         <div class="global-item" id="global-right">
             <img id="profilePicture" src="/static/images/profile-picture.png">
@@ -87,10 +84,6 @@
                 <h2>{{.User_name}}</h2>
                 <div  class="bannerSubtitle">
                 </div>
-            </div>
-            <div>
-                10000
-                5
             </div>
             <div class="frame"> 
                 <button class="custom-btn btn-6"><span>Logout</span></button>
@@ -100,17 +93,64 @@
 </body>
 <script>
     document.querySelector('.btn-6').addEventListener('click', () => {
-    function deleteCookie (name) { 
-        setCookie(name, '', -1) 
-    }
-    function setCookie(name, value, days) {
-        var d = new Date
-        d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
-        document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString()
-    }
-    deleteCookie("auth")
-    window.location.replace('http://localhost:8080')
-})
+        function deleteCookie (name) { 
+            setCookie(name, '', -1) 
+        }
+        function setCookie(name, value, days) {
+            var d = new Date
+            d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days)
+            document.cookie = name + "=" + value + ";path=/;expires=" + d.toGMTString()
+        }
+        deleteCookie("auth")
+        window.location.replace('http://localhost:8080')
+    })
+
+    document.querySelector('#mes-info').addEventListener('click', () => {
+
+        if (document.querySelector('#center-profil-data').classList.contains("center-profil-data-thread")) {
+            document.querySelector('#center-profil-data').classList.add("center-profil-data-mdp")
+            document.querySelector('#center-profil-data').classList.remove("center-profil-data-thread")
+            document.querySelector('#mail').classList.remove("hideForProfil")
+            document.querySelector('#mdp').classList.remove("hideForProfil")
+        } else {
+            document.querySelector('#center-profil-data').classList.add("center-profil-data-mdp")
+            document.querySelector('#mail').classList.remove("hideForProfil")
+            document.querySelector('#mdp').classList.remove("hideForProfil")
+        }
+        
+        if (!document.querySelector('.a-thread').classList.contains("hideForProfil")){
+            document.querySelector('.a-thread').classList.add("hideForProfil")
+        } 
+    })
+
+    //si clic sur voir mes thread
+    document.querySelector('#mes-thread').addEventListener('click', () => {
+
+        //si on a deja la classe center...mdp sur center 
+        if (document.querySelector('#center-profil-data').classList.contains("center-profil-data-mdp")){
+            //on change la class de center 
+            document.querySelector('#center-profil-data').classList.add("center-profil-data-thread")
+            document.querySelector('#center-profil-data').classList.remove("center-profil-data-mdp")
+            document.querySelector('#mail').classList.add("hideForProfil")
+            document.querySelector('#mdp').classList.add("hideForProfil")
+
+        } else {
+            //si on l'a pas 
+            document.querySelector('#center-profil-data').classList.add("center-profil-data-thread")
+            document.querySelector('#mail').classList.add("hideForProfil")
+            document.querySelector('#mdp').classList.add("hideForProfil") 
+            document.querySelector('#mail').classList.add("hideForProfil")
+            document.querySelector('#mdp').classList.add("hideForProfil")
+        } 
+
+
+        if (document.querySelector('.a-thread').classList.contains("hideForProfil")){
+            document.querySelector('.a-thread').classList.remove("hideForProfil")
+        } 
+    })
+
+        //on passe l'affichage du mdp en display hidden 
+
 </script>
 
 </html>
