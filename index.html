@@ -131,7 +131,7 @@
         <div id ="ajouter-thread">
             <input value="" type="text" id="namethreadedit" name="threadTitle"></input>
         </div>
-        <textarea name="créa_thread" id="créa_thread" cols="70" rows="30"></textarea>
+        <textarea name="modif_thread" id="modif_thread" cols="70" rows="30"></textarea>
         <ul id="ButtonCategory">
             <li>
             <input type="radio" name="drone" value="CHAMEAU"checked>
@@ -211,11 +211,7 @@
         document.querySelector("#namethreadedit").setAttribute("value", title)
 
         content = document.querySelector(`#content${postID}`).innerHTML
-        var Alltext = "";
-        function addText() {
-            Alltext += "ez"
-        }
-        document.getElementById("créa_thread").value = Alltext
+        document.getElementById("modif_thread").innerHTML = content
 
             document.querySelector('#thread-edit').classList.add("threadGrid")
             document.querySelector('#pop-up').classList.add("connexion-background")
