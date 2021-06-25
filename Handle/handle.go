@@ -83,6 +83,7 @@ func HandleProfil(oneUser databaseTools.User, database *sql.DB) {
 		oneUser.User_name = username
 		oneUser.Email = databaseTools.SingleRowQuerry(database, "email", "User", "user_name", oneUser.User_name)
 		oneUser.Password = databaseTools.SingleRowQuerry(database, "password", "User", "user_name", oneUser.User_name)
+		oneUser.Id_user = databaseTools.SingleRowQuerryId(database, "id_user", "User", "user_name", oneUser.User_name)
 
 		accountTools.ChangePassword(r, oneUser.Password, oneUser.User_name, database)
 		accountTools.ChangeEmail(r, oneUser.Password, oneUser.User_name, database)
@@ -90,6 +91,12 @@ func HandleProfil(oneUser databaseTools.User, database *sql.DB) {
 			http.Error(w, "Forbidden", http.StatusForbidden)
 			return
 		}
+		/* JE COMMENCE A MODIFIER ICI */
+		if databaseTools.CheckIfThread(database, oneUser.Id_user) { /* le check marche */
+			oneUser.OneThread = displayTools.DisplayThreadCrée(oneUser.OneThread, database, oneUser.Id_user) /* ici ne marche pas */
+			fmt.Println(oneUser.OneThread)
+		}
+
 		variable.Execute(w, oneUser)
 	})
 }
