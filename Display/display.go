@@ -2,7 +2,6 @@ package displayTools
 
 import (
 	"database/sql"
-	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -32,36 +31,6 @@ func RetrieveAccueil(dataToSend []databaseTools.ThreadData, w http.ResponseWrite
 }
 
 //DisplayCategory is the function which displays the data related with categories
-func DisplayAccueil(dataToSend []databaseTools.ThreadData, variable *template.Template, w http.ResponseWriter, db *sql.DB) {
-	rows := databaseTools.RetrieveAccueilRows(db)
-	for rows.Next() {
-		item := databaseTools.ThreadData{}
-		err2 := rows.Scan(&item.Id_th, &item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
-		if err2 != nil {
-			fmt.Println("err in DisplayAccueil : ", err2)
-		}
-		dataToSend = append(dataToSend, item)
-	}
-	variable.Execute(w, dataToSend)
-}
-
-func DisplayThreadCree(Threadcree []databaseTools.Thread, db *sql.DB, id_user int) []databaseTools.Thread {
-	rows := databaseTools.RetrieveThreadcreeRow(db, id_user)
-	for rows.Next() {
-		item := databaseTools.Thread{}
-		err2 := rows.Scan(&item.Id_th, &item.Title, &item.Content)
-		if err2 != nil {
-			fmt.Println("err in DisplayThreadCree : ", err2)
-		}
-		Threadcree = append(Threadcree, item)
-	}
-	for i := 0; i < len(Threadcree); i++ {
-		Threadcree[i].Like = databaseTools.CountOfLike(db, strconv.Itoa(Threadcree[i].Id_th), 1)
-		Threadcree[i].Dislike = databaseTools.CountOfLike(db, strconv.Itoa(Threadcree[i].Id_th), -1)
-	}
-	return Threadcree
-}
-
 func DisplayCategory(inputCatChoisie string, dataToSend []databaseTools.ThreadData, variable *template.Template, w http.ResponseWriter, db *sql.DB) {
 	rows := databaseTools.RetrieveCategoryRows(db, inputCatChoisie)
 
@@ -69,7 +38,7 @@ func DisplayCategory(inputCatChoisie string, dataToSend []databaseTools.ThreadDa
 		item := databaseTools.ThreadData{}
 		err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
 		if err2 != nil {
-			fmt.Println()
+			panic(err2)
 		}
 		dataToSend = append(dataToSend, item)
 	}
@@ -90,7 +59,7 @@ func DisplaySearchResult(inputSearchBar string, dataToSend []databaseTools.Threa
 		item := databaseTools.ThreadData{}
 		err2 := rows.Scan(&item.Id_user, &item.Title, &item.Content, &item.Created_at, &item.Category)
 		if err2 != nil {
-			fmt.Println("err in DisplaySearchResult : ", err2)
+			panic(err2)
 		}
 		dataToSend = append(dataToSend, item)
 	}
@@ -101,4 +70,21 @@ func DisplaySearchResult(inputSearchBar string, dataToSend []databaseTools.Threa
 	}
 
 	variable.Execute(w, dataToSend)
+}
+
+func DisplayThreadCree(Threadcree []databaseTools.Thread, db *sql.DB, id_user int) []databaseTools.Thread {
+	rows := databaseTools.RetrieveThreadcreeRow(db, id_user)
+	for rows.Next() {
+		item := databaseTools.Thread{}
+		err2 := rows.Scan(&item.Id_th, &item.Title, &item.Content)
+		if err2 != nil {
+			panic(err2)
+		}
+		Threadcree = append(Threadcree, item)
+	}
+	for i := 0; i < len(Threadcree); i++ {
+		Threadcree[i].Like = databaseTools.CountOfLike(db, strconv.Itoa(Threadcree[i].Id_th), 1)
+		Threadcree[i].Dislike = databaseTools.CountOfLike(db, strconv.Itoa(Threadcree[i].Id_th), -1)
+	}
+	return Threadcree
 }
