@@ -38,6 +38,10 @@ func HandleAccueil(database *sql.DB) {
 
 		deleteButton := r.FormValue("suppr")
 
+		modifButton := r.FormValue("submitthreadedit")
+		titleEdit := r.FormValue("threadEdit")
+		contentEdit := r.FormValue("modif_thread")
+
 		sessionCookieAuth, _ := store.Get(r, "auth")
 
 		if (submitButton == "Enregistrer") && (sessionCookieAuth.Values["authenticated"] == true) {
@@ -48,6 +52,10 @@ func HandleAccueil(database *sql.DB) {
 
 		if (deleteButton != "") && (sessionCookieAuth.Values["authenticated"] == true) {
 			interractionTools.SuppThread(sessionCookieAuth, deleteButton, database)
+		}
+		if (modifButton != "") && (sessionCookieAuth.Values["authenticated"] == true) {
+			fmt.Println("modifbutton" + modifButton)
+			interractionTools.EditThread(sessionCookieAuth, modifButton, titleEdit, contentEdit, database)
 		}
 
 		accountTools.Connexion(w, r, database)

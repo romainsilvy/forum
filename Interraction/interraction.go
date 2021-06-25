@@ -59,6 +59,31 @@ func SuppThread(session *sessions.Session, id_th string, database *sql.DB) {
 	}
 }
 
+//EditThread is the function which edit a thread from the database
+func EditThread(session *sessions.Session, id_th string, title string, content string, database *sql.DB) {
+
+	littlecookie := session.Values["user"]
+	convertissor := fmt.Sprintf("%v", littlecookie)
+	checkUser := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", convertissor)
+	conv_id_th, _ := strconv.Atoi(id_th)
+
+	checkUserIsInThread := databaseTools.SingleRowQuerry(database, "id_user", "Thread", "id_th", id_th)
+
+	fmt.Println(checkUser)
+	fmt.Println(checkUserIsInThread)
+
+	if checkUser == checkUserIsInThread {
+		fmt.Println("dans edit")
+		_, err := database.Exec(`UPDATE Thread SET title = ? AND content = ? WHERE id_th = ?`, title, content, conv_id_th)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		fmt.Println("wlh marche")
+		fmt.Println("Ce thread ne vous appartient pas")
+	}
+}
+
 //ManageLike is the function which manages likes into the database
 func ManageLike(db *sql.DB, id_user_int int, id_th_int int) {
 	if databaseTools.CheckIfExistLike(db, id_th_int, id_user_int) {
