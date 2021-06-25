@@ -12,6 +12,7 @@ import (
 
 	databaseTools "tools/dataBase"
 
+	"github.com/gomarkdown/markdown"
 	"github.com/gorilla/sessions"
 )
 
@@ -34,9 +35,14 @@ func AddThread(session *sessions.Session, title string, content string, category
 	check := databaseTools.SingleRowQuerry(database, "id_user", "User", "user_name", convertissor)
 	id_user, _ := strconv.Atoi(check)
 
-	content = strings.Replace(content, "\r\n", "<br/>", -1)
+	content = strings.Replace(content, "\r", "<br/>", -1)
 
-	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content,  category, created_at) VALUES (?, ?, ?, ?, time())`, id_user, title, content, category)
+	//markdown
+
+	md := []byte(content)
+	output := markdown.ToHTML(md, nil, nil)
+
+	_, err := database.Exec(`INSERT INTO Thread (id_user, title, content,  category, created_at) VALUES (?, ?, ?, ?, time())`, id_user, title, output, category)
 
 	if err != nil {
 		log.Fatal(err)
