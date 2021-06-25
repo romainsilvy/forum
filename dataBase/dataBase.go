@@ -16,15 +16,6 @@ type User struct {
 	Image     string
 }
 
-type Thread struct {
-	Id_th      int
-	Id_user    int
-	Title      string
-	Content    string
-	Created_at string
-	Category   string
-}
-
 type ThreadData struct {
 	Id_th      int
 	Id_user    int
@@ -36,42 +27,21 @@ type ThreadData struct {
 	Dislike    int
 }
 
-type ThreadMessage struct {
-	Id_th_msg   int
-	Id_th       int
-	Id_user     int
-	Created_at  string
-	Msg_content string
-}
-
-type Like struct {
-	Id_user     int
-	Nbr_like    int
-	Nbr_dislike int
-	Id_th       int
-}
-
-type ThreadCategory struct {
-	Id_th_cat int
-	Id_cat    int
-	Id_th     int
-}
-
-type Category struct {
-	Id_cat   int
-	Cat_name string
-}
-
+//InitDatabase is the function which init the database
 func InitDatabase(database string) *sql.DB {
+	//open the database in sqlite
 	db, err := sql.Open("sqlite3", database)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	//read the instructions from databaseText.txt
 	createDb, err := ioutil.ReadFile("dataBase/databaseText.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	//create the database using the instructions contained in createDb
 	str := string(createDb)
 	_, err = db.Exec(str)
 	if err != nil {
@@ -81,6 +51,7 @@ func InitDatabase(database string) *sql.DB {
 	return db
 }
 
+//InsertIntoUsers is the function which insert data in the table User
 func InsertIntoUsers(user_name string, email string, password string, db *sql.DB) {
 	_, err := db.Exec(`INSERT INTO User (user_name, email, password) VALUES (?, ?, ?)`, user_name, email, password)
 	if err != nil {
@@ -88,6 +59,7 @@ func InsertIntoUsers(user_name string, email string, password string, db *sql.DB
 	}
 }
 
+//InsertIntoLike is the function which insert data in the table Like
 func InsertIntoLike(id_user int, id_th int, value int, db *sql.DB) {
 	_, err := db.Exec(`INSERT INTO Like (id_user, id_th, value) VALUES (?, ?, ?)`, id_user, id_th, value)
 	if err != nil {
@@ -95,35 +67,33 @@ func InsertIntoLike(id_user int, id_th int, value int, db *sql.DB) {
 	}
 }
 
-// func InsertIntoThreads(id_user int, title string, content string, created_at string, db *sql.DB) {
-// 	_, err := db.Exec(`INSERT INTO Thread (id_user, title, content, created_at, notif, like_count, dislike_count, comment_count) VALUES (?, ?, ?, ?, false, 0, 0, 0)`, id_user, title, content, created_at)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// }
-
-//singleRowQuerry retrieve a value in the db with a where comparator
+//SingleRowQuerry is the function which select data in the table given as argument and return the wanted value
 func SingleRowQuerry(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 string) string {
-	// SELECT password FROM User WHERE User_name = " ?"
-	//recup le mdp
+	//prepare the queryRow request
 	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	//execute the queryRow request
 	var toReturn string
 	err = stmt.QueryRow(comparator2).Scan(&toReturn)
 	if err != nil {
 		return "notExist"
 	}
+
 	return toReturn
 }
 
+//SingleRowQuerryLike is the function which select data in the table Like and return the wanted value
 func SingleRowQuerryLike(db *sql.DB, comparator1 string, comparator2 int, comparator3 string, comparator4 int) string {
-
+	//prepare the queryRow request
 	stmt, err := db.Prepare("select value from Like where " + comparator1 + " = ? and " + comparator3 + " = ?")
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	//execute the queryRow request
 	var toReturn string
 	err = stmt.QueryRow(comparator2, comparator4).Scan(&toReturn)
 	if err != nil {
@@ -132,14 +102,19 @@ func SingleRowQuerryLike(db *sql.DB, comparator1 string, comparator2 int, compar
 	return toReturn
 }
 
-//checkIfExist return true or false depending if the comparator 1 passed as parameter exist in the db
+//CheckIfExist return true or false depending if the comparator 1 passed as parameter exist in the db
 func CheckIfExist(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 string) bool {
+	//prepare the queryRow request
 	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	//execute the queryRow request
 	var toReturn string
 	err = stmt.QueryRow(comparator2).Scan(&toReturn)
+
+	//test errors
 	if err != nil {
 		if err != sql.ErrNoRows {
 			log.Fatal(err)
@@ -150,24 +125,7 @@ func CheckIfExist(db *sql.DB, rowName string, tableName string, comparator1 stri
 	return true
 }
 
-func CheckIfExistDeux(db *sql.DB, rowName string, tableName string, comparator1 string, comparator2 int) bool {
-	stmt, err := db.Prepare("select " + rowName + " from " + tableName + " where " + comparator1 + " = ?")
-	if err != nil {
-		log.Fatal(err)
-	}
-	var toReturn string
-	err = stmt.QueryRow(comparator2).Scan(&toReturn)
-	if err != nil {
-		if err != sql.ErrNoRows {
-			log.Fatal(err)
-		} else {
-			return false
-		}
-	}
-	return true
-}
-
-//UpdateValue change the value of a case
+//UpdateValue is the function which changes the value of a row from a table
 func UpdateValue(db *sql.DB, tableName string, collumnName string, newValue string, comparator1 string, comparator2 string) {
 	_, err := db.Exec("update " + tableName + " set " + collumnName + " = " + "\"" + newValue + "\"" + " where " + comparator1 + " = " + "\"" + comparator2 + "\"")
 	if err != nil {
@@ -175,6 +133,7 @@ func UpdateValue(db *sql.DB, tableName string, collumnName string, newValue stri
 	}
 }
 
+//RetrieveCategoryRows is the function which retrieves threads filtered by categories
 func RetrieveCategoryRows(db *sql.DB, inputCatChoisie string) *sql.Rows {
 	reqC := `SELECT 
 			id_user,
@@ -190,6 +149,7 @@ func RetrieveCategoryRows(db *sql.DB, inputCatChoisie string) *sql.Rows {
 	return rows
 }
 
+//RetrieveSearchRows is the function which retrieves threads filtered by the value from the searchbar
 func RetrieveSearchRows(db *sql.DB, inputSearchBar string) *sql.Rows {
 	reqS := `SELECT 
 			id_user,
@@ -205,14 +165,15 @@ func RetrieveSearchRows(db *sql.DB, inputSearchBar string) *sql.Rows {
 	return rows
 }
 
+//RetrieveSearchRows is the function which retrieves all threads
 func RetrieveAccueilRows(db *sql.DB) *sql.Rows {
 	req := `SELECT 
-			id_th,
-			id_user,
-			title,
-			content,
-			created_at,
-			category
+	id_th,
+	id_user,
+	title,
+	content,
+	created_at,
+	category
 			FROM 
 			Thread
 			ORDER BY id_th DESC`
@@ -220,6 +181,7 @@ func RetrieveAccueilRows(db *sql.DB) *sql.Rows {
 	return rows
 }
 
+//CountOfLike is the function which returns the number of likes of a thread
 func CountOfLike(db *sql.DB, id_th string, value int) int {
 	req := `SELECT
 			COUNT(*)
@@ -234,11 +196,10 @@ func CountOfLike(db *sql.DB, id_th string, value int) int {
 	if err != nil {
 		return 0
 	}
-
 	return count
-
 }
 
+//CheckIfExistLike is the function which returns true or false depending of the number of like (0 is false and > 0 is true)
 func CheckIfExistLike(db *sql.DB, id_th int, id_user int) bool {
 	req := `SELECT
 			COUNT(*)
@@ -257,5 +218,4 @@ func CheckIfExistLike(db *sql.DB, id_th int, id_user int) bool {
 		return false
 	}
 	return true
-
 }

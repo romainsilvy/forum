@@ -45,6 +45,7 @@ func Connexion(w http.ResponseWriter, r *http.Request, database *sql.DB) {
 
 		passwordHashed := databaseTools.SingleRowQuerry(database, "password", "User", "user_name", connexionUser)
 		checkIfExist := databaseTools.CheckIfExist(database, "password", "User", "user_name", connexionUser)
+		fmt.Println(checkIfExist)
 
 		if checkIfExist {
 			if passwordHashed != "notExist" {
