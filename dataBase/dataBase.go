@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"io/ioutil"
 	"log"
-	"strconv"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -33,6 +32,8 @@ type ThreadData struct {
 	Content    string
 	Created_at string
 	Category   string
+	Like       int
+	Dislike    int
 }
 
 type ThreadMessage struct {
@@ -219,7 +220,7 @@ func RetrieveAccueilRows(db *sql.DB) *sql.Rows {
 	return rows
 }
 
-func CountOfLike(db *sql.DB, id_th string, value int) string {
+func CountOfLike(db *sql.DB, id_th string, value int) int {
 	req := `SELECT
 			COUNT(*)
 			FROM
@@ -231,10 +232,10 @@ func CountOfLike(db *sql.DB, id_th string, value int) string {
 	var count int
 	err := rows.Scan(&count)
 	if err != nil {
-		panic(err)
+		return 0
 	}
 
-	return strconv.Itoa(count)
+	return count
 
 }
 

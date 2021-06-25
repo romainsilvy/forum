@@ -66,7 +66,8 @@ func HandleAccueil(database *sql.DB) {
 		} else if inputSearchBar != "" {
 			displayTools.DisplaySearchResult(inputSearchBar, dataToSend, variable, w, database)
 		} else {
-			displayTools.DisplayAccueil(dataToSend, variable, w, database)
+			dataToSend = displayTools.RetrieveAccueil(dataToSend, w, database)
+			variable.Execute(w, dataToSend)
 		}
 	})
 }

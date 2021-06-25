@@ -55,7 +55,7 @@ func SuppThread(session *sessions.Session, database *sql.DB) {
 	}
 }
 
-func manageLike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int) {
+func ManageLike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int) {
 	if sessionCookieAuth.Values["authenticated"] == true {
 
 		if databaseTools.CheckIfExistLike(db, id_th_int, id_user_int) {
@@ -73,7 +73,7 @@ func manageLike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int
 	}
 }
 
-func manageDislike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int) {
+func ManageDislike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int int, id_th_int int) {
 	if sessionCookieAuth.Values["authenticated"] == true {
 		if databaseTools.CheckIfExistLike(db, id_th_int, id_user_int) {
 			if databaseTools.SingleRowQuerryLike(db, "id_th", id_th_int, "id_user", id_user_int) == "-1" {
@@ -87,13 +87,13 @@ func manageDislike(sessionCookieAuth *sessions.Session, db *sql.DB, id_user_int 
 	}
 }
 
+// Fetch data from the js script on index.html
 func FetchLike(db *sql.DB) {
 	http.HandleFunc("/like", func(w http.ResponseWriter, r *http.Request) {
-
 		var myParam MyBody
+		var item [2]int
 		body, _ := ioutil.ReadAll(r.Body)
 		json.Unmarshal(body, &myParam)
-
 		sessionCookieAuth, _ := store.Get(r, "auth")
 		littlecookie := sessionCookieAuth.Values["user"]
 		user_name := fmt.Sprintf("%v", littlecookie)
@@ -102,16 +102,20 @@ func FetchLike(db *sql.DB) {
 		id_th_int, _ := strconv.Atoi(myParam.Id_th)
 		value_int, _ := strconv.Atoi(myParam.Value)
 
-		switch value_int {
-		case 1:
-			manageLike(sessionCookieAuth, db, id_user_int, id_th_int)
-		case -1:
-			manageDislike(sessionCookieAuth, db, id_user_int, id_th_int)
+		if sessionCookieAuth.Values["authenticated"] == true {
+			switch value_int {
+			case 1:
+				ManageLike(sessionCookieAuth, db, id_user_int, id_th_int)
+				fmt.Println("apres le managelike")
+			case -1:
+				ManageDislike(sessionCookieAuth, db, id_user_int, id_th_int)
+			}
 		}
 
-		dislike := databaseTools.CountOfLike(db, myParam.Id_th, -1)
-		like := databaseTools.CountOfLike(db, myParam.Id_th, 1)
+		item[0] = databaseTools.CountOfLike(db, myParam.Id_th, 1)
+		item[1] = databaseTools.CountOfLike(db, myParam.Id_th, -1)
+		bytes, _ := json.Marshal(item)
 
-		w.Write([]byte(like + ":" + dislike))
+		w.Write(bytes)
 	})
 }

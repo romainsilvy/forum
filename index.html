@@ -54,8 +54,8 @@
                 <h3>{{.Title}}</h3>
                 <p class="zeub">
                     {{.Content}}
-                    <button value="likeAdd" class="btn-like" onclick="like('{{.Id_th}}', 1)" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span id="btnLike{{.Id_th}}" class="like__number"></span></button>
-                    <button class="btn-dislike" id="red" onclick="like('{{.Id_th}}', -1)"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span id="btnDislike{{.Id_th}}" class="like__number"></span></button>
+                    <button value="likeAdd" class="btn-like" onclick="like('{{.Id_th}}', 1)" id="green"><i class="fas fa-thumbs-up" aria-hidden="true"></i><span id="btnLike{{.Id_th}}" class="like__number">{{.Like}}</span></button>
+                    <button class="btn-dislike" id="red" onclick="like('{{.Id_th}}', -1)"><i class="fas fa-thumbs-down" aria-hidden="true"></i><span id="btnDislike{{.Id_th}}" class="like__number">{{.Dislike}}</span></button>
                 </p>
             </div>
             {{end}}
@@ -174,9 +174,7 @@
     })
     
     function like(id_th, value) {
-        console.log("id thread :   " + id_th)
         const body_content  = document.querySelectorAll("body")
-        console.log(body_content)
         fetch("/like", {
         method : "POST",
         headers : {
@@ -188,19 +186,16 @@
         })
         })
         .then((response)=>{
-        return response.text()
+        return response.json()
         })
         .then((result)=>{
 
-            const tabLike = result.split(":")
-            console.log(tabLike[0])
-            console.log(tabLike[1])
 
             
             const bDislike = `#btnDislike${id_th.toString()}`
-            document.querySelector(bDislike).innerHTML = tabLike[1]
+            document.querySelector(bDislike).innerHTML = result[1]
             const bLike = `#btnLike${id_th.toString()}`
-            document.querySelector(bLike).innerHTML = tabLike[0]
+            document.querySelector(bLike).innerHTML = result[0]
         })
         .catch((err) =>{
         throw err
